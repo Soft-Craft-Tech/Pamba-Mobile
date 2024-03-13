@@ -1,6 +1,8 @@
 import React, { useState } from "react";
-import { View, Text, StyleSheet, TouchableOpacity } from "react-native";
-import { MaterialIcons } from "@expo/vector-icons"; // You may need to import this icon library if not already imported
+import { StyleSheet, TouchableOpacity } from "react-native";
+import { MaterialIcons } from "@expo/vector-icons";
+import { View, Text } from "@/components/Themed";
+import { useColorScheme } from "./useColorScheme.web";
 
 interface Props {
   label: string;
@@ -14,6 +16,7 @@ const CustomCheckbox: React.FC<Props> = ({
   onChange,
 }) => {
   const [checked, setChecked] = useState(initialValue);
+  const colorScheme = useColorScheme();
 
   const toggleCheckbox = () => {
     const newValue = !checked;
@@ -26,9 +29,15 @@ const CustomCheckbox: React.FC<Props> = ({
   return (
     <TouchableOpacity style={styles.container} onPress={toggleCheckbox}>
       <View style={styles.checkbox}>
-        {checked && <MaterialIcons name="check" size={24} color="#000" />}
+        {checked && (
+          <MaterialIcons
+            name="check"
+            size={24}
+            color={colorScheme === "dark" ? "#fff" : "#000000"}
+          />
+        )}
       </View>
-      <Text>{label}</Text>
+      <Text style={styles.labelText}>{label}</Text>
     </TouchableOpacity>
   );
 };
@@ -46,6 +55,9 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     marginRight: 10,
+  },
+  labelText: {
+    maxWidth: 280,
   },
 });
 
