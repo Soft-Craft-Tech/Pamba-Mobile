@@ -1,13 +1,43 @@
-import { StyleSheet, TouchableOpacity, View as NormalView } from "react-native";
+// import ForgotPassword from "@/components/ForgotPassword";
+// import ResetPassword from "@/components/ResetPassword";
+// import ResetSuccess from "@/components/ResetSuccess";
+import {
+  StyleSheet,
+  TouchableOpacity,
+  View as NormalView,
+  Image,
+  TextInput,
+  Pressable,
+} from "react-native";
+import { Link } from "expo-router";
 import { View, Text } from "@/components/Themed";
 import { useNavigation } from "@react-navigation/native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useState } from "react";
 
-interface ForgotPasswordProps {}
+interface PasswordPageProps {}
 
-const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
+const checkIcom = require("../assets/images/checkIcon.png");
+
+type Step = "forgot" | "reset" | "success";
+
+const PasswordPage: React.FC<PasswordPageProps> = () => {
+  const [step, setStep] = useState<Step>("forgot");
+
+  const goToResetPassword = () => {
+    setStep("reset");
+  };
+
+  const goToResetSuccess = () => {
+    setStep("success");
+  };
+
   const navigation = useNavigation();
+  const [passwordVisible, setPasswordVisible] = useState(false);
 
+  const togglePasswordVisibility = () => {
+    setPasswordVisible((prev) => !prev);
+  };
   const PhoneNumberComponent = () => {
     const phoneNumber = "1234567890";
     const hiddenDigits = phoneNumber
@@ -38,35 +68,108 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
   };
   return (
     <View style={styles.container}>
-      <View>
-        <View style={styles.header}>
-          <TouchableOpacity onPress={() => navigation.goBack()}>
-            <MaterialIcons name="arrow-back" size={24} color="#d0d0d0" />
-          </TouchableOpacity>
-          <Text style={styles.headerText}>FORGOT PASSWORD</Text>
-          <Text></Text>
-        </View>
-        <View style={styles.lowerContainer}>
-          <Text style={styles.confirmationTitle}>Forgot password?</Text>
-          <Text style={styles.confirmationText}>
-            Select which contact details should we use to reset your password
-          </Text>
-          <View style={styles.optionContainer}>
-            <MaterialIcons name="chat" size={24} color="#db1471" />
-            <NormalView>
-              <Text>Via sms:</Text>
-              <PhoneNumberComponent />
-            </NormalView>
+      {/* Forgot Password */}
+      {step === "forgot" && (
+        <View>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="arrow-back" size={24} color="#d0d0d0" />
+            </TouchableOpacity>
+            <Text style={styles.headerText}>FORGOT PASSWORD</Text>
+            <Text></Text>
           </View>
-          <View style={styles.optionContainer}>
-            <MaterialIcons name="email" size={24} color="#db1471" />
-            <NormalView>
-              <Text>Via email:</Text>
-              <EmailComponent />
-            </NormalView>
+          <View style={styles.lowerContainer}>
+            <Text style={styles.confirmationTitle}>Forgot password?</Text>
+            <Text style={styles.confirmationText}>
+              Select which contact details should we use to reset your password
+            </Text>
+            <TouchableOpacity
+              style={styles.optionContainer}
+              onPress={goToResetPassword}
+            >
+              <MaterialIcons name="chat" size={24} color="#db1471" />
+              <NormalView>
+                <Text>Via sms:</Text>
+                <PhoneNumberComponent />
+              </NormalView>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.optionContainer}
+              onPress={goToResetPassword}
+            >
+              <MaterialIcons name="email" size={24} color="#db1471" />
+              <NormalView>
+                <Text>Via email:</Text>
+                <EmailComponent />
+              </NormalView>
+            </TouchableOpacity>
           </View>
         </View>
-      </View>
+      )}
+      {/* Reset Password */}
+      {step === "reset" && (
+        <View>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="arrow-back" size={24} color="#d0d0d0" />
+            </TouchableOpacity>
+            <Text style={styles.headerText}>RESET PASSWORD</Text>
+            <Text></Text>
+          </View>
+          <View style={styles.lowerContainer}>
+            <Text style={styles.confirmationTitle}>
+              Reset your password here
+            </Text>
+            <Text style={styles.confirmationText}>Enter new password here</Text>
+            <View style={styles.inputContainer}>
+              <TextInput
+                style={styles.newInput}
+                placeholder="New Password"
+                placeholderTextColor="#d0d0d0"
+                secureTextEntry={!passwordVisible}
+                autoCapitalize="none"
+              />
+              <TouchableOpacity onPress={togglePasswordVisibility}>
+                <MaterialIcons
+                  name={passwordVisible ? "visibility" : "visibility-off"}
+                  size={24}
+                  color="#fff"
+                />
+              </TouchableOpacity>
+            </View>
+            <Pressable style={styles.buttonStyle} onPress={goToResetSuccess}>
+              <Text style={styles.btnTxt}>RESET MY PASSWORD</Text>
+            </Pressable>
+          </View>
+        </View>
+      )}
+      {/* <ResetSuccess /> */}
+      {step === "success" && (
+        <View>
+          <View style={styles.header}>
+            <TouchableOpacity onPress={() => navigation.goBack()}>
+              <MaterialIcons name="arrow-back" size={24} color="#d0d0d0" />
+            </TouchableOpacity>
+            <Text style={styles.headerText}>PASSWORD RESET SUCCESFUL</Text>
+            <Text></Text>
+          </View>
+          <View style={styles.lowerContainer}>
+            <Image source={checkIcom} />
+            <Text style={styles.confirmationTitle}>
+              Password reset succesful
+            </Text>
+            <Text style={styles.confirmationText}>
+              You have successfully reset your password. Please use your new
+              password when you're loggin in
+            </Text>
+            <Link href="/login" asChild>
+              <Pressable style={styles.buttonStyle} onPress={() => {}}>
+                <Text style={styles.btnTxt}>CONTINUE</Text>
+              </Pressable>
+            </Link>
+          </View>
+        </View>
+      )}
     </View>
   );
 };
@@ -143,6 +246,40 @@ const styles = StyleSheet.create({
     marginTop: 10,
     fontWeight: "500",
   },
+  inputContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    height: 55,
+    backgroundColor: "#1b2840",
+    width: "80%",
+    borderRadius: 5,
+    paddingHorizontal: 10,
+  },
+  newInput: {
+    flex: 1,
+    height: "100%",
+    fontSize: 16,
+    paddingLeft: 10,
+  },
+  buttonStyle: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    elevation: 3,
+    height: 60,
+
+    backgroundColor: "#DB1471",
+    width: "80%",
+  },
+  btnTxt: {
+    fontSize: 16,
+    lineHeight: 21,
+    fontWeight: "bold",
+    letterSpacing: 0.25,
+    color: "white",
+  },
 });
 
-export default ForgotPassword;
+export default PasswordPage;
