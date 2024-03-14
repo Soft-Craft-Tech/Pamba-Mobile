@@ -29,13 +29,7 @@ const CustomCheckbox: React.FC<Props> = ({
   return (
     <TouchableOpacity style={styles.container} onPress={toggleCheckbox}>
       <View style={styles.checkbox}>
-        {checked && (
-          <MaterialIcons
-            name="check"
-            size={24}
-            color={colorScheme === "dark" ? "#fff" : "#000000"}
-          />
-        )}
+        {checked && <MaterialIcons name="check" size={24} color="#fff" />}
       </View>
       <Text style={styles.labelText}>{label}</Text>
     </TouchableOpacity>

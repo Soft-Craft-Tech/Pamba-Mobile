@@ -32,7 +32,7 @@ export default function Page() {
   useEffect(() => {
     setTimeout(() => {
       setIsLoading(false);
-    }, 5000);
+    }, 3000);
   }, []);
   return (
     <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
@@ -81,7 +81,7 @@ export default function Page() {
           </View>
           <View style={styles.checkBoxContainer}>
             <CustomCheckbox label="Remember me" />
-            <Link href="/">
+            <Link href="/forgot-password">
               <Text style={styles.linkText}>Forgot password?</Text>
             </Link>
           </View>

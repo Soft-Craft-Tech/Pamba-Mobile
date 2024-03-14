@@ -29,18 +29,18 @@ export default function Page() {
           </TouchableOpacity>
           <TextInput
             style={styles.input}
-            placeholder="First name"
+            placeholder="Full Name"
             placeholderTextColor="#d0d0d0"
             autoCapitalize="none"
           />
         </View>
         <View style={styles.inputContainer}>
           <TouchableOpacity onPress={() => console.log("Left icon pressed")}>
-            <MaterialIcons name="person" size={24} color="#d0d0d0" />
+            <MaterialIcons name="phone" size={24} color="#d0d0d0" />
           </TouchableOpacity>
           <TextInput
             style={styles.input}
-            placeholder="Last name"
+            placeholder="0712345678"
             placeholderTextColor="#d0d0d0"
             autoCapitalize="none"
           />
@@ -70,7 +70,7 @@ export default function Page() {
             autoCapitalize="none"
           />
         </View>
-        <Link href="/signup" asChild>
+        <Link href="/otp" asChild>
           <Pressable style={styles.buttonStyle} onPress={() => {}}>
             <Text style={styles.btnTxt}>REGISTER NOW</Text>
           </Pressable>
@@ -125,9 +125,10 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     height: 55,
-    backgroundColor: "#f4f4f4",
+    borderColor: "#d0d0d0",
+    borderWidth: 1,
     width: "80%",
-    borderRadius: 16,
+    borderRadius: 5,
     paddingHorizontal: 10,
   },
   checkbox: {
