@@ -7,7 +7,7 @@ import {
   Pressable,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import CustomCheckbox from "@/components/CustomCheckbox";
 import {
   DarkTheme,
@@ -18,6 +18,7 @@ import { Text, View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme.web";
 
 const logoImage = require("../assets/images/Logo.png");
+const newLogo = require("../assets/images/Splash.png");
 
 export default function Page() {
   const colorScheme = useColorScheme();
@@ -26,64 +27,77 @@ export default function Page() {
   const togglePasswordVisibility = () => {
     setPasswordVisible((prev) => !prev);
   };
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    setTimeout(() => {
+      setIsLoading(false);
+    }, 5000);
+  }, []);
   return (
     <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
-      <View style={styles.container}>
-        <Image style={styles.image} source={logoImage} />
-        <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.signInText}>Sign in to continue</Text>
+      {isLoading ? (
+        <View style={styles.splashContainer}>
+          <Image style={styles.splashImage} source={newLogo} />
+        </View>
+      ) : (
+        <View style={styles.container}>
+          <Image style={styles.image} source={logoImage} />
+          <Text style={styles.title}>Welcome Back</Text>
+          <Text style={styles.signInText}>Sign in to continue</Text>
 
-        <View style={styles.inputContainer}>
-          <TouchableOpacity onPress={() => console.log("Left icon pressed")}>
-            <MaterialIcons name="email" size={24} color="#d0d0d0" />
-          </TouchableOpacity>
-          <TextInput
-            style={styles.input}
-            placeholder="Enter your email"
-            placeholderTextColor="#d0d0d0"
-            autoCapitalize="none"
-          />
-        </View>
-        {/* Password Input */}
-        <View style={styles.inputContainer}>
-          <TouchableOpacity
-            onPress={() => console.log("Left password icon pressed")}
-          >
-            <MaterialIcons name="lock" size={24} color="#d0d0d0" />
-          </TouchableOpacity>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            placeholderTextColor="#d0d0d0"
-            secureTextEntry={!passwordVisible}
-            autoCapitalize="none"
-          />
-          <TouchableOpacity onPress={togglePasswordVisibility}>
-            <MaterialIcons
-              name={passwordVisible ? "visibility" : "visibility-off"}
-              size={24}
-              color="#d0d0d0"
+          <View style={styles.inputContainer}>
+            <TouchableOpacity onPress={() => console.log("Left icon pressed")}>
+              <MaterialIcons name="email" size={24} color="#d0d0d0" />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Enter your email"
+              placeholderTextColor="#d0d0d0"
+              autoCapitalize="none"
             />
-          </TouchableOpacity>
+          </View>
+          {/* Password Input */}
+          <View style={styles.inputContainer}>
+            <TouchableOpacity
+              onPress={() => console.log("Left password icon pressed")}
+            >
+              <MaterialIcons name="lock" size={24} color="#d0d0d0" />
+            </TouchableOpacity>
+            <TextInput
+              style={styles.input}
+              placeholder="Password"
+              placeholderTextColor="#d0d0d0"
+              secureTextEntry={!passwordVisible}
+              autoCapitalize="none"
+            />
+            <TouchableOpacity onPress={togglePasswordVisibility}>
+              <MaterialIcons
+                name={passwordVisible ? "visibility" : "visibility-off"}
+                size={24}
+                color="#d0d0d0"
+              />
+            </TouchableOpacity>
+          </View>
+          <View style={styles.checkBoxContainer}>
+            <CustomCheckbox label="Remember me" />
+            <Link href="/">
+              <Text style={styles.linkText}>Forgot password?</Text>
+            </Link>
+          </View>
+          <Pressable style={styles.buttonStyle} onPress={() => {}}>
+            <Text style={styles.btnTxt}>Sign In</Text>
+          </Pressable>
+          <View style={styles.thirdPartyAuth}>
+            <Text>Don't have an Account?</Text>
+            <Link href="/signup" asChild>
+              <Pressable>
+                <Text style={styles.linkText}>Signup</Text>
+              </Pressable>
+            </Link>
+          </View>
         </View>
-        <View style={styles.checkBoxContainer}>
-          <CustomCheckbox label="Remember me" />
-          <Link href="/">
-            <Text style={styles.linkText}>Forgot password?</Text>
-          </Link>
-        </View>
-        <Pressable style={styles.buttonStyle} onPress={() => {}}>
-          <Text style={styles.btnTxt}>Sign In</Text>
-        </Pressable>
-        <View style={styles.thirdPartyAuth}>
-          <Text>Don't have an Account?</Text>
-          <Link href="/signup" asChild>
-            <Pressable>
-              <Text style={styles.linkText}>Signup</Text>
-            </Pressable>
-          </Link>
-        </View>
-      </View>
+      )}
     </ThemeProvider>
   );
 }
@@ -95,6 +109,11 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     padding: 20,
     gap: 20,
+  },
+  splashContainer: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
   },
   checkBoxContainer: {
     flexDirection: "row",
@@ -191,5 +210,13 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     letterSpacing: 0.25,
     color: "white",
+  },
+  betaText: {
+    marginTop: 100,
+  },
+
+  splashImage: {
+    width: "100%",
+    height: "100%",
   },
 });
