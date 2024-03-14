@@ -73,9 +73,11 @@ export default function Page() {
             <Text style={styles.linkText}>Forgot password?</Text>
           </Link>
         </View>
-        <Pressable style={styles.buttonStyle} onPress={() => {}}>
-          <Text style={styles.btnTxt}>Sign In</Text>
-        </Pressable>
+        <Link href="/home" asChild>
+          <Pressable style={styles.buttonStyle} onPress={() => {}}>
+            <Text style={styles.btnTxt}>Sign In</Text>
+          </Pressable>
+        </Link>
         <View style={styles.thirdPartyAuth}>
           <Text>Don't have an Account?</Text>
           <Link href="/signup" asChild>
