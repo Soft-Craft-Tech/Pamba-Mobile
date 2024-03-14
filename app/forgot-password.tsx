@@ -36,34 +36,35 @@ const ForgotPassword: React.FC<ForgotPasswordProps> = () => {
       </NormalView>
     );
   };
-
   return (
     <View style={styles.container}>
-      <View style={styles.header}>
-        <TouchableOpacity onPress={() => navigation.goBack()}>
-          <MaterialIcons name="arrow-back" size={24} color="#d0d0d0" />
-        </TouchableOpacity>
-        <Text style={styles.headerText}>FORGOT PASSWORD</Text>
-        <Text></Text>
-      </View>
-      <View style={styles.lowerContainer}>
-        <Text style={styles.confirmationTitle}>Forgot password?</Text>
-        <Text style={styles.confirmationText}>
-          Select which contact details should we use to reset your password
-        </Text>
-        <View style={styles.optionContainer}>
-          <MaterialIcons name="chat" size={24} color="#db1471" />
-          <NormalView>
-            <Text>Via sms:</Text>
-            <PhoneNumberComponent />
-          </NormalView>
+      <View>
+        <View style={styles.header}>
+          <TouchableOpacity onPress={() => navigation.goBack()}>
+            <MaterialIcons name="arrow-back" size={24} color="#d0d0d0" />
+          </TouchableOpacity>
+          <Text style={styles.headerText}>FORGOT PASSWORD</Text>
+          <Text></Text>
         </View>
-        <View style={styles.optionContainer}>
-          <MaterialIcons name="email" size={24} color="#db1471" />
-          <NormalView>
-            <Text>Via email:</Text>
-            <EmailComponent />
-          </NormalView>
+        <View style={styles.lowerContainer}>
+          <Text style={styles.confirmationTitle}>Forgot password?</Text>
+          <Text style={styles.confirmationText}>
+            Select which contact details should we use to reset your password
+          </Text>
+          <View style={styles.optionContainer}>
+            <MaterialIcons name="chat" size={24} color="#db1471" />
+            <NormalView>
+              <Text>Via sms:</Text>
+              <PhoneNumberComponent />
+            </NormalView>
+          </View>
+          <View style={styles.optionContainer}>
+            <MaterialIcons name="email" size={24} color="#db1471" />
+            <NormalView>
+              <Text>Via email:</Text>
+              <EmailComponent />
+            </NormalView>
+          </View>
         </View>
       </View>
     </View>
@@ -75,7 +76,6 @@ const styles = StyleSheet.create({
     flex: 1,
   },
   lowerContainer: {
-    flex: 1,
     marginTop: 100,
     alignItems: "center",
     gap: 30,
@@ -131,14 +131,14 @@ const styles = StyleSheet.create({
   },
   confirmationText: {
     fontSize: 18,
-    color: "#c9c2c2",
+    color: "#fff",
     textAlign: "center",
     marginTop: 20,
     maxWidth: "80%",
   },
   confirmationTitle: {
     fontSize: 35,
-    color: "#828282",
+    color: "#fff",
     textAlign: "center",
     marginTop: 10,
     fontWeight: "500",
