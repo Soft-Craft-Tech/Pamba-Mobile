@@ -35,7 +35,6 @@ export default function Page() {
         <Text style={styles.signInText}>
           Please enter your email & phone number to login
         </Text>
-
         <View style={styles.inputContainer}>
           <TouchableOpacity onPress={() => console.log("Left icon pressed")}>
             <MaterialIcons name="email" size={24} color="#d0d0d0" />
@@ -47,7 +46,6 @@ export default function Page() {
             autoCapitalize="none"
           />
         </View>
-        {/* Password Input */}
         <View style={styles.inputContainer}>
           <TouchableOpacity
             onPress={() => console.log("Left password icon pressed")}
@@ -164,8 +162,9 @@ const styles = StyleSheet.create({
   },
   thirdPartyAuth: {
     flexDirection: "column",
-    width: "95%",
+    width: "100%",
     justifyContent: "center",
+    alignItems: "center",
   },
   buttonStyle: {
     alignItems: "center",

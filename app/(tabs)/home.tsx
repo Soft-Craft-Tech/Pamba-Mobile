@@ -8,34 +8,91 @@ import {
   ScrollView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
-import { useState } from "react";
-import BottomDrawer from "@/components/BottomDrawer";
+import ViewShops from "@/components/Shops";
 
 const bagLogo = require("../../assets/images/bag.png");
+const connectSpa = require("../../assets/images/connectSpa.png");
+const spa3 = require("../../assets/images/spa3.png");
+const spa4 = require("../../assets/images/spa4.png");
+const spa5 = require("../../assets/images/spa5.png");
+
+const salon = require("../../assets/images/salon.png");
+const salon1 = require("../../assets/images/salon2.png");
+const salon2 = require("../../assets/images/salon3.png");
+const salon3 = require("../../assets/images/salon4.png");
+
+const barber = require("../../assets/images/barber.png");
+const barber1 = require("../../assets/images/barber1.png");
+const barber2 = require("../../assets/images/barber2.png");
+const barber3 = require("../../assets/images/barber3.png");
+
+interface InitialsAvatarProps {
+  name: string;
+  size: number;
+}
+
+const InitialsAvatar: React.FC<InitialsAvatarProps> = ({ name, size }) => {
+  const initials = name
+    .split(" ")
+    .map((part: string) => part.charAt(0).toUpperCase())
+    .join("");
+  return (
+    <View style={[styles.avatarContainer, { width: size, height: size }]}>
+      <Text style={styles.avatarText}>{initials}</Text>
+    </View>
+  );
+};
+
+const spaData = [
+  { imageSrc: connectSpa, subTitle: "Connect Spa", bgColor: "#DB1471" },
+  { imageSrc: spa3, subTitle: "Flexi Spa", bgColor: "#0F1C35" },
+  { imageSrc: spa4, subTitle: "Spa & Relax", bgColor: "#DB1471" },
+  { imageSrc: spa5, subTitle: "Gogo Spa", bgColor: "#0F1C35" },
+];
+const salonData = [
+  { imageSrc: salon, subTitle: "Gurl Salon", bgColor: "#DB1471" },
+  { imageSrc: salon1, subTitle: "Relax salon", bgColor: "#0F1C35" },
+  { imageSrc: salon2, subTitle: "Halton senior", bgColor: "#DB1471" },
+  { imageSrc: salon3, subTitle: "Pham salon", bgColor: "#0F1C35" },
+];
+const barberData = [
+  { imageSrc: barber, subTitle: "Barbershop", bgColor: "#DB1471" },
+  { imageSrc: barber1, subTitle: "Flex barber", bgColor: "#0F1C35" },
+  { imageSrc: barber2, subTitle: "Halma barber", bgColor: "#DB1471" },
+  { imageSrc: barber3, subTitle: "BarberKIng", bgColor: "#0F1C35" },
+];
 
 export default function TabOneScreen() {
-  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
-  const handleOpenBottomSheet = () => {
-    setIsBottomSheetOpen(true);
-  };
-  const handleCloseBottomSheet = () => {
-    setIsBottomSheetOpen(false);
-  };
   return (
-    <ScrollView contentContainerStyle={styles.scrollViewContent}>
+    <ScrollView>
       <View style={styles.container}>
         <View>
           <View style={styles.header}>
-            <TouchableOpacity
-              onPress={() => {
-                console.log("Here");
-              }}
-            >
-              <MaterialIcons name="menu" size={30} color="#303535" />
-            </TouchableOpacity>
-            <Text style={styles.headerText}>Search</Text>
-            <Text style={styles.hiddenElement}>Here</Text>
+            <View style={styles.greetingsContainer}>
+              <InitialsAvatar name="John Doe" size={40} />
+              <View>
+                <Text>Welcome back</Text>
+                <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                  Diana Mugo
+                </Text>
+              </View>
+            </View>
+            <MaterialIcons
+              name="notifications-none"
+              size={30}
+              color="#DB1471"
+            />
           </View>
+          <Text
+            style={{
+              textAlign: "center",
+              fontSize: 16,
+              fontWeight: "600",
+              marginBottom: 10,
+            }}
+          >
+            Search
+          </Text>
           <View style={styles.inputContainer}>
             <TextInput
               style={styles.input}
@@ -49,65 +106,9 @@ export default function TabOneScreen() {
               <MaterialIcons name="search" size={35} color="#d0d0d0" />
             </TouchableOpacity>
           </View>
-          <Text style={styles.pageTitle}>My Appointments</Text>
-          <View style={styles.mainContainer}>
-            <View style={styles.innerContainer}>
-              <View style={styles.boxContainer}>
-                <View style={styles.circleBox}>
-                  <MaterialIcons
-                    name="play-circle-outline"
-                    size={30}
-                    color="#fff"
-                  />
-                </View>
-                <View style={styles.textBox}>
-                  <Text style={styles.textInBox}>Completed</Text>
-                  <Text style={styles.subText}>234 Tasks</Text>
-                </View>
-              </View>
-              <View style={styles.boxContainerTwo}>
-                <View style={styles.circleBox}>
-                  <MaterialIcons
-                    name="play-circle-outline"
-                    size={30}
-                    color="#fff"
-                  />
-                </View>
-                <View style={styles.textBox}>
-                  <Text style={styles.textInBox}>Cancelled</Text>
-                  <Text style={styles.subText}>8 Tasks</Text>
-                </View>
-              </View>
-            </View>
-            <View style={styles.innerContainer}>
-              <View style={styles.boxContainerTwo}>
-                <View style={styles.circleBox}>
-                  <MaterialIcons
-                    name="play-circle-outline"
-                    size={30}
-                    color="#fff"
-                  />
-                </View>
-                <View style={styles.textBox}>
-                  <Text style={styles.textInBox}>Upcoming Appointments</Text>
-                  <Text style={styles.subText}>13 Tasks</Text>
-                </View>
-              </View>
-              <View style={styles.boxContainer}>
-                <View style={styles.circleBox}>
-                  <MaterialIcons
-                    name="play-circle-outline"
-                    size={30}
-                    color="#fff"
-                  />
-                </View>
-                <View style={styles.textBox}>
-                  <Text style={styles.textInBox}>On Going</Text>
-                  <Text style={styles.subText}>23 Tasks</Text>
-                </View>
-              </View>
-            </View>
-          </View>
+          <ViewShops title="Top SPAs" items={spaData} />
+          <ViewShops title="Top Salons" items={salonData} />
+          <ViewShops title="Top Barbershops" items={barberData} />
           <View style={styles.appointMentHeader}>
             <Text style={styles.appointMentTitle}>Today's Appointments</Text>
             <Text style={styles.linkText}>View all</Text>
@@ -122,9 +123,7 @@ export default function TabOneScreen() {
               <TouchableOpacity
                 key={index}
                 style={styles.optionContainer}
-                onPress={() => {
-                  handleOpenBottomSheet();
-                }}
+                onPress={() => {}}
               >
                 <Image source={bagLogo} />
                 <View>
@@ -144,24 +143,16 @@ export default function TabOneScreen() {
             ))}
           </View>
         </View>
-        <BottomDrawer
-          isVisible={isBottomSheetOpen}
-          onClose={() => {
-            handleCloseBottomSheet();
-          }}
-        />
       </View>
     </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
-  scrollViewContent: {
-    flex: 1,
-  },
   container: {
     flex: 1,
     alignItems: "center",
+    paddingTop: 10,
   },
   linkText: {
     fontSize: 14,
@@ -209,33 +200,7 @@ const styles = StyleSheet.create({
     maxWidth: "90%",
     marginTop: 10,
   },
-  circleBox: {
-    alignItems: "flex-end",
-  },
-  boxContainer: {
-    backgroundColor: "#0f1c35",
-    width: 156,
-    height: 152,
-    borderRadius: 16,
-    padding: 10,
-    flexDirection: "column",
-    justifyContent: "space-between",
-    paddingBottom: 30,
-  },
-  boxContainerTwo: {
-    backgroundColor: "#DB1471",
-    width: 156,
-    height: 115,
-    borderRadius: 16,
-    padding: 10,
-    flexDirection: "column",
-    justifyContent: "space-between",
-    paddingBottom: 30,
-  },
-  innerContainer: { flexDirection: "column", gap: 20 },
-  textBox: {},
-  textInBox: { color: "#fff", fontSize: 16, fontWeight: "500" },
-  subText: { color: "#fff", fontSize: 14, fontWeight: "400" },
+
   appointMentTitle: {
     fontSize: 24,
     fontWeight: "700",
@@ -272,4 +237,16 @@ const styles = StyleSheet.create({
   deadLine: { flexDirection: "row", alignItems: "center", gap: 10 },
   appointMentCardText: { fontSize: 16, fontWeight: "500" },
   appointMentCardDate: { fontSize: 14, fontWeight: "400" },
+  avatarContainer: {
+    backgroundColor: "#0f1c35",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  avatarText: {
+    color: "#fff",
+    fontSize: 18,
+    fontWeight: "bold",
+  },
+  greetingsContainer: { flexDirection: "row", alignItems: "center", gap: 10 },
 });
