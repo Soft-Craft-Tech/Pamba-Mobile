@@ -32,7 +32,9 @@ export default function Page() {
       <View style={styles.container}>
         <Image style={styles.image} source={logoImage} />
         <Text style={styles.title}>Welcome Back</Text>
-        <Text style={styles.signInText}>Sign in to continue</Text>
+        <Text style={styles.signInText}>
+          Please enter your email & phone number to login
+        </Text>
 
         <View style={styles.inputContainer}>
           <TouchableOpacity onPress={() => console.log("Left icon pressed")}>
@@ -68,7 +70,7 @@ export default function Page() {
           </TouchableOpacity>
         </View>
         <View style={styles.checkBoxContainer}>
-          <CustomCheckbox label="Remember me" />
+          <CustomCheckbox label="Keep me signed in" />
           <Link href="/forgot-password">
             <Text style={styles.linkText}>Forgot password?</Text>
           </Link>
@@ -103,14 +105,14 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "center",
     justifyContent: "space-between",
-    width: "80%",
+    width: "95%",
   },
   inputContainer: {
     flexDirection: "row",
     alignItems: "center",
     height: 55,
     backgroundColor: "#1b2840",
-    width: "80%",
+    width: "95%",
     borderRadius: 5,
     paddingHorizontal: 10,
   },
@@ -130,6 +132,8 @@ const styles = StyleSheet.create({
   signInText: {
     fontSize: 16,
     color: "#393f45",
+    maxWidth: "80%",
+    textAlign: "center",
   },
   link: {
     paddingVertical: 15,
@@ -140,13 +144,13 @@ const styles = StyleSheet.create({
   },
   image: {},
   signInBtn: {
-    width: "80%",
+    width: "95%",
   },
   dividerContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
     alignItems: "center",
-    width: "80%",
+    width: "95%",
     gap: 10,
   },
   divider: {
@@ -174,18 +178,7 @@ const styles = StyleSheet.create({
     height: 60,
     marginTop: 40,
     backgroundColor: "#DB1471",
-    width: "80%",
-  },
-  btn2: {
-    alignItems: "center",
-    justifyContent: "center",
-    paddingVertical: 12,
-    paddingHorizontal: 32,
-    borderRadius: 10,
-    elevation: 3,
-    height: 60,
-    backgroundColor: "#0F1C35",
-    width: "45%",
+    width: "95%",
   },
   btnTxt: {
     fontSize: 16,

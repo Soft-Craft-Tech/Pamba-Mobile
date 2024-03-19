@@ -8,10 +8,19 @@ import {
   ScrollView,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useState } from "react";
+import BottomDrawer from "@/components/BottomDrawer";
 
 const bagLogo = require("../../assets/images/bag.png");
 
 export default function TabOneScreen() {
+  const [isBottomSheetOpen, setIsBottomSheetOpen] = useState(false);
+  const handleOpenBottomSheet = () => {
+    setIsBottomSheetOpen(true);
+  };
+  const handleCloseBottomSheet = () => {
+    setIsBottomSheetOpen(false);
+  };
   return (
     <ScrollView contentContainerStyle={styles.scrollViewContent}>
       <View style={styles.container}>
@@ -110,7 +119,13 @@ export default function TabOneScreen() {
               { text: "Appointment 3", deadline: "16/04/2024" },
               { text: "Appointment 4", deadline: "17/04/2024" },
             ].map((item, index) => (
-              <TouchableOpacity key={index} style={styles.optionContainer}>
+              <TouchableOpacity
+                key={index}
+                style={styles.optionContainer}
+                onPress={() => {
+                  handleOpenBottomSheet();
+                }}
+              >
                 <Image source={bagLogo} />
                 <View>
                   <Text style={styles.appointMentCardText}>{item.text}</Text>
@@ -129,6 +144,12 @@ export default function TabOneScreen() {
             ))}
           </View>
         </View>
+        <BottomDrawer
+          isVisible={isBottomSheetOpen}
+          onClose={() => {
+            handleCloseBottomSheet();
+          }}
+        />
       </View>
     </ScrollView>
   );

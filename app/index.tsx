@@ -1,4 +1,4 @@
-import { StyleSheet, Image } from "react-native";
+import { StyleSheet, Text, ImageBackground, Image } from "react-native";
 import { useEffect } from "react";
 import {
   DarkTheme,
@@ -9,7 +9,9 @@ import { View } from "@/components/Themed";
 import { useColorScheme } from "@/components/useColorScheme.web";
 import { router } from "expo-router";
 
-const newLogo = require("../assets/images/Splash.png");
+const newLogo = require("../assets/images/bgImage.png");
+
+const splashLogo = require("../assets/images/splashLogo.png");
 
 export default function Page() {
   const colorScheme = useColorScheme();
@@ -22,7 +24,10 @@ export default function Page() {
   return (
     <ThemeProvider value={colorScheme === "light" ? DarkTheme : DefaultTheme}>
       <View style={styles.splashContainer}>
-        <Image style={styles.splashImage} source={newLogo} />
+        <ImageBackground source={newLogo} style={styles.image}>
+          <Image source={splashLogo} style={styles.logo} />
+          <Text style={styles.text}>Beta Version</Text>
+        </ImageBackground>
       </View>
     </ThemeProvider>
   );
@@ -31,11 +36,20 @@ export default function Page() {
 const styles = StyleSheet.create({
   splashContainer: {
     flex: 1,
+    flexDirection: "column",
+  },
+  image: {
+    flex: 1,
+    resizeMode: "cover",
+    justifyContent: "space-between",
     alignItems: "center",
-    justifyContent: "center",
   },
-  splashImage: {
-    width: "100%",
-    height: "100%",
+  text: {
+    color: "white",
+    fontSize: 15,
+    fontWeight: "400",
+    textAlign: "center",
+    marginBottom: "10%",
   },
+  logo: { marginTop: "30%" },
 });
