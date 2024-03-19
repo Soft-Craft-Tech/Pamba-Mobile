@@ -19,7 +19,7 @@ export default function Page() {
   return (
     <>
       <View style={styles.bottomRow}>
-        <Text style={styles.accountHeader}>CREATE ACCOUNT</Text>
+        <Text style={styles.accountHeader}>CREATE</Text>
       </View>
       <View style={styles.container}>
         <Text style={styles.textStyle}>Welcome to Pamba</Text>
@@ -108,7 +108,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     justifyContent: "center",
     padding: 20,
-    gap: 30,
+    gap: 20,
   },
   textStyle: {
     fontSize: 20,
@@ -127,7 +127,7 @@ const styles = StyleSheet.create({
     height: 55,
     backgroundColor: "#1b2840",
     width: "80%",
-    borderRadius: 5,
+    borderRadius: 10,
     paddingHorizontal: 10,
   },
   checkbox: {
@@ -173,8 +173,9 @@ const styles = StyleSheet.create({
     fontSize: 16,
   },
   accountHeader: {
-    fontSize: 20,
-    fontWeight: "700",
+    fontSize: 16,
+    fontWeight: "600",
     marginTop: 20,
+    color: "#DB1471",
   },
 });

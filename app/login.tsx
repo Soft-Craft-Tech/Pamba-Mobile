@@ -77,14 +77,14 @@ export default function Page() {
         </View>
         <Link href="/home" asChild>
           <Pressable style={styles.buttonStyle} onPress={() => {}}>
-            <Text style={styles.btnTxt}>Sign In</Text>
+            <Text style={styles.btnTxt}>Login</Text>
           </Pressable>
         </Link>
         <View style={styles.thirdPartyAuth}>
-          <Text>Don't have an Account?</Text>
-          <Link href="/signup" asChild>
-            <Pressable>
-              <Text style={styles.linkText}>Signup</Text>
+          <Text style={styles.accountText}>Don't have an Account?</Text>
+          <Link href="/signup" style={styles.signUpBtn} asChild>
+            <Pressable onPress={() => {}}>
+              <Text style={styles.btnTxt}>Sign Up Now</Text>
             </Pressable>
           </Link>
         </View>
@@ -163,10 +163,9 @@ const styles = StyleSheet.create({
     color: "#393f45",
   },
   thirdPartyAuth: {
-    flexDirection: "row",
-    width: "60%",
+    flexDirection: "column",
+    width: "95%",
     justifyContent: "center",
-    gap: 10,
   },
   buttonStyle: {
     alignItems: "center",
@@ -189,5 +188,22 @@ const styles = StyleSheet.create({
   },
   betaText: {
     marginTop: 100,
+  },
+  signUpBtn: {
+    alignItems: "center",
+    justifyContent: "center",
+    paddingVertical: 12,
+    paddingHorizontal: 32,
+    borderRadius: 10,
+    height: 60,
+    marginTop: 10,
+    width: "95%",
+    borderWidth: 1,
+    borderColor: "#fff",
+  },
+  accountText: {
+    marginTop: 30,
+    textAlign: "center",
+    color: "#ffffff",
   },
 });
