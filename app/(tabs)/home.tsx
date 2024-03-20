@@ -64,48 +64,50 @@ const barberData = [
 
 export default function TabOneScreen() {
   return (
-    <ScrollView>
-      <View style={styles.container}>
-        <View>
-          <View style={styles.header}>
-            <View style={styles.greetingsContainer}>
-              <InitialsAvatar name="John Doe" size={40} />
-              <View>
-                <Text>Welcome back</Text>
-                <Text style={{ fontSize: 20, fontWeight: "600" }}>
-                  Diana Mugo
-                </Text>
-              </View>
+    <View style={{ flex: 1, marginTop: 36, alignItems: "center" }}>
+      <View
+        style={{
+          flex: 0.18,
+        }}
+      >
+        <View style={styles.header}>
+          <View style={styles.greetingsContainer}>
+            <InitialsAvatar name="John Doe" size={40} />
+            <View>
+              <Text>Welcome back</Text>
+              <Text style={{ fontSize: 20, fontWeight: "600" }}>
+                Diana Mugo
+              </Text>
             </View>
-            <MaterialIcons
-              name="notifications-none"
-              size={30}
-              color="#DB1471"
-            />
           </View>
-          <Text
-            style={{
-              textAlign: "center",
-              fontSize: 16,
-              fontWeight: "600",
-              marginBottom: 10,
-            }}
+          <MaterialIcons name="notifications-none" size={30} color="#DB1471" />
+        </View>
+        <Text
+          style={{
+            textAlign: "center",
+            fontSize: 16,
+            fontWeight: "600",
+            marginBottom: 10,
+          }}
+        >
+          Search
+        </Text>
+        <View style={styles.inputContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Search your services or treatments"
+            placeholderTextColor="#d0d0d0"
+            autoCapitalize="none"
+          />
+          <TouchableOpacity
+            onPress={() => console.log("Left password icon pressed")}
           >
-            Search
-          </Text>
-          <View style={styles.inputContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Search your services or treatments"
-              placeholderTextColor="#d0d0d0"
-              autoCapitalize="none"
-            />
-            <TouchableOpacity
-              onPress={() => console.log("Left password icon pressed")}
-            >
-              <MaterialIcons name="search" size={35} color="#d0d0d0" />
-            </TouchableOpacity>
-          </View>
+            <MaterialIcons name="search" size={35} color="#d0d0d0" />
+          </TouchableOpacity>
+        </View>
+      </View>
+      <View style={{ flex: 0.82, padding: 16, marginTop: 20 }}>
+        <ScrollView showsVerticalScrollIndicator={false}>
           <ViewShops title="Top SPAs" items={spaData} />
           <ViewShops title="Top Salons" items={salonData} />
           <ViewShops title="Top Barbershops" items={barberData} />
@@ -142,9 +144,9 @@ export default function TabOneScreen() {
               </TouchableOpacity>
             ))}
           </View>
-        </View>
+        </ScrollView>
       </View>
-    </ScrollView>
+    </View>
   );
 }
 

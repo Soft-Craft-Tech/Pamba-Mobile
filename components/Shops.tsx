@@ -1,6 +1,14 @@
-import { router, useLocalSearchParams } from "expo-router";
+import { Href, Link } from "expo-router";
 import React from "react";
-import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
+import {
+  View,
+  Text,
+  StyleSheet,
+  Image,
+  TouchableOpacity,
+  Pressable,
+  ScrollView,
+} from "react-native";
 
 interface ViewShopsProps {
   items: { imageSrc: any; subTitle: string; bgColor: string }[];
@@ -16,16 +24,24 @@ const ViewShops: React.FC<ViewShopsProps> = ({ title, items }) => {
       </View>
       <View style={styles.container}>
         {items.map(({ imageSrc, subTitle, bgColor }, index) => (
-          <TouchableOpacity
-            onPress={() => {}}
-            key={index}
-            style={[styles.itemContainer, { backgroundColor: bgColor }]}
-          >
-            <View style={styles.imageContainer}>
-              <Image source={imageSrc} />
-            </View>
-            <Text style={styles.subTitle}>{subTitle}</Text>
-          </TouchableOpacity>
+          <ScrollView key={index} horizontal>
+            <TouchableOpacity
+              style={[styles.itemContainer, { backgroundColor: bgColor }]}
+            >
+              <Link
+                href={
+                  {
+                    pathname: "shop/[id]",
+                    params: { id: 123 },
+                  } as Href<any>
+                }
+                style={styles.imageContainer}
+              >
+                <Image source={imageSrc} />
+              </Link>
+              <Text style={styles.subTitle}>{subTitle}</Text>
+            </TouchableOpacity>
+          </ScrollView>
         ))}
       </View>
     </View>

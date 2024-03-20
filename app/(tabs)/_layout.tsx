@@ -39,7 +39,7 @@ export default function TabLayout() {
           }}
         />
         <Tabs.Screen
-          name="modal"
+          name="shop/[id]"
           options={{
             title: "",
             headerShown: false,
