@@ -44,22 +44,62 @@ const InitialsAvatar: React.FC<InitialsAvatarProps> = ({ name, size }) => {
 };
 
 const spaData = [
-  { imageSrc: connectSpa, subTitle: "Connect Spa", bgColor: "#DB1471" },
-  { imageSrc: spa3, subTitle: "Flexi Spa", bgColor: "#0F1C35" },
-  { imageSrc: spa4, subTitle: "Spa & Relax", bgColor: "#DB1471" },
-  { imageSrc: spa5, subTitle: "Gogo Spa", bgColor: "#0F1C35" },
+  {
+    imageSrc: connectSpa,
+    subTitle: "Connect Spa",
+    bgColor: "#DB1471",
+    shopId: "an",
+  },
+  { imageSrc: spa3, subTitle: "Flexi Spa", bgColor: "#0F1C35", shopId: "bd" },
+  { imageSrc: spa4, subTitle: "Spa & Relax", bgColor: "#DB1471", shopId: "bd" },
+  { imageSrc: spa5, subTitle: "Gogo Spa", bgColor: "#0F1C35", shopId: "dhb" },
 ];
 const salonData = [
-  { imageSrc: salon, subTitle: "Gurl Salon", bgColor: "#DB1471" },
-  { imageSrc: salon1, subTitle: "Relax salon", bgColor: "#0F1C35" },
-  { imageSrc: salon2, subTitle: "Halton senior", bgColor: "#DB1471" },
-  { imageSrc: salon3, subTitle: "Pham salon", bgColor: "#0F1C35" },
+  { imageSrc: salon, subTitle: "Gurl Salon", bgColor: "#DB1471", shopId: "ie" },
+  {
+    imageSrc: salon1,
+    subTitle: "Relax salon",
+    bgColor: "#0F1C35",
+    shopId: "po",
+  },
+  {
+    imageSrc: salon2,
+    subTitle: "Halton senior",
+    bgColor: "#DB1471",
+    shopId: "er",
+  },
+  {
+    imageSrc: salon3,
+    subTitle: "Pham salon",
+    bgColor: "#0F1C35",
+    shopId: "ma",
+  },
 ];
 const barberData = [
-  { imageSrc: barber, subTitle: "Barbershop", bgColor: "#DB1471" },
-  { imageSrc: barber1, subTitle: "Flex barber", bgColor: "#0F1C35" },
-  { imageSrc: barber2, subTitle: "Halma barber", bgColor: "#DB1471" },
-  { imageSrc: barber3, subTitle: "BarberKIng", bgColor: "#0F1C35" },
+  {
+    imageSrc: barber,
+    subTitle: "Barbershop",
+    bgColor: "#DB1471",
+    shopId: "qw",
+  },
+  {
+    imageSrc: barber1,
+    subTitle: "Flex barber",
+    bgColor: "#0F1C35",
+    shopId: "li",
+  },
+  {
+    imageSrc: barber2,
+    subTitle: "Halma barber",
+    bgColor: "#DB1471",
+    shopId: "er",
+  },
+  {
+    imageSrc: barber3,
+    subTitle: "BarberKIng",
+    bgColor: "#0F1C35",
+    shopId: "ur",
+  },
 ];
 
 export default function TabOneScreen() {
@@ -67,7 +107,7 @@ export default function TabOneScreen() {
     <View style={{ flex: 1, marginTop: 36, alignItems: "center" }}>
       <View
         style={{
-          flex: 0.18,
+          flex: 0.2,
         }}
       >
         <View style={styles.header}>

@@ -1,17 +1,9 @@
 import { Href, Link } from "expo-router";
 import React from "react";
-import {
-  View,
-  Text,
-  StyleSheet,
-  Image,
-  TouchableOpacity,
-  Pressable,
-  ScrollView,
-} from "react-native";
+import { View, Text, StyleSheet, Image, TouchableOpacity } from "react-native";
 
 interface ViewShopsProps {
-  items: { imageSrc: any; subTitle: string; bgColor: string }[];
+  items: { imageSrc: any; subTitle: string; bgColor: string; shopId: string }[];
   title: string;
 }
 
@@ -23,25 +15,24 @@ const ViewShops: React.FC<ViewShopsProps> = ({ title, items }) => {
         <Text style={styles.headerText}>View All</Text>
       </View>
       <View style={styles.container}>
-        {items.map(({ imageSrc, subTitle, bgColor }, index) => (
-          <ScrollView key={index} horizontal>
-            <TouchableOpacity
-              style={[styles.itemContainer, { backgroundColor: bgColor }]}
+        {items.map(({ imageSrc, subTitle, bgColor, shopId }, index) => (
+          <TouchableOpacity
+            style={[styles.itemContainer, { backgroundColor: bgColor }]}
+            key={index}
+          >
+            <Link
+              href={
+                {
+                  pathname: "shop/[id]",
+                  params: { id: shopId },
+                } as Href<any>
+              }
+              style={styles.imageContainer}
             >
-              <Link
-                href={
-                  {
-                    pathname: "shop/[id]",
-                    params: { id: 123 },
-                  } as Href<any>
-                }
-                style={styles.imageContainer}
-              >
-                <Image source={imageSrc} />
-              </Link>
-              <Text style={styles.subTitle}>{subTitle}</Text>
-            </TouchableOpacity>
-          </ScrollView>
+              <Image source={imageSrc} />
+            </Link>
+            <Text style={styles.subTitle}>{subTitle}</Text>
+          </TouchableOpacity>
         ))}
       </View>
     </View>
@@ -81,9 +72,9 @@ const styles = StyleSheet.create({
   },
   imageContainer: {
     height: 50,
-    width: 48,
-    justifyContent: "center",
+    flex: 1,
     alignItems: "center",
+    justifyContent: "center",
   },
   subTitle: {
     fontSize: 9,
