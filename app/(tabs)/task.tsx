@@ -1,3 +1,5 @@
+import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 import React from "react";
 import {
   View,
@@ -8,6 +10,7 @@ import {
 } from "react-native";
 
 const NotificationsScreen = () => {
+  const navigation = useNavigation();
   const offers = [
     { title: "Oil Massage", description: "Lorem ipsum.Lom", price: 50 },
     { title: "Relaxing Massage", description: "Lorem ipsum.Lom", price: 50 },
@@ -20,6 +23,13 @@ const NotificationsScreen = () => {
 
   return (
     <View style={styles.container}>
+      <View style={styles.header}>
+        <TouchableOpacity onPress={() => navigation.goBack()}>
+          <MaterialIcons name="arrow-back" size={24} />
+        </TouchableOpacity>
+        <Text style={styles.headerText}>Notifications</Text>
+        <Text></Text>
+      </View>
       <Text style={styles.heading}>Today's Offers</Text>
       <ScrollView showsVerticalScrollIndicator={false}>
         {offers.map((offer, index) => (
@@ -50,6 +60,16 @@ const styles = StyleSheet.create({
     fontSize: 20,
     fontWeight: "bold",
     marginBottom: 16,
+  },
+  header: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    height: 60,
+  },
+  headerText: {
+    fontSize: 20,
+    fontWeight: "bold",
+    marginRight: 30,
   },
   offerContainer: {
     backgroundColor: "#ffffff",
