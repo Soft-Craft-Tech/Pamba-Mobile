@@ -1,5 +1,5 @@
 import { MaterialIcons } from "@expo/vector-icons";
-import { useNavigation } from "expo-router";
+import { Link, useNavigation } from "expo-router";
 import React from "react";
 import {
   View,
@@ -7,8 +7,8 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
-  Image,
   ImageSourcePropType,
+  Pressable,
 } from "react-native";
 
 const salon = require("../../assets/images/salon.png");
@@ -49,8 +49,6 @@ const services: Service[] = [
   { id: 3, name: "Hairdrty", icon: salon2 },
   { id: 4, name: "Shamp", icon: salon3 },
 ];
-
-const categories: string[] = ["Care", "Pedicure", "Straig", "Make"];
 
 const getCurrentMonthAndYear = () => {
   const months = [
@@ -103,21 +101,17 @@ export default function TabThreeScreen() {
       ]}
       onPress={() => setSelectedTime(item)}
     >
-      <Text style={styles.timeSlotText}>{item}</Text>
+      <Text
+        style={
+          (styles.timeSlotText,
+          item === selectedTime && styles.selectedTimeSlotText)
+        }
+      >
+        {item}
+      </Text>
     </TouchableOpacity>
   );
 
-  const renderService = ({ item }: { item: Service }) => (
-    <TouchableOpacity
-      style={[
-        styles.serviceIcon,
-        item.id === selectedService.id && styles.selectedServiceIcon,
-      ]}
-      onPress={() => setSelectedService(item)}
-    >
-      <Image source={item.icon} style={styles.icon} />
-    </TouchableOpacity>
-  );
   const renderWeekDay = ({ item }: { item: { day: string; date: string } }) => {
     const currentDate = new Date().getDate();
     const itemDate = parseInt(item.date.trim());
@@ -175,29 +169,35 @@ export default function TabThreeScreen() {
       </View>
       <View style={styles.lowerContainer}>
         <Text style={styles.heading}>Choose Appropriate Time</Text>
-        <FlatList
-          data={timeSlots}
-          renderItem={renderTimeSlot}
-          keyExtractor={(item) => item}
-          numColumns={3}
-        />
-        <FlatList
-          data={services}
-          renderItem={renderService}
-          keyExtractor={(item) => item.id.toString()}
-          horizontal
-          showsHorizontalScrollIndicator={false}
-        />
-        <View style={styles.categoryContainer}>
-          {categories.map((category) => (
-            <Text key={category} style={styles.category}>
-              {category}
-            </Text>
-          ))}
+        <View
+          style={{
+            backgroundColor: "#fff",
+            marginTop: 10,
+            borderRadius: 10,
+            alignItems: "center",
+            justifyContent: "center",
+            shadowColor: "#000",
+            shadowOffset: {
+              width: 0,
+              height: 2,
+            },
+            shadowOpacity: 0.25,
+            shadowRadius: 3.84,
+            elevation: 2,
+          }}
+        >
+          <FlatList
+            data={timeSlots}
+            renderItem={renderTimeSlot}
+            keyExtractor={(item) => item}
+            numColumns={3}
+          />
         </View>
-        <TouchableOpacity style={styles.bookButton}>
-          <Text style={styles.bookButtonText}>BOOK NOW</Text>
-        </TouchableOpacity>
+        <Link href="/success" style={styles.bookButton} asChild>
+          <Pressable onPress={() => {}}>
+            <Text style={styles.bookButtonText}>BOOK NOW</Text>
+          </Pressable>
+        </Link>
       </View>
     </View>
   );
@@ -208,11 +208,10 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingHorizontal: 16,
     backgroundColor: "#fff",
-    justifyContent: "center",
+    paddingVertical: 5,
   },
   header: {
     flexDirection: "row",
-    alignItems: "center",
     justifyContent: "space-between",
     height: 60,
     paddingHorizontal: 10,
@@ -237,14 +236,15 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginHorizontal: 4,
     marginVertical: 8,
-    backgroundColor: "#F5F5F5",
+    borderWidth: 1,
+    borderColor: "#C1B9BB",
   },
   selectedTimeSlot: {
-    backgroundColor: "#FF69B4",
+    backgroundColor: "#E41A4C",
   },
   timeSlotText: {
     fontSize: 16,
-    color: "#333",
+    color: "#C1B9BB",
   },
   serviceIcon: {
     padding: 12,
@@ -260,7 +260,7 @@ const styles = StyleSheet.create({
   lowerContainer: {
     paddingHorizontal: 8,
   },
-
+  selectedTimeSlotText: { color: "#fff" },
   weekDateContainer: {
     backgroundColor: "#fff",
     marginTop: 10,
@@ -316,9 +316,10 @@ const styles = StyleSheet.create({
     color: "#FF69B4",
   },
   bookButton: {
-    backgroundColor: "#FF69B4",
+    backgroundColor: "#E41A4C",
     paddingVertical: 16,
-    borderRadius: 8,
+    borderRadius: 10,
+    marginTop: 10,
   },
   bookButtonText: {
     color: "#fff",
