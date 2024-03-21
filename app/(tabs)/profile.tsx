@@ -1,14 +1,16 @@
 import CancelButton from "@/components/CancelButton";
 import { MaterialIcons } from "@expo/vector-icons";
+import { useNavigation } from "expo-router";
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
 const Profile = () => {
+  const navigation = useNavigation();
   return (
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Settings</Text>
-        <CancelButton onPress={() => {}} />
+        <CancelButton onPress={() => navigation.goBack()} />
       </View>
       <View
         style={{
