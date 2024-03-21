@@ -173,30 +173,32 @@ export default function TabThreeScreen() {
           showsHorizontalScrollIndicator={false}
         />
       </View>
-      <Text style={styles.heading}>Choose Appropriate Time</Text>
-      <FlatList
-        data={timeSlots}
-        renderItem={renderTimeSlot}
-        keyExtractor={(item) => item}
-        numColumns={3}
-      />
-      <FlatList
-        data={services}
-        renderItem={renderService}
-        keyExtractor={(item) => item.id.toString()}
-        horizontal
-        showsHorizontalScrollIndicator={false}
-      />
-      <View style={styles.categoryContainer}>
-        {categories.map((category) => (
-          <Text key={category} style={styles.category}>
-            {category}
-          </Text>
-        ))}
+      <View style={styles.lowerContainer}>
+        <Text style={styles.heading}>Choose Appropriate Time</Text>
+        <FlatList
+          data={timeSlots}
+          renderItem={renderTimeSlot}
+          keyExtractor={(item) => item}
+          numColumns={3}
+        />
+        <FlatList
+          data={services}
+          renderItem={renderService}
+          keyExtractor={(item) => item.id.toString()}
+          horizontal
+          showsHorizontalScrollIndicator={false}
+        />
+        <View style={styles.categoryContainer}>
+          {categories.map((category) => (
+            <Text key={category} style={styles.category}>
+              {category}
+            </Text>
+          ))}
+        </View>
+        <TouchableOpacity style={styles.bookButton}>
+          <Text style={styles.bookButtonText}>BOOK NOW</Text>
+        </TouchableOpacity>
       </View>
-      <TouchableOpacity style={styles.bookButton}>
-        <Text style={styles.bookButtonText}>BOOK NOW</Text>
-      </TouchableOpacity>
     </View>
   );
 }
@@ -222,8 +224,8 @@ const styles = StyleSheet.create({
   },
   heading: {
     fontSize: 18,
-    fontWeight: "bold",
-    marginVertical: 16,
+    fontWeight: "500",
+    color: "#302C2D",
   },
   monthText: {
     textAlign: "center",
@@ -255,6 +257,10 @@ const styles = StyleSheet.create({
     borderRadius: 8,
     marginBottom: 16,
   },
+  lowerContainer: {
+    paddingHorizontal: 8,
+  },
+
   weekDateContainer: {
     backgroundColor: "#fff",
     marginTop: 10,
