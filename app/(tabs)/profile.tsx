@@ -1,3 +1,5 @@
+import CancelButton from "@/components/CancelButton";
+import { MaterialIcons } from "@expo/vector-icons";
 import React from "react";
 import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
 
@@ -6,9 +8,7 @@ const Profile = () => {
     <View style={styles.container}>
       <View style={styles.header}>
         <Text style={styles.headerText}>Settings</Text>
-        <TouchableOpacity>
-          <Text style={styles.closeButton}>X</Text>
-        </TouchableOpacity>
+        <CancelButton onPress={() => {}} />
       </View>
       <View
         style={{
@@ -30,32 +30,75 @@ const Profile = () => {
           <Text style={styles.editProfileButton}>Edit Profile</Text>
         </TouchableOpacity>
       </View>
-
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: "400",
+          color: "#667085",
+          marginTop: 10,
+          paddingHorizontal: 10,
+        }}
+      >
+        ACCOUNT
+      </Text>
       <View style={styles.ProfileOptions}>
         <TouchableOpacity style={styles.optionRow}>
-          <Text style={styles.optionText}>Notification</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <MaterialIcons name="notifications" size={20} />
+            <Text style={styles.optionText}>Notification</Text>
+          </View>
+          <MaterialIcons name="chevron-right" size={23} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.optionRow}>
-          <Text style={styles.optionText}>Payment Method</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <MaterialIcons name="shopping-bag" size={20} />
+            <Text style={styles.optionText}>Payment Method</Text>
+          </View>
+          <MaterialIcons name="chevron-right" size={23} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.optionRow}>
-          <Text style={styles.optionText}>Security</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <MaterialIcons name="lock" size={20} />
+            <Text style={styles.optionText}>Security</Text>
+          </View>
+          <MaterialIcons name="chevron-right" size={23} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.optionRow}>
-          <Text style={styles.optionText}>Linked Devices</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <MaterialIcons name="dataset-linked" size={20} />
+            <Text style={styles.optionText}>Linked Devices</Text>
+          </View>
+          <MaterialIcons name="chevron-right" size={23} />
         </TouchableOpacity>
       </View>
-
-      <View style={styles.appOptions}>
+      <Text
+        style={{
+          fontSize: 12,
+          fontWeight: "400",
+          color: "#667085",
+          paddingHorizontal: 10,
+        }}
+      >
+        APPS
+      </Text>
+      <View style={styles.ProfileOptions}>
         <TouchableOpacity style={styles.optionRow}>
-          <Text style={styles.optionText}>Privacy & Policy</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <MaterialIcons name="notifications" size={20} />
+            <Text style={styles.optionText}>Privacy & Policy</Text>
+          </View>
+          <MaterialIcons name="chevron-right" size={23} />
         </TouchableOpacity>
         <TouchableOpacity style={styles.optionRow}>
-          <Text style={styles.optionText}>Terms & Conditions</Text>
+          <View style={{ flexDirection: "row", alignItems: "center", gap: 10 }}>
+            <MaterialIcons name="shopping-bag" size={20} />
+            <Text style={styles.optionText}>Terms & Conditions</Text>
+          </View>
+          <MaterialIcons name="chevron-right" size={23} />
         </TouchableOpacity>
       </View>
-
       <TouchableOpacity style={styles.deactivateButton}>
+        <MaterialIcons name="delete-outline" size={20} color="#DB1471" />
         <Text style={styles.deactivateButtonText}>Deactivate Account</Text>
       </TouchableOpacity>
     </View>
@@ -91,7 +134,7 @@ const styles = StyleSheet.create({
     width: 48,
     height: 48,
     borderRadius: 24,
-    backgroundColor: "#ccc",
+    backgroundColor: "black",
     justifyContent: "center",
     alignItems: "center",
     marginRight: 16,
@@ -99,7 +142,7 @@ const styles = StyleSheet.create({
   userInitials: {
     fontSize: 20,
     fontWeight: "bold",
-    color: "#fff",
+    color: "#DB1471",
   },
   editButton: {
     padding: 5,
@@ -120,11 +163,18 @@ const styles = StyleSheet.create({
   },
   ProfileOptions: {
     marginBottom: 24,
+    marginTop: 10,
+    backgroundColor: "#F9FAFB",
+    borderRadius: 10,
+    paddingHorizontal: 20,
   },
   optionRow: {
     paddingVertical: 12,
     borderBottomWidth: 1,
     borderBottomColor: "#ddd",
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   optionText: {
     fontSize: 16,
@@ -133,12 +183,16 @@ const styles = StyleSheet.create({
     marginBottom: 24,
   },
   deactivateButton: {
-    backgroundColor: "#FF3B30",
-    paddingVertical: 12,
-    borderRadius: 8,
+    backgroundColor: "#FDEBEB",
+    borderRadius: 20,
+    justifyContent: "center",
+    alignItems: "center",
+    flexDirection: "row",
+    paddingVertical: 10,
+    gap: 10,
   },
   deactivateButtonText: {
-    color: "#fff",
+    color: "#DB1471",
     textAlign: "center",
     fontSize: 16,
     fontWeight: "bold",
