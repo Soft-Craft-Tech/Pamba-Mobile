@@ -6,9 +6,11 @@ import {
   TextInput,
   Image,
   ScrollView,
+  Keyboard,
 } from "react-native";
 import { MaterialIcons } from "@expo/vector-icons";
 import ViewShops from "@/components/Shops";
+import { useEffect, useState } from "react";
 
 const bagLogo = require("../../assets/images/bag.png");
 const connectSpa = require("../../assets/images/connectSpa.png");
@@ -103,11 +105,36 @@ const barberData = [
 ];
 
 export default function TabOneScreen() {
+  const [isFocused, setIsFocused] = useState(false);
+
+  const [, setKeyboardHeight] = useState(0);
+
+  useEffect(() => {
+    const keyboardDidShowListener = Keyboard.addListener(
+      "keyboardDidShow",
+      (event: any) => {
+        setKeyboardHeight(event.endCoordinates.height);
+        setIsFocused(true);
+      }
+    );
+
+    const keyboardDidHideListener = Keyboard.addListener(
+      "keyboardDidHide",
+      () => {
+        setKeyboardHeight(0);
+        setIsFocused(false);
+      }
+    );
+    return () => {
+      keyboardDidShowListener.remove();
+      keyboardDidHideListener.remove();
+    };
+  }, []);
   return (
     <View style={{ flex: 1, marginTop: 36, alignItems: "center" }}>
       <View
         style={{
-          flex: 0.2,
+          flex: isFocused ? 0.4 : 0.2,
         }}
       >
         <View style={styles.header}>
