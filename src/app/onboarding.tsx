@@ -1,3 +1,4 @@
+import { router } from 'expo-router';
 import React, { useEffect, useState } from 'react';
 import {
   Animated,
@@ -8,8 +9,10 @@ import {
   View,
 } from 'react-native';
 
+import { Button, FocusAwareStatusBar, Image } from '@/ui';
 const CarouselOne = require('../../assets/CarouselOne.jpeg');
 const CarouselTwo = require('../../assets/CarouselTwo.jpeg');
+const Logo = require('../../assets/transparentLogo.png');
 
 type ImageSource = number | { uri: string };
 
@@ -43,6 +46,7 @@ const OnboardingCarousel: React.FC = () => {
 
   return (
     <View style={styles.container}>
+      <FocusAwareStatusBar />
       <ImageCarousel activeSlide={activeSlide} fadeAnim={fadeAnim} />
       <PaginationDots activeSlide={activeSlide} />
     </View>
@@ -57,11 +61,24 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
     <Animated.View style={[styles.imageContainer, { opacity: fadeAnim }]}>
       <ImageBackground source={images[activeSlide]} style={styles.image}>
         <View style={styles.content}>
-          <Text style={styles.title}>Where Style Meets Convenience</Text>
-          <Text style={styles.description}>
-            Enjoy a seamless and efficient way to book your Spa, Salon, or
-            Barber sessions with Pamba!
-          </Text>
+          <Image
+            className="h-[90px] w-[169px] overflow-hidden rounded-t-xl"
+            source={Logo}
+          />
+          <View>
+            <Text style={styles.title}>Where Style Meets Convenience</Text>
+            <Text style={styles.description}>
+              Enjoy a seamless and efficient way to book your Spa, Salon, or
+              Barber sessions with Pamba!
+            </Text>
+            <Button
+              label="Join Our Family"
+              onPress={() => {
+                router.replace('/landing');
+              }}
+              testID="Join Our Family"
+            />
+          </View>
         </View>
       </ImageBackground>
     </Animated.View>
@@ -103,7 +120,8 @@ const styles = StyleSheet.create({
   },
   content: {
     flex: 1,
-    justifyContent: 'center',
+    justifyContent: 'space-evenly',
+
     alignItems: 'center',
     paddingHorizontal: 20,
   },
@@ -125,19 +143,19 @@ const styles = StyleSheet.create({
     justifyContent: 'center',
     alignItems: 'center',
     position: 'absolute',
-    bottom: 20,
+    bottom: '20%',
     left: 0,
     right: 0,
   },
   paginationDot: {
-    width: 8,
-    height: 8,
+    width: 24,
+    height: 4,
     borderRadius: 4,
     backgroundColor: 'rgba(255, 255, 255, 0.5)',
     marginHorizontal: 4,
   },
   activePaginationDot: {
-    backgroundColor: 'rgba(255, 255, 255, 0.92)',
+    backgroundColor: '#DB1471',
   },
 });
 

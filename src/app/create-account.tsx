@@ -2,12 +2,12 @@ import { useRouter } from 'expo-router';
 import React from 'react';
 
 import type { LoginFormProps } from '@/components/login-form';
-import { LoginForm } from '@/components/login-form';
+import { SignUpForm } from '@/components/signup-form';
 import { useAuth } from '@/core';
 import { useSoftKeyboardEffect } from '@/core/keyboard';
-import { FocusAwareStatusBar, View } from '@/ui';
+import { FocusAwareStatusBar } from '@/ui';
 
-export default function Login() {
+export default function CreateAccount() {
   const router = useRouter();
   const signIn = useAuth.use.signIn();
   useSoftKeyboardEffect();
@@ -18,9 +18,9 @@ export default function Login() {
     router.push('/');
   };
   return (
-    <View className="flex-1 justify-center bg-[#0F1C35] p-4">
+    <>
       <FocusAwareStatusBar />
-      <LoginForm onSubmit={onSubmit} />
-    </View>
+      <SignUpForm onSubmit={onSubmit} />
+    </>
   );
 }

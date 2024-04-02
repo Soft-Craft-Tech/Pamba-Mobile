@@ -2,12 +2,9 @@ import { zodResolver } from '@hookform/resolvers/zod';
 import React from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
-import { Dimensions, StyleSheet } from 'react-native';
 import * as z from 'zod';
 
-import { Button, ControlledInput, Image, View } from '@/ui';
-
-const Logo = require('../../assets/transparentLogo.png');
+import { Button, ControlledInput, Text, View } from '@/ui';
 
 const schema = z.object({
   name: z.string().optional(),
@@ -25,30 +22,33 @@ const schema = z.object({
 
 export type FormType = z.infer<typeof schema>;
 
-export type LoginFormProps = {
+export type SignUpProps = {
   onSubmit?: SubmitHandler<FormType>;
 };
 
-export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
+export const SignUpForm = ({ onSubmit = () => {} }: SignUpProps) => {
   const { handleSubmit, control } = useForm<FormType>({
     resolver: zodResolver(schema),
   });
   return (
     <View className="flex-1 justify-center p-4">
-      <View style={styles.logoContent}>
-        <Image
-          className="h-[90px] w-[169px] overflow-hidden rounded-t-xl"
-          source={Logo}
-        />
-      </View>
+      <Text testID="form-title" className="pb-6 text-center text-2xl">
+        Sign In
+      </Text>
+
+      <ControlledInput
+        testID="name"
+        control={control}
+        name="name"
+        label="Name"
+      />
+
       <ControlledInput
         testID="email-input"
         control={control}
         name="email"
         label="Email"
-        // labelIcon={<FontAwesome6 name="user" size={24} color="black" />}
       />
-
       <ControlledInput
         testID="password-input"
         control={control}
@@ -57,30 +57,11 @@ export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
         placeholder="***"
         secureTextEntry={true}
       />
-      <View className="mt-14">
-        <Button
-          testID="login-button"
-          label="Login"
-          onPress={handleSubmit(onSubmit)}
-        />
-      </View>
+      <Button
+        testID="login-button"
+        label="Login"
+        onPress={handleSubmit(onSubmit)}
+      />
     </View>
   );
 };
-const styles = StyleSheet.create({
-  image: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'space-evenly',
-    paddingHorizontal: 40,
-  },
-  logoContent: {
-    alignItems: 'center',
-    marginBottom: '20%',
-  },
-});
