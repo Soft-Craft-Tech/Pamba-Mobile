@@ -4,7 +4,7 @@ import { Dimensions, ImageBackground, StyleSheet } from 'react-native';
 
 import { Button, Image, View } from '@/ui';
 
-const CarouselOne = require('../../assets/CarouselOne.jpeg');
+const CarouselOne = require('../../assets/landing.jpg');
 const Logo = require('../../assets/transparentLogo.png');
 
 export default function Landing() {
@@ -18,8 +18,7 @@ export default function Landing() {
               source={Logo}
             />
           </View>
-
-          <View className="">
+          <View>
             <Button
               testID="login-button"
               onPress={() => {

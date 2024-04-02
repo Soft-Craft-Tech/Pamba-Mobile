@@ -1,4 +1,5 @@
 import { zodResolver } from '@hookform/resolvers/zod';
+import { router } from 'expo-router';
 import React from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
@@ -29,7 +30,11 @@ export type LoginFormProps = {
   onSubmit?: SubmitHandler<FormType>;
 };
 
-export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
+export const LoginForm = ({
+  onSubmit = () => {
+    router.replace('/feed/add-post');
+  },
+}: LoginFormProps) => {
   const { handleSubmit, control } = useForm<FormType>({
     resolver: zodResolver(schema),
   });

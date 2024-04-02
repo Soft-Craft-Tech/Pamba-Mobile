@@ -69,30 +69,32 @@ export const Input = React.forwardRef<TextInput, NInputProps>((props, ref) => {
   );
 
   return (
-    <View className={styles.container()}>
-      {icon && <View className={styles.iconContainer()}>{icon}</View>}
-      <TextInput
-        testID={testID}
-        ref={ref}
-        placeholderTextColor={colors.neutral[400]}
-        className={styles.input()}
-        onBlur={onBlur}
-        onFocus={onFocus}
-        {...inputProps}
-      >
-        {label && (
-          <Text
-            testID={testID ? `${testID}-label` : undefined}
-            className={styles.label()}
-          >
-            {label}
-          </Text>
-        )}
-      </TextInput>
+    <View>
+      <View className={styles.container()}>
+        {icon && <View className={styles.iconContainer()}>{icon}</View>}
+        <TextInput
+          testID={testID}
+          ref={ref}
+          placeholderTextColor={colors.neutral[400]}
+          className={styles.input()}
+          onBlur={onBlur}
+          onFocus={onFocus}
+          {...inputProps}
+        >
+          {label && (
+            <Text
+              testID={testID ? `${testID}-label` : undefined}
+              className={styles.label()}
+            >
+              {label}
+            </Text>
+          )}
+        </TextInput>
+      </View>
       {error && (
         <Text
           testID={testID ? `${testID}-error` : undefined}
-          className="text-sm text-danger-400 dark:text-danger-600"
+          className="mb-2 text-sm text-white"
         >
           {error}
         </Text>
