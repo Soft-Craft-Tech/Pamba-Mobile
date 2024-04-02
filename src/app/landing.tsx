@@ -1,6 +1,7 @@
 import { router } from 'expo-router';
 import React from 'react';
 import { Dimensions, ImageBackground, StyleSheet } from 'react-native';
+import Svg, { Defs, Path, RadialGradient, Stop } from 'react-native-svg';
 
 import { Button, Image, View } from '@/ui';
 
@@ -18,6 +19,31 @@ export default function Landing() {
               source={Logo}
             />
           </View>
+          <Svg style={styles.overlay}>
+            <Defs>
+              <RadialGradient id="gradient" cx="50%" cy="50%" r="50%">
+                <Stop offset="0%" stopColor="#FFFFFF" />
+                <Stop offset="100%" stopColor="#FFFFFF" />
+              </RadialGradient>
+            </Defs>
+            <Path
+              d={`
+    M 0 0
+    Q ${Dimensions.get('window').width * 0.5} ${
+                Dimensions.get('window').height * 0.1
+              },
+    ${Dimensions.get('window').width * 0.2} 0
+    T ${Dimensions.get('window').width * 0.95} ${
+                Dimensions.get('window').height * 0.1
+              }
+    ${Dimensions.get('window').width} 0
+    V ${Dimensions.get('window').height}
+    H 0
+    Z
+  `}
+              fill="url(#gradient)"
+            />
+          </Svg>
           <View>
             <Button
               testID="login-button"
@@ -55,5 +81,14 @@ const styles = StyleSheet.create({
   },
   logoContent: {
     alignItems: 'center',
+  },
+  overlay: {
+    position: 'absolute',
+    bottom: 0,
+    left: 0,
+    right: 0,
+    height: '50%',
+    alignItems: 'center',
+    justifyContent: 'center',
   },
 });
