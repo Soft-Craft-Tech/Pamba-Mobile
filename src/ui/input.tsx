@@ -117,21 +117,27 @@ export type InputControllerType<T extends FieldValues> = {
 interface ControlledInputProps<T extends FieldValues>
   extends NInputProps,
     InputControllerType<T> {}
-
 export function ControlledInput<T extends FieldValues>(
   props: ControlledInputProps<T>
 ) {
-  const { name, control, rules, ...inputProps } = props;
+  const { name, control, rules, label, ...inputProps } = props;
   const { field, fieldState } = useController({ control, name, rules });
 
   return (
-    <Input
-      ref={field.ref}
-      autoCapitalize="none"
-      onChangeText={field.onChange}
-      value={field.value as string}
-      {...inputProps}
-      error={fieldState.error?.message}
-    />
+    <View>
+      {label && (
+        <Text testID={`${props.testID}-label`} className="text-white">
+          {label}
+        </Text>
+      )}
+      <Input
+        ref={field.ref}
+        autoCapitalize="none"
+        onChangeText={field.onChange}
+        value={field.value as string}
+        {...inputProps}
+        error={fieldState.error?.message}
+      />
+    </View>
   );
 }
