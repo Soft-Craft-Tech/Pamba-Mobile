@@ -14,7 +14,7 @@ const button = tv({
   variants: {
     variant: {
       default: {
-        container: 'bg-black dark:bg-white',
+        container: 'bg-[#DB1471] h-[56px]',
         label: 'text-white dark:text-black',
         indicator: 'text-white dark:text-black',
       },
@@ -34,9 +34,9 @@ const button = tv({
         indicator: 'text-white',
       },
       ghost: {
-        container: 'bg-transparent',
-        label: 'text-black underline dark:text-white',
-        indicator: 'text-black dark:text-white',
+        container: 'bg-[#fff] border-solid border-2 border-[#0F1C35]',
+        label: 'text-black',
+        indicator: 'text-black',
       },
       link: {
         container: 'bg-transparent',
