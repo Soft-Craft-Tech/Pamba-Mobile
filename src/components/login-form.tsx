@@ -1,14 +1,11 @@
 import { zodResolver } from '@hookform/resolvers/zod';
-import { router } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
-import { Dimensions, StyleSheet } from 'react-native';
 import * as z from 'zod';
 
-import { Button, ControlledInput, Image, View } from '@/ui';
-
-const Logo = require('../../assets/transparentLogo.png');
+import { Button, ControlledInput, Pressable, Text, View } from '@/ui';
 
 const schema = z.object({
   name: z.string().optional(),
@@ -30,30 +27,30 @@ export type LoginFormProps = {
   onSubmit?: SubmitHandler<FormType>;
 };
 
-export const LoginForm = ({
-  onSubmit = () => {
-    router.replace('/feed/add-post');
-  },
-}: LoginFormProps) => {
+export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
+  const router = useRouter();
   const { handleSubmit, control } = useForm<FormType>({
     resolver: zodResolver(schema),
   });
   return (
     <View className="flex-1 justify-center p-4">
-      <View style={styles.logoContent}>
-        <Image
-          className="h-[90px] w-[169px] overflow-hidden rounded-t-xl"
-          source={Logo}
-        />
-      </View>
+      <Text testID="form-title" className="pb-6 text-center text-2xl">
+        Sign In
+      </Text>
+
+      <ControlledInput
+        testID="name"
+        control={control}
+        name="name"
+        label="Name"
+      />
+
       <ControlledInput
         testID="email-input"
         control={control}
         name="email"
         label="Email"
-        // labelIcon={<FontAwesome6 name="user" size={24} color="black" />}
       />
-
       <ControlledInput
         testID="password-input"
         control={control}
@@ -62,30 +59,23 @@ export const LoginForm = ({
         placeholder="***"
         secureTextEntry={true}
       />
-      <View className="mt-14">
-        <Button
-          testID="login-button"
-          label="Login"
-          onPress={handleSubmit(onSubmit)}
-        />
-      </View>
+      <Button
+        testID="login-button"
+        label="Login"
+        onPress={handleSubmit(onSubmit)}
+      />
+      <Link href="/forgot-password" asChild>
+        <Pressable>
+          <Text className="px-3 text-primary-300">Forgot Password</Text>
+        </Pressable>
+      </Link>
+      <Button
+        testID="login-button"
+        label="Sign Up"
+        onPress={() => {
+          router.replace('/create-account');
+        }}
+      />
     </View>
   );
 };
-const styles = StyleSheet.create({
-  image: {
-    width: Dimensions.get('window').width,
-    height: Dimensions.get('window').height,
-    resizeMode: 'cover',
-    justifyContent: 'center',
-  },
-  content: {
-    flex: 1,
-    justifyContent: 'space-evenly',
-    paddingHorizontal: 40,
-  },
-  logoContent: {
-    alignItems: 'center',
-    marginBottom: '20%',
-  },
-});

@@ -38,7 +38,9 @@ function RootLayoutNav() {
         <Stack.Screen name="(app)" options={{ headerShown: false }} />
         <Stack.Screen name="onboarding" options={{ headerShown: false }} />
         <Stack.Screen name="login" options={{ headerShown: false }} />
-        <Stack.Screen name="landing" options={{ headerShown: false }} />
+        <Stack.Screen name="create-account" options={{ headerShown: false }} />
+        <Stack.Screen name="forgot-password" options={{ headerShown: false }} />
+        <Stack.Screen name="reset-password" options={{ headerShown: false }} />
       </Stack>
     </Providers>
   );
@@ -46,9 +48,11 @@ function RootLayoutNav() {
 
 function Providers({ children }: { children: React.ReactNode }) {
   const theme = useThemeConfig();
-
   return (
-    <GestureHandlerRootView style={styles.container}>
+    <GestureHandlerRootView
+      style={styles.container}
+      className={theme.dark ? `dark` : undefined}
+    >
       <ThemeProvider value={theme}>
         <APIProvider>
           <BottomSheetModalProvider>

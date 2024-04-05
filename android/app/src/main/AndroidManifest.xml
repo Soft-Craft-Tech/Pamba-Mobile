@@ -25,8 +25,8 @@
         <action android:name="android.intent.action.VIEW"/>
         <category android:name="android.intent.category.DEFAULT"/>
         <category android:name="android.intent.category.BROWSABLE"/>
-        <data android:scheme="Pamba"/>
-        <data android:scheme="com.pamba.development"/>
+        <data android:scheme="revamp"/>
+        <data android:scheme="com.revamp.development"/>
         <data android:scheme="exp+obytesapp"/>
       </intent-filter>
     </activity>

@@ -1,26 +1,24 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 
-import type { LoginFormProps } from '@/components/login-form';
-import { SignUpForm } from '@/components/signup-form';
-import { useAuth } from '@/core';
-import { useSoftKeyboardEffect } from '@/core/keyboard';
-import { FocusAwareStatusBar } from '@/ui';
+import { Button, FocusAwareStatusBar, Text, View } from '@/ui';
 
 export default function CreateAccount() {
   const router = useRouter();
-  const signIn = useAuth.use.signIn();
-  useSoftKeyboardEffect();
 
-  const onSubmit: LoginFormProps['onSubmit'] = (data) => {
-    console.log(data);
-    signIn({ access: 'access-token', refresh: 'refresh-token' });
-    router.push('/');
-  };
   return (
     <>
       <FocusAwareStatusBar />
-      <SignUpForm onSubmit={onSubmit} />
+      <View className="flex-1 justify-center p-4">
+        <Text>Forgot</Text>
+        <Button
+          testID="login-button"
+          label="REGISTER NOW"
+          onPress={() => {
+            router.replace('/');
+          }}
+        />
+      </View>
     </>
   );
 }

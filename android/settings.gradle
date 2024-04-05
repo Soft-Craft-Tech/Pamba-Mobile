@@ -1,4 +1,4 @@
-rootProject.name = 'Pamba'
+rootProject.name = 'revamp'
 
 dependencyResolutionManagement {
   versionCatalogs {
