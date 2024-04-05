@@ -9,11 +9,9 @@ import { Button, ControlledInput, Image, Pressable, Text, View } from '@/ui';
 const Logo = require('../../assets/transparentLogo.png');
 
 const schema = z.object({
-  email: z
-    .string({
-      required_error: 'Email is required',
-    })
-    .email('Invalid email format'),
+  email: z.string({
+    required_error: 'Email is required',
+  }),
   password: z
     .string({
       required_error: 'Password is required',

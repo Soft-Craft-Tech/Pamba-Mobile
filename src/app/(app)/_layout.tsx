@@ -4,11 +4,9 @@ import React, { useCallback, useEffect } from 'react';
 
 import { useAuth, useIsFirstTime } from '@/core';
 import { Pressable, Text } from '@/ui';
-import {
-  Feed as FeedIcon,
-  Settings as SettingsIcon,
-  Style as StyleIcon,
-} from '@/ui/icons';
+import { Home as HomeIcon, Settings as SettingsIcon } from '@/ui/icons';
+import { AppointmentSvg } from '@/ui/icons/appointment';
+import { SearchSvg } from '@/ui/icons/search';
 
 export default function TabLayout() {
   const status = useAuth.use.status();
@@ -35,20 +33,29 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Feed',
-          tabBarIcon: ({ color }) => <FeedIcon color={color} />,
+          title: 'Home',
+          tabBarIcon: ({ color }) => <HomeIcon color={color} />,
           headerRight: () => <CreateNewPostLink />,
           tabBarTestID: 'feed-tab',
         }}
       />
 
       <Tabs.Screen
-        name="style"
+        name="search"
         options={{
-          title: 'Style',
+          title: 'Search',
           headerShown: false,
-          tabBarIcon: ({ color }) => <StyleIcon color={color} />,
+          tabBarIcon: ({ color }) => <SearchSvg color={color} />,
           tabBarTestID: 'style-tab',
+        }}
+      />
+      <Tabs.Screen
+        name="appointments"
+        options={{
+          title: 'Appointments',
+          headerShown: false,
+          tabBarIcon: ({ color }) => <AppointmentSvg color={color} />,
+          tabBarTestID: 'settings-tab',
         }}
       />
       <Tabs.Screen
