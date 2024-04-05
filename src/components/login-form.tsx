@@ -5,10 +5,10 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Button, ControlledInput, Pressable, Text, View } from '@/ui';
+import { Button, ControlledInput, Image, Pressable, Text, View } from '@/ui';
+const Logo = require('../../assets/transparentLogo.png');
 
 const schema = z.object({
-  name: z.string().optional(),
   email: z
     .string({
       required_error: 'Email is required',
@@ -33,49 +33,61 @@ export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
     resolver: zodResolver(schema),
   });
   return (
-    <View className="flex-1 justify-center p-4">
-      <Text testID="form-title" className="pb-6 text-center text-2xl">
-        Sign In
-      </Text>
-
-      <ControlledInput
-        testID="name"
-        control={control}
-        name="name"
-        label="Name"
-      />
-
-      <ControlledInput
-        testID="email-input"
-        control={control}
-        name="email"
-        label="Email"
-      />
-      <ControlledInput
-        testID="password-input"
-        control={control}
-        name="password"
-        label="Password"
-        placeholder="***"
-        secureTextEntry={true}
-      />
+    <View className="flex-1 justify-between  bg-[#0F1C35] px-4 py-24">
+      <View className="flex items-center">
+        <Image
+          className="h-[90px] w-[169px] overflow-hidden rounded-t-xl"
+          source={Logo}
+        />
+        <Text
+          testID="form-title"
+          className="mt-8 max-w-[222px] pb-6 text-center text-[14px] text-[#A59E9E]"
+        >
+          Please enter your email & phone number to Login
+        </Text>
+      </View>
+      <View className="gap-y-4">
+        <ControlledInput
+          testID="email-input"
+          control={control}
+          name="email"
+          label="Email"
+        />
+        <ControlledInput
+          testID="password-input"
+          control={control}
+          name="password"
+          label="Password"
+          placeholder="***"
+          secureTextEntry={true}
+        />
+        <Link href="/forgot-password" asChild>
+          <Pressable>
+            <Text className="px-3 text-white">Forgot Password?</Text>
+          </Pressable>
+        </Link>
+      </View>
       <Button
         testID="login-button"
         label="Login"
         onPress={handleSubmit(onSubmit)}
       />
-      <Link href="/forgot-password" asChild>
-        <Pressable>
-          <Text className="px-3 text-primary-300">Forgot Password</Text>
-        </Pressable>
-      </Link>
-      <Button
-        testID="login-button"
-        label="Sign Up"
-        onPress={() => {
-          router.replace('/create-account');
-        }}
-      />
+      <View>
+        <Text
+          testID="form-title"
+          className="mt-8  pb-6 text-center text-[14px] text-[#A59E9E]"
+        >
+          Don't have an account?
+        </Text>
+        <Button
+          testID="login-button"
+          label="Sign Up"
+          variant="outlined"
+          onPress={() => {
+            router.replace('/create-account');
+          }}
+        />
+      </View>
     </View>
   );
 };

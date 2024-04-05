@@ -6,7 +6,8 @@ import { tv } from 'tailwind-variants';
 
 const button = tv({
   slots: {
-    container: 'flex flex-row items-center justify-center rounded-md my-2 px-4',
+    container:
+      'flex flex-row items-center justify-center rounded-2xl my-2 px-4',
     label: 'text-base font-[600] font-jakarta',
     indicator: 'text-white h-6',
   },
@@ -14,9 +15,8 @@ const button = tv({
   variants: {
     variant: {
       default: {
-        container: 'bg-[#DB1471] h-[56px]',
-        label: 'text-white dark:text-black',
-        indicator: 'text-white dark:text-black',
+        container: 'bg-[#DB1471]',
+        label: 'text-white',
       },
       secondary: {
         container: 'bg-primary-600',
@@ -26,7 +26,7 @@ const button = tv({
       outline: {
         container: 'border border-neutral-400',
         label: 'text-black dark:text-neutral-100',
-        indicator: 'text-black dark:text-neutral-100',
+        indicator: 'text-black',
       },
       destructive: {
         container: 'bg-red-600',
@@ -43,10 +43,15 @@ const button = tv({
         label: 'text-black',
         indicator: 'text-black',
       },
+      outlined: {
+        container: 'bg-[#0F1C35] border-solid border-2 border-[#A59E9E]',
+        label: 'text-[#A59E9E]',
+        indicator: 'text-black',
+      },
     },
     size: {
       default: {
-        container: 'h-10 px-4',
+        container: 'h-14 px-4',
         label: 'text-base',
       },
       lg: {
@@ -62,9 +67,9 @@ const button = tv({
     },
     disabled: {
       true: {
-        container: 'bg-neutral-300 dark:bg-neutral-300',
-        label: 'text-neutral-600 dark:text-neutral-600',
-        indicator: 'text-neutral-400 dark:text-neutral-400',
+        container: 'bg-neutral-300',
+        label: 'text-neutral-600',
+        indicator: 'text-neutral-400',
       },
     },
     fullWidth: {
