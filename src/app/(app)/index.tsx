@@ -1,3 +1,4 @@
+/* eslint-disable max-lines-per-function */
 import { FlashList } from '@shopify/flash-list';
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
@@ -5,6 +6,7 @@ import { ScrollView } from 'react-native';
 import type { Post } from '@/api';
 import { usePosts } from '@/api';
 import { Card } from '@/components/card';
+import { ReccomendationsCard } from '@/components/reccomendations-card';
 import { EmptyList, FocusAwareStatusBar, Pressable, Text, View } from '@/ui';
 import BellIcon from '@/ui/icons/notification';
 
@@ -63,6 +65,23 @@ export default function Feed() {
               </Pressable>
             )
           )}
+        </ScrollView>
+      </View>
+      <Text className="text-xl font-bold text-[#000000]">Recomendations</Text>
+      <View className="my-4">
+        <ScrollView horizontal showsHorizontalScrollIndicator={false}>
+          <ReccomendationsCard
+            imageUrl="https://example.com/image.jpg"
+            rating={4.5}
+          />
+          <ReccomendationsCard
+            imageUrl="https://example.com/image.jpg"
+            rating={4.5}
+          />
+          <ReccomendationsCard
+            imageUrl="https://example.com/image.jpg"
+            rating={4.5}
+          />
         </ScrollView>
       </View>
       <Text className="text-xl font-bold text-[#000000]">
