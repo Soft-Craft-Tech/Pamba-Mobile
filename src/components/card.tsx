@@ -22,9 +22,10 @@ export const Card = ({ id }: Props) => {
               uri: images[Math.floor(Math.random() * images.length)],
             }}
           />
-
           <View className="flex flex-col gap-y-2 px-2">
-            <Text className=" text-lg font-medium">Hair Dressing</Text>
+            <Text className=" text-lg font-medium text-[#000000]">
+              Hair Dressing
+            </Text>
             <View className="flex flex-row items-center gap-x-2">
               <View className="flex flex-row items-center justify-evenly gap-x-2 rounded-lg bg-[#DB1471] px-5 py-1">
                 <AppointmentCard />

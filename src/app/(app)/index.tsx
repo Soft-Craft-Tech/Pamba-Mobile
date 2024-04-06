@@ -65,6 +65,9 @@ export default function Feed() {
           )}
         </ScrollView>
       </View>
+      <Text className="text-xl font-bold text-[#000000]">
+        Upcoming Appointments
+      </Text>
       <FlashList
         data={data}
         renderItem={renderItem}
