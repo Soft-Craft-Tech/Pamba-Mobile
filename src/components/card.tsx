@@ -23,7 +23,7 @@ export const Card = ({ id }: Props) => {
             }}
           />
 
-          <View className="p-2">
+          <View className="flex flex-col gap-y-2 px-2">
             <Text className=" text-lg font-medium">Hair Dressing</Text>
             <View className="flex flex-row items-center gap-x-2">
               <View className="flex flex-row items-center justify-evenly gap-x-2 rounded-lg bg-[#DB1471] px-5 py-1">
