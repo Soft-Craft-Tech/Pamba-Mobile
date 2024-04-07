@@ -38,6 +38,11 @@ const button = tv({
         label: 'text-black',
         indicator: 'text-black',
       },
+      ghostVoke: {
+        container: 'bg-[#fff] border-solid border-2 border-[#DB1471]',
+        label: 'text-[#DB1471]',
+        indicator: 'text-black',
+      },
       link: {
         container: 'bg-transparent',
         label: 'text-black',
