@@ -1,5 +1,6 @@
 /* eslint-disable max-lines-per-function */
 import { FlashList } from '@shopify/flash-list';
+import { useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 
@@ -16,6 +17,7 @@ export default function Feed() {
     ({ item }: { item: AllAppointments }) => <Card {...item} />,
     []
   );
+  const router = useRouter();
 
   return (
     <View className="flex-1 px-8 pt-12">
@@ -32,7 +34,9 @@ export default function Feed() {
             </View>
           </View>
         </View>
-        <BellIcon />
+        <Pressable onPress={() => router.push('/feed/notifications')}>
+          <BellIcon />
+        </Pressable>
       </View>
       <View className="my-4">
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
