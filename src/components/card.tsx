@@ -4,7 +4,7 @@ import React from 'react';
 
 import type { AllAppointments } from '@/api';
 import { Image, Pressable, Text, View } from '@/ui';
-import AppointmentCard from '@/ui/icons/appoint-card';
+import { AppointmentSvg } from '@/ui/icons/appointment';
 import { Time } from '@/ui/icons/time';
 
 type Props = AllAppointments;
@@ -22,18 +22,16 @@ export const Card = ({ id, time, date, comment, imgUrl }: Props) => {
             }}
           />
           <View className="flex flex-col gap-y-2 px-2">
-            <Text className=" text-lg font-medium text-[#000000]">
-              {comment}
-            </Text>
+            <Text className="text-xl  text-[#000000]">{comment}</Text>
             <View className="flex flex-row items-center gap-x-2">
               <View className="flex flex-row items-center justify-evenly gap-x-2 rounded-lg bg-[#DB1471] px-5 py-1">
-                <AppointmentCard />
+                <AppointmentSvg color="#fff" />
                 <Text className="text-white">
                   {Moment(date).format('d MMM YY')}
                 </Text>
               </View>
               <View className="flex flex-row items-center justify-evenly gap-x-2 rounded-lg bg-[#DB1471] px-5 py-1">
-                <Time color="#0F1C35" />
+                <Time color="#fff" />
                 <Text className="text-white">{time.slice(0, -3)}</Text>
               </View>
             </View>
