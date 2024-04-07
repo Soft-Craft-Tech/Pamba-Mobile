@@ -18,13 +18,6 @@ export default function Feed() {
     []
   );
 
-  if (isError) {
-    return (
-      <View>
-        <Text> Error Loading data </Text>
-      </View>
-    );
-  }
   return (
     <View className="flex-1 px-8 pt-12">
       <FocusAwareStatusBar />
@@ -87,13 +80,21 @@ export default function Feed() {
       <Text className="text-xl font-bold text-[#000000]">
         Upcoming Appointments
       </Text>
-      <FlashList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(_, index) => `item-${index}`}
-        ListEmptyComponent={<EmptyList isLoading={isLoading} />}
-        estimatedItemSize={300}
-      />
+      <View className="mt-10">
+        {isError ? (
+          <View>
+            <Text>Error Loading Data</Text>
+          </View>
+        ) : (
+          <FlashList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={(_, index) => `item-${index}`}
+            ListEmptyComponent={<EmptyList isLoading={isLoading} />}
+            estimatedItemSize={300}
+          />
+        )}
+      </View>
     </View>
   );
 }
