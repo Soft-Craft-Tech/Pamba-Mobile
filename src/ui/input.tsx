@@ -21,7 +21,6 @@ const inputTv = tv({
     input:
       'mt-0 border-[0.5px] font-jakarta text-white leading-5 font-[500] px-4 py-3 rounded-xl  bg-[#1b2840] border-neutral-300',
   },
-
   variants: {
     focused: {
       true: {
