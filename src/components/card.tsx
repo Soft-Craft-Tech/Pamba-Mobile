@@ -5,7 +5,7 @@ import React from 'react';
 import type { AllAppointments } from '@/api';
 import { Image, Pressable, Text, View } from '@/ui';
 import AppointmentCard from '@/ui/icons/appoint-card';
-import Time from '@/ui/icons/time';
+import { Time } from '@/ui/icons/time';
 
 type Props = AllAppointments;
 
@@ -33,7 +33,7 @@ export const Card = ({ id, time, date, comment, imgUrl }: Props) => {
                 </Text>
               </View>
               <View className="flex flex-row items-center justify-evenly gap-x-2 rounded-lg bg-[#DB1471] px-5 py-1">
-                <Time />
+                <Time color="#0F1C35" />
                 <Text className="text-white">{time.slice(0, -3)}</Text>
               </View>
             </View>

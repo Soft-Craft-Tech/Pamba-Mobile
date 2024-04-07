@@ -1,23 +1,83 @@
 import * as React from 'react';
 import type { SvgProps } from 'react-native-svg';
-import Svg, { Path, Rect } from 'react-native-svg';
+import Svg, { Path } from 'react-native-svg';
 
+// eslint-disable-next-line max-lines-per-function
 export const AppointmentSvg = ({ color = '#0F1C35', ...props }: SvgProps) => (
-  <Svg width={20} height={20} viewBox="0 0 20 20" fill="none" {...props}>
+  <Svg width="24" height="24" viewBox="0 0 24 24" fill="none" {...props}>
     <Path
-      fillRule="evenodd"
-      clipRule="evenodd"
-      d="M15.582 1.87h2.701c.918 0 1.662.744 1.662 1.662v14.75c0 .918-.744 1.662-1.662 1.662H1.662C.744 19.944 0 19.2 0 18.282V3.531c0-.918.744-1.662 1.662-1.662h2.701V.623c0-.345.278-.623.623-.623.345 0 .623.278.623.623v1.247h3.74V.623c0-.345.278-.623.623-.623.345 0 .623.278.623.623v1.247h3.75V.623c0-.345.278-.623.623-.623.345 0 .623.278.623.623v1.247z"
-      fill={color}
+      d="M8 2V5"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
     />
-    <Rect x={4.363} y={7.479} width={2.493} height={1.87} fill={color} />
-    <Rect x={4.363} y={10.596} width={2.493} height={1.87} fill={color} />
-    <Rect x={4.363} y={13.712} width={2.493} height={1.87} fill={color} />
-    <Rect x={8.726} y={13.712} width={2.493} height={1.87} fill={color} />
-    <Rect x={8.726} y={10.596} width={2.493} height={1.87} fill={color} />
-    <Rect x={8.726} y={7.479} width={2.493} height={1.87} fill={color} />
-    <Rect x={13.088} y={13.712} width={2.493} height={1.87} fill={color} />
-    <Rect x={13.088} y={10.596} width={2.493} height={1.87} fill={color} />
-    <Rect x={13.088} y={7.479} width={2.493} height={1.87} fill={color} />
+    <Path
+      d="M16 2V5"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M3.5 9.08997H20.5"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M21 8.5V17C21 20 19.5 22 16 22H8C4.5 22 3 20 3 17V8.5C3 5.5 4.5 3.5 8 3.5H16C19.5 3.5 21 5.5 21 8.5Z"
+      stroke={color}
+      strokeWidth="1.5"
+      strokeMiterlimit="10"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M15.6947 13.7H15.7037"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M15.6947 16.7H15.7037"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M11.9955 13.7H12.0045"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M11.9955 16.7H12.0045"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M8.29431 13.7H8.30329"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
+    <Path
+      d="M8.29431 16.7H8.30329"
+      stroke={color}
+      strokeWidth="2"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+    />
   </Svg>
 );
