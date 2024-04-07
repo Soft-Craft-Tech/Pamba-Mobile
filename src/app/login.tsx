@@ -7,15 +7,14 @@ import { useSoftKeyboardEffect } from '@/core/keyboard';
 import { FocusAwareStatusBar } from '@/ui';
 
 export default function Login() {
-  const router = useRouter();
   const signIn = useAuth.use.signIn();
   useSoftKeyboardEffect();
+  const router = useRouter();
 
   const onSubmit = async (data: { email: string; password: string }) => {
     try {
-      console.log(data);
       await signIn(data.email, data.password);
-      router.replace('/');
+      router.push('/');
     } catch (error) {
       console.error('Sign-in error:', error);
     }

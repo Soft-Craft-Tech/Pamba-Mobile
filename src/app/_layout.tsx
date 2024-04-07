@@ -8,7 +8,6 @@ import FlashMessage from 'react-native-flash-message';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 
 import { APIProvider } from '@/api';
-import { hydrateAuth, loadSelectedTheme } from '@/core';
 import { useThemeConfig } from '@/core/use-theme-config';
 
 export { ErrorBoundary } from 'expo-router';
@@ -16,12 +15,16 @@ export { ErrorBoundary } from 'expo-router';
 // Import  global CSS file
 import '../../global.css';
 
+import { hydrateAuth, loadSelectedTheme } from '@/core';
+
 export const unstable_settings = {
   initialRouteName: '(app)',
 };
 
 hydrateAuth();
+
 loadSelectedTheme();
+
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
 

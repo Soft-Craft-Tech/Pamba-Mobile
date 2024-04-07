@@ -1,6 +1,6 @@
 import { Link } from 'expo-router';
 import React from 'react';
-import { ImageBackground } from 'react-native';
+import { ImageBackground, StyleSheet } from 'react-native';
 
 import type { AllBusiness } from '@/api';
 import { Pressable, Text, View } from '@/ui';
@@ -17,9 +17,11 @@ export const BusinessCard = ({ profile_img, slug, business_name }: Props) => {
     <Link href={`/feed/${slug}`} asChild>
       <Pressable>
         <View className="ml-2  rounded-xl bg-white shadow-xl">
-          <View className="flex h-[100px]  items-end justify-end rounded-t-xl bg-[#DB1471] p-4">
-            <ImageBackground source={{ uri: profile_img }} resizeMode="cover">
-              <View className="flex flex-row">{stars}</View>
+          <View className="flex h-[100px]  items-end justify-end rounded-t-xl bg-[#DB1471] ">
+            <ImageBackground source={{ uri: profile_img }} style={styles.image}>
+              <View className="mr-2 mt-10 flex flex-row items-end justify-end">
+                {stars}
+              </View>
             </ImageBackground>
           </View>
           <View className="h-[61px] p-4">
@@ -30,3 +32,11 @@ export const BusinessCard = ({ profile_img, slug, business_name }: Props) => {
     </Link>
   );
 };
+const styles = StyleSheet.create({
+  image: {
+    width: '100%',
+    height: '100%',
+    resizeMode: 'cover',
+    justifyContent: 'center',
+  },
+});
