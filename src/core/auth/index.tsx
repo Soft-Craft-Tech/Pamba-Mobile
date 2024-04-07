@@ -1,5 +1,7 @@
 import { create } from 'zustand';
 
+import { loginClient } from '@/api';
+
 import { createSelectors } from '../utils';
 import type { TokenType } from './utils';
 import { getToken, removeToken, setToken } from './utils';
@@ -7,17 +9,24 @@ import { getToken, removeToken, setToken } from './utils';
 interface AuthState {
   token: TokenType | null;
   status: 'idle' | 'signOut' | 'signIn';
-  signIn: (data: TokenType) => void;
+  signIn: (email: string, password: string) => Promise<void>;
   signOut: () => void;
   hydrate: () => void;
 }
 
-const _useAuth = create<AuthState>((set, get) => ({
+const useAuthStore = create<AuthState>((set) => ({
   status: 'idle',
   token: null,
-  signIn: (token) => {
-    setToken(token);
-    set({ status: 'signIn', token });
+  signIn: async (email, password) => {
+    try {
+      const data = await loginClient(email, password);
+      const { authToken } = data;
+      setToken(authToken);
+      set({ status: 'signIn', token: authToken });
+    } catch (error) {
+      console.error('Sign-in error:', error);
+      throw error;
+    }
   },
   signOut: () => {
     removeToken();
@@ -27,19 +36,18 @@ const _useAuth = create<AuthState>((set, get) => ({
     try {
       const userToken = getToken();
       if (userToken !== null) {
-        get().signIn(userToken);
+        set({ status: 'signIn', token: userToken });
       } else {
-        get().signOut();
+        set({ status: 'signOut', token: null });
       }
     } catch (e) {
-      // catch error here
-      // Maybe sign_out user!
+      console.error('Hydration error:', e);
+      set({ status: 'signOut', token: null });
     }
   },
 }));
 
-export const useAuth = createSelectors(_useAuth);
+export const useAuth = createSelectors(useAuthStore);
 
-export const signOut = () => _useAuth.getState().signOut();
-export const signIn = (token: TokenType) => _useAuth.getState().signIn(token);
-export const hydrateAuth = () => _useAuth.getState().hydrate();
+export const signOut = () => useAuthStore.getState().signOut();
+export const hydrateAuth = () => useAuthStore.getState().hydrate();

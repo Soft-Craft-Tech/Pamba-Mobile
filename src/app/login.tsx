@@ -1,7 +1,6 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 
-import type { LoginFormProps } from '@/components/login-form';
 import { LoginForm } from '@/components/login-form';
 import { useAuth } from '@/core';
 import { useSoftKeyboardEffect } from '@/core/keyboard';
@@ -12,10 +11,14 @@ export default function Login() {
   const signIn = useAuth.use.signIn();
   useSoftKeyboardEffect();
 
-  const onSubmit: LoginFormProps['onSubmit'] = (data) => {
-    console.log(data);
-    signIn({ access: 'access-token', refresh: 'refresh-token' });
-    router.push('/login');
+  const onSubmit = async (data: { email: string; password: string }) => {
+    try {
+      console.log(data);
+      await signIn(data.email, data.password);
+      router.replace('/');
+    } catch (error) {
+      console.error('Sign-in error:', error);
+    }
   };
   return (
     <>

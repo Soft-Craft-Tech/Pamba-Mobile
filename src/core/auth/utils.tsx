@@ -1,11 +1,8 @@
 import { getItem, removeItem, setItem } from '@/core/storage';
 
-const TOKEN = 'token';
+const TOKEN = 'authToken';
 
-export type TokenType = {
-  access: string;
-  refresh: string;
-};
+export type TokenType = string;
 
 export const getToken = () => getItem<TokenType>(TOKEN);
 export const removeToken = () => removeItem(TOKEN);

@@ -80,7 +80,7 @@ export default function Feed() {
       <Text className="text-xl font-bold text-[#000000]">
         Upcoming Appointments
       </Text>
-      <View className="mt-10">
+      <View className="mt-10 min-h-full">
         {isError ? (
           <View>
             <Text>Error Loading Data</Text>
