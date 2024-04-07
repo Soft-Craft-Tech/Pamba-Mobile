@@ -28,4 +28,5 @@ export type AllAppointments = {
   date: string;
   id: number;
   time: string;
+  imgUrl: string;
 };
