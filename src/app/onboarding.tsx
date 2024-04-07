@@ -9,6 +9,7 @@ import {
   View,
 } from 'react-native';
 
+import { useIsFirstTime } from '@/core';
 import { Button, FocusAwareStatusBar, Image, SafeAreaView } from '@/ui';
 const CarouselOne = require('../../assets/CarouselOne.jpeg');
 const CarouselTwo = require('../../assets/CarouselTwo.jpeg');
@@ -64,6 +65,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
   activeSlide,
   fadeAnim,
 }) => {
+  const [_, setIsFirstTime] = useIsFirstTime();
   return (
     <Animated.View style={[styles.imageContainer, { opacity: fadeAnim }]}>
       <ImageBackground source={images[activeSlide]} style={styles.image}>
@@ -83,6 +85,7 @@ const ImageCarousel: React.FC<ImageCarouselProps> = ({
                 label="Join Our Family"
                 onPress={() => {
                   router.replace('/landing');
+                  setIsFirstTime(false);
                 }}
                 testID="Join Our Family"
               />

@@ -1,34 +1,35 @@
 /* eslint-disable react/no-unstable-nested-components */
-import { Link, Tabs } from 'expo-router';
-import React from 'react';
+import { Link, Redirect, SplashScreen, Tabs } from 'expo-router';
+import React, { useCallback, useEffect } from 'react';
 
+import { useAuth, useIsFirstTime } from '@/core';
 import { Pressable, Text } from '@/ui';
 import { Home as HomeIcon, Settings as SettingsIcon } from '@/ui/icons';
 import { AppointmentSvg } from '@/ui/icons/appointment';
 import { SearchSvg } from '@/ui/icons/search';
 
 export default function TabLayout() {
-  // const status = useAuth.use.status();
-  // const [isFirstTime] = useIsFirstTime();
+  const status = useAuth.use.status();
+  const [isFirstTime] = useIsFirstTime();
 
-  // const hideSplash = useCallback(async () => {
-  //   await SplashScreen.hideAsync();
-  // }, []);
-  // useEffect(() => {
-  //   if (status !== 'idle') {
-  //     setTimeout(() => {
-  //       hideSplash();
-  //     }, 1000);
-  //   }
-  // }, [hideSplash, status]);
+  const hideSplash = useCallback(async () => {
+    await SplashScreen.hideAsync();
+  }, []);
+  useEffect(() => {
+    if (status !== 'idle') {
+      setTimeout(() => {
+        hideSplash();
+      }, 1000);
+    }
+  }, [hideSplash, status]);
 
-  // if (isFirstTime) {
-  //   return <Redirect href="/onboarding" />;
-  // }
+  if (isFirstTime) {
+    return <Redirect href="/onboarding" />;
+  }
 
-  // if (status === 'signOut') {
-  //   return <Redirect href="/login" />;
-  // }
+  if (status === 'signOut') {
+    return <Redirect href="/login" />;
+  }
 
   return (
     <Tabs>
