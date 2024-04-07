@@ -16,8 +16,8 @@ export const BusinessCard = ({ profile_img, slug, business_name }: Props) => {
   return (
     <Link href={`/feed/${slug}`} asChild>
       <Pressable>
-        <View className="ml-2  rounded-xl bg-white shadow-xl">
-          <View className="flex h-[100px]  items-end justify-end rounded-t-xl bg-[#DB1471] ">
+        <View className="ml-2 mt-8  rounded-xl bg-white shadow-xl">
+          <View className="flex h-[100px]  items-end justify-end  bg-[#DB1471] ">
             <ImageBackground source={{ uri: profile_img }} style={styles.image}>
               <View className="mr-2 mt-10 flex flex-row items-end justify-end">
                 {stars}

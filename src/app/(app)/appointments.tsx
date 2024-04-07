@@ -1,15 +1,14 @@
 import { FlashList } from '@shopify/flash-list';
 import * as React from 'react';
 
-import type { Post } from '@/api';
-import { usePosts } from '@/api';
+import { type AllAppointments, useUpcoming } from '@/api';
 import { Card } from '@/components/card';
 import { EmptyList, FocusAwareStatusBar, NoData, Text, View } from '@/ui';
 
 export default function Style() {
-  const { data, isLoading, isError } = usePosts();
+  const { data, isLoading, isError } = useUpcoming();
   const renderItem = React.useCallback(
-    ({ item }: { item: Post }) => <Card {...item} />,
+    ({ item }: { item: AllAppointments }) => <Card {...item} />,
     []
   );
   if (isError) {

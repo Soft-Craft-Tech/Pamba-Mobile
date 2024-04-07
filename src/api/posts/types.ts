@@ -20,3 +20,12 @@ export type AllBusiness = {
   slug: string;
   verified: boolean;
 };
+export type AllAppointments = {
+  cancelled: boolean;
+  comment: string;
+  completed: boolean;
+  create_at: string;
+  date: string;
+  id: number;
+  time: string;
+};

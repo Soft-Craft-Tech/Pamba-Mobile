@@ -3,18 +3,17 @@ import { FlashList } from '@shopify/flash-list';
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 
-import type { Post } from '@/api';
-import { usePosts } from '@/api';
+import { type AllAppointments, useUpcoming } from '@/api';
 import { Card } from '@/components/card';
 import { ReccomendationsCard } from '@/components/reccomendations-card';
 import { EmptyList, FocusAwareStatusBar, Pressable, Text, View } from '@/ui';
 import BellIcon from '@/ui/icons/notification';
 
 export default function Feed() {
-  const { data, isLoading, isError } = usePosts();
+  const { data, isLoading, isError } = useUpcoming();
   const [activeFilter, setActiveFilter] = useState(0);
   const renderItem = React.useCallback(
-    ({ item }: { item: Post }) => <Card {...item} />,
+    ({ item }: { item: AllAppointments }) => <Card {...item} />,
     []
   );
 

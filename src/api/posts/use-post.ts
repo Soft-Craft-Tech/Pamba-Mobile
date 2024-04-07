@@ -2,16 +2,15 @@ import type { AxiosError } from 'axios';
 import { createQuery } from 'react-query-kit';
 
 import { client } from '../common';
-import type { Post } from './types';
+import type { AllAppointments } from './types';
 
-type Variables = { id: string };
-type Response = Post;
+type Response = AllAppointments[];
 
-export const usePost = createQuery<Response, Variables, AxiosError>({
-  queryKey: ['posts'],
-  fetcher: (variables) => {
+export const useUpcoming = createQuery<Response, AxiosError>({
+  queryKey: ['upcoming'],
+  fetcher: () => {
     return client
-      .get(`posts/${variables.id}`)
-      .then((response) => response.data);
+      .get(`appointments/my-appointments`)
+      .then((response) => response.data.upcoming);
   },
 });

@@ -2,13 +2,18 @@ import { Env } from '@env';
 import axios from 'axios';
 import { encode } from 'base-64';
 
+import { getToken } from '@/core/auth/utils';
+
 const apiKey = '0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62';
+
+const token = getToken();
 
 export const client = axios.create({
   baseURL: Env.API_URL,
   headers: {
     'Content-Type': 'application/json',
     'X-API-KEY': apiKey,
+    'x-access-token': token,
   },
 });
 
