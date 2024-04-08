@@ -14,7 +14,7 @@ export const BusinessCard = ({ profile_img, slug, business_name }: Props) => {
   ));
 
   return (
-    <Link href={`/feed/${slug}`} asChild>
+    <Link href={`/business/${slug}`} asChild>
       <Pressable>
         <View className="ml-2 mt-8  rounded-xl bg-white shadow-xl">
           <View className="flex h-[100px]  items-end justify-end  bg-[#DB1471] ">
