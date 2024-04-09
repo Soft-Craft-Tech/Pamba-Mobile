@@ -1,11 +1,12 @@
 /* eslint-disable max-lines-per-function */
-import DateTimePicker from '@react-native-community/datetimepicker';
+import type { Tabs } from 'expo-router';
 import { Stack, useLocalSearchParams } from 'expo-router';
-import Moment from 'moment';
 import * as React from 'react';
-import { useState } from 'react';
 
 import { useUpcoming } from '@/api';
+import { BookAppointment } from '@/components/bookappointment';
+import { GalleryTab } from '@/components/gallery-tab';
+import { ReviewTab } from '@/components/reviewtab';
 import {
   ActivityIndicator,
   Button,
@@ -15,33 +16,41 @@ import {
   Text,
   View,
 } from '@/ui';
-import DropDown from '@/ui/icons/drop-down';
 import { LocationIcon } from '@/ui/icons/location';
 import { Rating } from '@/ui/icons/rating';
 
+type Tab = {
+  content: React.ReactElement;
+  isActive: boolean;
+};
+
+type Tabs = {
+  About: Tab;
+  Reviews: Tab;
+  Gallery: Tab;
+};
+
 export default function Post() {
   const local = useLocalSearchParams<{ id: string }>();
+  const [activeTab, setActiveTab] = React.useState<keyof Tabs>('About');
 
-  const [date, setDate] = React.useState(new Date(1598051730000));
-  const [mode, setMode] = useState<any | undefined>('date');
-  const [show, setShow] = useState(false);
-  const onChange = (event: any, selectedDate: any) => {
-    const currentDate = selectedDate;
-    setShow(false);
-    setDate(currentDate);
+  const tabs: Tabs = {
+    About: {
+      content: <BookAppointment />,
+      isActive: activeTab === 'About',
+    },
+    Reviews: {
+      content: <ReviewTab />,
+      isActive: activeTab === 'Reviews',
+    },
+    Gallery: {
+      content: <GalleryTab />,
+      isActive: activeTab === 'Gallery',
+    },
   };
 
-  const showMode = (currentMode: any) => {
-    setShow(true);
-    setMode(currentMode);
-  };
-
-  const showDatepicker = () => {
-    showMode('date');
-  };
-
-  const showTimepicker = () => {
-    showMode('time');
+  const handleTabClick = (tab: keyof Tabs) => {
+    setActiveTab(tab);
   };
 
   console.log(local.id);
@@ -97,61 +106,20 @@ export default function Post() {
           </View>
         </View>
         <View className="m-4 flex flex-row justify-between gap-x-1 overflow-hidden rounded-xl bg-[#0F1C35] p-2">
-          <Button label="About" className="w-[100px]" />
-          <Button label="Reviews" variant="inactiveBtn" className="w-[100px]" />
-          <Button label="Gallery" variant="inactiveBtn" className="w-[100px]" />
-        </View>
-      </View>
-      <View>
-        <View className="m-2 flex overflow-hidden  rounded-xl bg-white p-10 shadow-xl">
-          <Text>
-            Welcome to Nathan Massage, where relaxation and rejuvenation await
-            you. Located in the heart of the city, our shop offers a tranquil
-            oasis where you can escape the hustle and bustle of everyda...
-          </Text>
-        </View>
-        <View className="m-2 flex overflow-hidden rounded-xl bg-white p-10 shadow-xl">
-          <Text className="text-2xl">Services</Text>
-          <View className="flex flex-row flex-wrap gap-x-2">
-            <Button label="About" variant="ghostGray" className="w-[90px]" />
-            <Button label="About" variant="ghostGray" className="w-[90px]" />
-            <Button label="About" variant="ghostGray" className="w-[90px]" />
-            <Button label="About" className="w-[90px]" />
-          </View>
-        </View>
-        <View className="m-2 flex flex-row justify-between gap-x-4 overflow-hidden p-10">
-          <View className="w-1/2">
-            <Text className="text-lg">Choose Date</Text>
-            <Pressable
-              onPress={showDatepicker}
-              className="flex flex-row items-center justify-between rounded-xl border border-[#C1B9BB] p-4"
-            >
-              <Text>{Moment(date).format('DD/MM/YY')}</Text>
-              <DropDown />
-            </Pressable>
-          </View>
-          <View className="w-1/2">
-            <Text className="text-lg">Choose Time</Text>
-            <Pressable
-              onPress={showTimepicker}
-              className="flex flex-row items-center justify-between rounded-xl border border-[#C1B9BB] p-4"
-            >
-              <Text>{Moment(date).format('LT')}</Text>
-              <DropDown />
-            </Pressable>
-          </View>
-          {show && (
-            <DateTimePicker
-              testID="dateTimePicker"
-              value={date}
-              mode={mode}
-              is24Hour={true}
-              onChange={onChange}
+          {Object.keys(tabs).map((tab) => (
+            <Button
+              key={tab}
+              label={tab}
+              className={`w-[100px]`}
+              variant={
+                tabs[tab as keyof Tabs].isActive ? 'default' : 'inactiveBtn'
+              }
+              onPress={() => handleTabClick(tab as keyof Tabs)}
             />
-          )}
+          ))}
         </View>
-        <Button label="Book Appointment" />
       </View>
+      {tabs[activeTab].content}
     </View>
   );
 }
