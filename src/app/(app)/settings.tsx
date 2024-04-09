@@ -49,10 +49,9 @@ export default function Settings() {
               variant="ghost"
               label="Edit Profile"
             />
-            <Modal snapPoints={['60%']} title="Example Modal" ref={ref}>
+            <Modal snapPoints={['60%']} title="Edit Profile" ref={ref}>
               <View className="p-5">
-                <Text>Edit Profile</Text>
-                <Button label="Close Modal" onPress={() => dismiss()} />
+                <Button label="Submit" onPress={() => dismiss()} />
               </View>
             </Modal>
           </View>
