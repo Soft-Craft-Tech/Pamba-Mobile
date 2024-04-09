@@ -34,3 +34,27 @@ export type AllAppointments = {
   imgUrl: string;
   mapUrl: string;
 };
+
+type Business = {
+  category: string;
+  google_map: string;
+  id: string;
+  location: string;
+  name: string;
+  phone: string;
+  imageUrl: string;
+  description: string;
+};
+
+type Services = {
+  description: string;
+  id: number;
+  price: number;
+  service: string;
+};
+
+export type SingleBusiness = {
+  business: Business;
+  ratingsAverage: string;
+  services: Services[];
+};

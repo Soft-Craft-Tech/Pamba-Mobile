@@ -1,9 +1,10 @@
 /* eslint-disable max-lines-per-function */
+import * as Linking from 'expo-linking';
 import type { Tabs } from 'expo-router';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import * as React from 'react';
 
-import { useUpcoming } from '@/api';
+import { useSingleBusiness } from '@/api/posts/use-single-business';
 import { BookAppointment } from '@/components/bookappointment';
 import { GalleryTab } from '@/components/gallery-tab';
 import { ReviewTab } from '@/components/reviewtab';
@@ -33,10 +34,13 @@ type Tabs = {
 export default function Post() {
   const local = useLocalSearchParams<{ id: string }>();
   const [activeTab, setActiveTab] = React.useState<keyof Tabs>('About');
+  const { data, isLoading, isError } = useSingleBusiness({
+    variables: local.id,
+  });
 
   const tabs: Tabs = {
     About: {
-      content: <BookAppointment />,
+      content: <BookAppointment data={data} />,
       isActive: activeTab === 'About',
     },
     Reviews: {
@@ -53,10 +57,6 @@ export default function Post() {
     setActiveTab(tab);
   };
 
-  console.log(local.id);
-
-  const { data, isLoading, isError } = useUpcoming();
-  console.log(data);
   if (isLoading) {
     return (
       <View className="flex-1 justify-center  p-3">
@@ -71,16 +71,19 @@ export default function Post() {
       <View className="flex-1 justify-center p-3">
         <Stack.Screen options={{ title: 'Profile', headerBackTitle: 'Feed' }} />
         <FocusAwareStatusBar />
-        <Text className="text-center">Error loading Appointment Details</Text>
+        <Text className="text-center">Error loading Business Details</Text>
       </View>
     );
   }
-  const stars = Array.from({ length: Math.floor(4.5) }, (_, index) => (
-    <Rating key={index} color="#DB1471" />
-  ));
+  const stars = Array.from(
+    { length: Math.floor(Number(data?.ratingsAverage)) },
+    (_, index) => <Rating key={index} color="#DB1471" />
+  );
   return (
     <View className="flex-1 p-3 ">
-      <Stack.Screen options={{ title: 'Profile', headerBackTitle: 'Feed' }} />
+      <Stack.Screen
+        options={{ title: data?.business?.category, headerBackTitle: 'Feed' }}
+      />
       <FocusAwareStatusBar />
       <View className="m-2 overflow-hidden rounded-xl  bg-white px-5 py-4 shadow-xl">
         <View className="flex  flex-row items-center">
@@ -88,18 +91,25 @@ export default function Post() {
             className="inline-flex h-20 w-20 items-center justify-center rounded-full"
             contentFit="cover"
             source={{
-              uri: '',
+              uri: data?.business?.imageUrl,
             }}
           />
           <View className="flex flex-col px-2">
-            <Text className=" text-2xl  text-[#000000]">Deevabits</Text>
+            <Text className=" text-2xl  text-[#000000]">
+              {data?.business?.name}
+            </Text>
             <View className="mt-3 flex flex-row gap-x-3">{stars}</View>
             <View className="flex w-full flex-row items-center justify-between pr-10">
               <View className="flex flex-row items-center gap-x-2">
                 <LocationIcon />
-                <Text className="text-lg">Nairobi</Text>
+                <Text className="text-lg">{data?.business?.location}</Text>
               </View>
-              <Pressable className="mr-10 flex items-center justify-center rounded-lg border border-charcoal-300 px-4 shadow-lg">
+              <Pressable
+                onPress={() =>
+                  Linking.openURL(data?.business?.google_map || '')
+                }
+                className="mr-10 flex items-center justify-center rounded-lg border border-charcoal-300 px-4 shadow-lg"
+              >
                 <Text className="text-center align-middle">Directions</Text>
               </Pressable>
             </View>
