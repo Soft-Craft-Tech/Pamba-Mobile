@@ -4,7 +4,7 @@ import { loginClient } from '@/api';
 
 import { createSelectors } from '../utils';
 import type { TokenType } from './utils';
-import { getToken, removeToken, setToken } from './utils';
+import { getToken, removeToken, setToken, setUserData } from './utils';
 
 interface AuthState {
   token: TokenType | null;
@@ -20,8 +20,9 @@ const useAuthStore = create<AuthState>((set) => ({
   signIn: async (email, password) => {
     try {
       const data = await loginClient(email, password);
-      const { authToken } = data;
+      const { authToken, client } = data;
       setToken(authToken);
+      setUserData(client);
       set({ status: 'signIn', token: authToken });
     } catch (error) {
       console.error('Sign-in error:', error);

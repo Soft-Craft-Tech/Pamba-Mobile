@@ -1,16 +1,12 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable react/react-in-jsx-scope */
-import { Env } from '@env';
-import { useColorScheme } from 'nativewind';
 
 import { Item } from '@/components/settings/item';
 import { ItemsContainer } from '@/components/settings/items-container';
-import { LanguageItem } from '@/components/settings/language-item';
-import { ThemeItem } from '@/components/settings/theme-item';
 import { useAuth } from '@/core';
+import { getUserData } from '@/core/auth/utils';
 import {
   Button,
-  colors,
   FocusAwareStatusBar,
   Modal,
   ScrollView,
@@ -18,15 +14,16 @@ import {
   useModal,
   View,
 } from '@/ui';
-import { Github, Rate, Share, Support, Website } from '@/ui/icons';
+import NOtificationItem from '@/ui/icons/notiification-item';
+import PaymentIcons from '@/ui/icons/payment-icon';
+import SecurityIcon from '@/ui/icons/security-icon';
+import TermsIcon from '@/ui/icons/terms';
 
 export default function Settings() {
   const signOut = useAuth.use.signOut();
-  const { colorScheme } = useColorScheme();
   const { dismiss, ref, present } = useModal();
+  const userData = getUserData();
 
-  const iconColor =
-    colorScheme === 'dark' ? colors.neutral[400] : colors.neutral[500];
   return (
     <>
       <FocusAwareStatusBar />
@@ -39,9 +36,9 @@ export default function Settings() {
                 <Text className="text-xl text-[#DB1471]">TW</Text>
               </View>
               <View>
-                <Text className="text-xl">David Clinton</Text>
+                <Text className="text-xl">{userData?.name}</Text>
                 <Text className="text-xl text-[#303535]">
-                  clintondavid46@gmail.com
+                  {userData?.email}
                 </Text>
               </View>
             </View>
@@ -57,54 +54,44 @@ export default function Settings() {
               </View>
             </Modal>
           </View>
-          <ItemsContainer title="settings.generale">
-            <LanguageItem />
-            <ThemeItem />
-          </ItemsContainer>
-
-          <ItemsContainer title="settings.about">
-            <Item text="settings.app_name" value={Env.NAME} />
-            <Item text="settings.version" value={Env.VERSION} />
-          </ItemsContainer>
-
-          <ItemsContainer title="settings.support_us">
+          <ItemsContainer title="ACCOUNT">
             <Item
-              text="settings.share"
-              icon={<Share color={iconColor} />}
+              icon={<NOtificationItem />}
+              text="Notifications"
               onPress={() => {}}
             />
             <Item
-              text="settings.rate"
-              icon={<Rate color={iconColor} />}
-              onPress={() => {}}
-            />
-            <Item
-              text="settings.support"
-              icon={<Support color={iconColor} />}
+              icon={<PaymentIcons />}
+              text="Payment Method"
               onPress={() => {}}
             />
           </ItemsContainer>
-
-          <ItemsContainer title="settings.links">
-            <Item text="settings.privacy" onPress={() => {}} />
-            <Item text="settings.terms" onPress={() => {}} />
+          <ItemsContainer title="APPS">
             <Item
-              text="settings.github"
-              icon={<Github color={iconColor} />}
+              icon={<SecurityIcon />}
+              text="Privacy Policy"
               onPress={() => {}}
             />
             <Item
-              text="settings.website"
-              icon={<Website color={iconColor} />}
+              icon={<TermsIcon />}
+              text="Terms & Condiitions"
               onPress={() => {}}
+            />
+            <Item
+              icon={<TermsIcon />}
+              text="Logout"
+              onPress={() => {
+                signOut();
+              }}
             />
           </ItemsContainer>
-
-          <View className="my-8">
-            <ItemsContainer>
-              <Item text="settings.logout" onPress={signOut} />
-            </ItemsContainer>
-          </View>
+          <Button
+            label="Deactivate Account"
+            className="mt-5"
+            onPress={() => {
+              signOut();
+            }}
+          />
         </View>
       </ScrollView>
     </>
