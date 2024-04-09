@@ -21,12 +21,16 @@ export type AllBusiness = {
   verified: boolean;
 };
 export type AllAppointments = {
+  name: string;
+  location: string;
   cancelled: boolean;
   comment: string;
   completed: boolean;
   create_at: string;
+  description: string;
   date: string;
   id: number;
   time: string;
   imgUrl: string;
+  mapUrl: string;
 };

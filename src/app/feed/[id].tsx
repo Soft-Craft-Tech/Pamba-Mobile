@@ -1,3 +1,4 @@
+import * as Linking from 'expo-linking';
 import { Stack, useLocalSearchParams } from 'expo-router';
 import Moment from 'moment';
 import * as React from 'react';
@@ -49,7 +50,9 @@ export default function Post() {
 
   return (
     <View className="flex-1 p-3 ">
-      <Stack.Screen options={{ title: 'Profile', headerBackTitle: 'Feed' }} />
+      <Stack.Screen
+        options={{ title: postData?.name, headerBackTitle: 'Feed' }}
+      />
       <FocusAwareStatusBar />
 
       <View className="m-2 flex h-[100px] flex-row items-center overflow-hidden  rounded-xl bg-white px-10 shadow-xl">
@@ -66,9 +69,12 @@ export default function Post() {
           <View className="flex w-full flex-row items-center justify-between pr-10">
             <View className="flex flex-row items-center gap-x-2">
               <LocationIcon />
-              <Text className="text-lg">Nairobi</Text>
+              <Text className="text-sm">{postData?.location}</Text>
             </View>
-            <Pressable className="flex items-center justify-center rounded-lg border border-charcoal-300 px-4 shadow-lg">
+            <Pressable
+              onPress={() => Linking.openURL(postData?.mapUrl || '')}
+              className="flex items-center justify-center rounded-lg border border-charcoal-300 px-4 shadow-lg"
+            >
               <Text className="text-center align-middle">Directions</Text>
             </Pressable>
           </View>
@@ -76,11 +82,7 @@ export default function Post() {
       </View>
       <View className="m-2 flex overflow-hidden  rounded-xl bg-white p-10 shadow-xl">
         <Text className="text-2xl">Shop Description</Text>
-        <Text>
-          Maecenas non imperdiet diam, nec vulputate erat. Fusce fringilla
-          varius sem id scelerisque. Cras eu dolor vitae nibh sagittis
-          elementum. Call/whatsapp +25423456789
-        </Text>
+        <Text>{postData?.description}</Text>
       </View>
       <Text className="px-4 text-xl font-bold text-[#000000]">Appointment</Text>
       <View className="m-2 flex overflow-hidden rounded-xl bg-white px-10 shadow-xl">
