@@ -1,9 +1,9 @@
 /* eslint-disable max-lines-per-function */
 import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import DateTimePicker from '@react-native-community/datetimepicker';
+import { useRouter } from 'expo-router';
 import Moment from 'moment';
 import React, { useState } from 'react';
-import { showMessage } from 'react-native-flash-message';
 
 // import { showMessage } from 'react-native-flash-message';
 import { useBookAppoinment } from '@/api';
@@ -16,6 +16,7 @@ interface BookAppointmentProps {
 }
 
 export const BookAppointment: React.FC<BookAppointmentProps> = ({ data }) => {
+  const router = useRouter();
   const { mutate: bookAppointment, isLoading } = useBookAppoinment();
   const [date, setDate] = React.useState(new Date(1598051730000));
   const [time, setTime] = React.useState(new Date(1598051730000));
@@ -73,12 +74,11 @@ export const BookAppointment: React.FC<BookAppointmentProps> = ({ data }) => {
       { time: newTime, date: newDate, comment, service, provider },
       {
         onSuccess: () => {
-          showMessage({
-            message: 'Appointment booked succesfuly',
-            type: 'success',
-          });
-          // here you can navigate to the post list and refresh the list data
-          //queryClient.invalidateQueries(usePosts.getKey());
+          router.push('/feed/congratulations');
+          // showMessage({
+          //   message: 'Appointment booked succesfuly',
+          //   type: 'success',
+          // });
         },
         onError: () => {
           showErrorMessage('Error booking appointment');
