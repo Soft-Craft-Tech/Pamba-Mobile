@@ -1,6 +1,8 @@
 /* eslint-disable max-lines-per-function */
 /* eslint-disable react/react-in-jsx-scope */
 
+import { router } from 'expo-router';
+
 import { Item } from '@/components/settings/item';
 import { ItemsContainer } from '@/components/settings/items-container';
 import { useAuth } from '@/core';
@@ -49,7 +51,7 @@ export default function Settings() {
             />
             <Modal snapPoints={['60%']} title="Example Modal" ref={ref}>
               <View className="p-5">
-                <Text>Modal Content</Text>
+                <Text>Edit Profile</Text>
                 <Button label="Close Modal" onPress={() => dismiss()} />
               </View>
             </Modal>
@@ -58,7 +60,9 @@ export default function Settings() {
             <Item
               icon={<NOtificationItem />}
               text="Notifications"
-              onPress={() => {}}
+              onPress={() => {
+                router.push('/feed/notifications');
+              }}
             />
             <Item
               icon={<PaymentIcons />}

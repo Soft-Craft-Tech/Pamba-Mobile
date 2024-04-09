@@ -1,7 +1,7 @@
 import React from 'react';
 import Svg, { Path } from 'react-native-svg';
 
-const MySvg = ({ color = '#667085' }) => {
+const SecurityIcon = ({ color = '#667085' }) => {
   return (
     <Svg width="20" height="20" viewBox="0 0 20 20" fill="none">
       <Path
@@ -32,4 +32,4 @@ const MySvg = ({ color = '#667085' }) => {
   );
 };
 
-export default MySvg;
+export default SecurityIcon;
