@@ -18,6 +18,10 @@ const button = tv({
         container: 'bg-[#DB1471]',
         label: 'text-white',
       },
+      inactiveBtn: {
+        container: 'bg-transparent',
+        label: 'text-[#828188]',
+      },
       secondary: {
         container: 'bg-primary-600',
         label: 'text-secondary-600',
@@ -41,6 +45,11 @@ const button = tv({
       ghostVoke: {
         container: 'bg-[#fff] border-solid border-2 border-[#DB1471]',
         label: 'text-[#DB1471]',
+        indicator: 'text-black',
+      },
+      ghostGray: {
+        container: 'bg-[#fff] border-solid border-2 border-[#C1B9BB]',
+        label: 'text-[#C1B9BB]',
         indicator: 'text-black',
       },
       link: {

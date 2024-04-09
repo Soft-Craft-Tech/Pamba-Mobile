@@ -12,6 +12,7 @@ import BellIcon from '@/ui/icons/notification';
 
 export default function Feed() {
   const { data, isLoading, isError } = useUpcoming();
+  console.log(data);
   const [activeFilter, setActiveFilter] = useState(0);
   const renderItem = React.useCallback(
     ({ item }: { item: AllAppointments }) => <Card {...item} />,

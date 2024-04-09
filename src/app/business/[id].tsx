@@ -1,6 +1,9 @@
 /* eslint-disable max-lines-per-function */
+import DateTimePicker from '@react-native-community/datetimepicker';
 import { Stack, useLocalSearchParams } from 'expo-router';
+import Moment from 'moment';
 import * as React from 'react';
+import { useState } from 'react';
 
 import { useUpcoming } from '@/api';
 import {
@@ -18,6 +21,28 @@ import { Rating } from '@/ui/icons/rating';
 
 export default function Post() {
   const local = useLocalSearchParams<{ id: string }>();
+
+  const [date, setDate] = React.useState(new Date(1598051730000));
+  const [mode, setMode] = useState<any | undefined>('date');
+  const [show, setShow] = useState(false);
+  const onChange = (event: any, selectedDate: any) => {
+    const currentDate = selectedDate;
+    setShow(false);
+    setDate(currentDate);
+  };
+
+  const showMode = (currentMode: any) => {
+    setShow(true);
+    setMode(currentMode);
+  };
+
+  const showDatepicker = () => {
+    showMode('date');
+  };
+
+  const showTimepicker = () => {
+    showMode('time');
+  };
 
   console.log(local.id);
 
@@ -73,8 +98,8 @@ export default function Post() {
         </View>
         <View className="m-4 flex flex-row justify-between gap-x-1 overflow-hidden rounded-xl bg-[#0F1C35] p-2">
           <Button label="About" className="w-[100px]" />
-          <Button label="Reviews" className="w-[100px]" />
-          <Button label="Gallery" className="w-[100px]" />
+          <Button label="Reviews" variant="inactiveBtn" className="w-[100px]" />
+          <Button label="Gallery" variant="inactiveBtn" className="w-[100px]" />
         </View>
       </View>
       <View>
@@ -88,29 +113,42 @@ export default function Post() {
         <View className="m-2 flex overflow-hidden rounded-xl bg-white p-10 shadow-xl">
           <Text className="text-2xl">Services</Text>
           <View className="flex flex-row flex-wrap gap-x-2">
-            <Button label="About" className="w-[90px]" />
-            <Button label="About" className="w-[90px]" />
-            <Button label="About" className="w-[90px]" />
-            <Button label="About" className="w-[90px]" />
-            <Button label="About" className="w-[90px]" />
+            <Button label="About" variant="ghostGray" className="w-[90px]" />
+            <Button label="About" variant="ghostGray" className="w-[90px]" />
+            <Button label="About" variant="ghostGray" className="w-[90px]" />
             <Button label="About" className="w-[90px]" />
           </View>
         </View>
         <View className="m-2 flex flex-row justify-between gap-x-4 overflow-hidden p-10">
           <View className="w-1/2">
             <Text className="text-lg">Choose Date</Text>
-            <Pressable className="flex flex-row items-center justify-between rounded-xl border border-[#C1B9BB] p-4">
-              <Text>08/04/2024</Text>
+            <Pressable
+              onPress={showDatepicker}
+              className="flex flex-row items-center justify-between rounded-xl border border-[#C1B9BB] p-4"
+            >
+              <Text>{Moment(date).format('DD/MM/YY')}</Text>
               <DropDown />
             </Pressable>
           </View>
           <View className="w-1/2">
             <Text className="text-lg">Choose Time</Text>
-            <Pressable className="flex flex-row items-center justify-between rounded-xl border border-[#C1B9BB] p-4">
-              <Text>13:00</Text>
+            <Pressable
+              onPress={showTimepicker}
+              className="flex flex-row items-center justify-between rounded-xl border border-[#C1B9BB] p-4"
+            >
+              <Text>{Moment(date).format('LT')}</Text>
               <DropDown />
             </Pressable>
           </View>
+          {show && (
+            <DateTimePicker
+              testID="dateTimePicker"
+              value={date}
+              mode={mode}
+              is24Hour={true}
+              onChange={onChange}
+            />
+          )}
         </View>
         <Button label="Book Appointment" />
       </View>
