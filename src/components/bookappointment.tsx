@@ -1,4 +1,5 @@
 /* eslint-disable max-lines-per-function */
+import type { DateTimePickerEvent } from '@react-native-community/datetimepicker';
 import DateTimePicker from '@react-native-community/datetimepicker';
 import Moment from 'moment';
 import React, { useState } from 'react';
@@ -17,39 +18,59 @@ interface BookAppointmentProps {
 export const BookAppointment: React.FC<BookAppointmentProps> = ({ data }) => {
   const { mutate: bookAppointment, isLoading } = useBookAppoinment();
   const [date, setDate] = React.useState(new Date(1598051730000));
+  const [time, setTime] = React.useState(new Date(1598051730000));
   const [mode, setMode] = useState<any | undefined>('date');
-  const [show, setShow] = useState(false);
-  const onChange = (selectedDate: any) => {
-    const currentDate = selectedDate;
-    setShow(false);
+  const [datePicker, setDatePicker] = useState(false);
+  const [timeKeeper, setTimePicker] = useState(false);
+
+  const onChangeDate = (
+    _event: DateTimePickerEvent,
+    selectedDate?: Date | undefined
+  ) => {
+    const currentDate = selectedDate || date;
+    setDatePicker(false);
     setDate(currentDate);
   };
+  const onChangeTime = (
+    _event: DateTimePickerEvent,
+    selectedDate?: Date | undefined
+  ) => {
+    const currentDate = selectedDate || date;
+    setTimePicker(false);
+    setTime(currentDate);
+  };
 
-  const [service, setSelectedService] = useState(8);
+  const [firstServiceId] = data?.services?.map((service) => service?.id) || [];
+
+  const [service, setSelectedService] = useState(firstServiceId);
 
   const [comment] = useState('');
 
   const [provider] = useState(9);
 
-  const showMode = (currentMode: any) => {
-    setShow(true);
+  const showDateMode = (currentMode: any) => {
+    setTimePicker(true);
+    setMode(currentMode);
+  };
+
+  const showTimeMode = (currentMode: any) => {
+    setTimePicker(true);
     setMode(currentMode);
   };
 
   const showDatepicker = () => {
-    showMode('date');
+    showDateMode('date');
   };
 
   const showTimepicker = () => {
-    showMode('time');
+    showTimeMode('time');
   };
 
   const onSubmit = () => {
-    const newDate = Moment(new Date(1598051730000)).format('DD-MM-YYYY');
-    const time = Moment(new Date(1598051930000)).format('HH:mm');
-    console.log(time, date, comment, service, provider);
+    const newDate = Moment(date).format('DD-MM-YYYY');
+    const newTime = Moment(time).format('HH:mm');
     bookAppointment(
-      { time, date: newDate, comment, service, provider },
+      { time: newTime, date: newDate, comment, service, provider },
       {
         onSuccess: () => {
           showMessage({
@@ -103,17 +124,26 @@ export const BookAppointment: React.FC<BookAppointmentProps> = ({ data }) => {
             onPress={showTimepicker}
             className="flex flex-row items-center justify-between rounded-xl border border-[#C1B9BB] p-4"
           >
-            <Text>{Moment(date).format('LT')}</Text>
+            <Text>{Moment(time).format('LT')}</Text>
             <DropDown />
           </Pressable>
         </View>
-        {show && (
+        {datePicker && (
           <DateTimePicker
             testID="dateTimePicker"
             value={date}
             mode={mode}
             is24Hour={true}
-            onChange={onChange}
+            onChange={onChangeDate}
+          />
+        )}
+        {timeKeeper && (
+          <DateTimePicker
+            testID="dateTimePicker"
+            value={date}
+            mode={mode}
+            is24Hour={true}
+            onChange={onChangeTime}
           />
         )}
       </View>
