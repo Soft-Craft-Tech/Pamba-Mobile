@@ -1,24 +1,36 @@
 import { useRouter } from 'expo-router';
 import React from 'react';
 
-import { Button, FocusAwareStatusBar, Text, View } from '@/ui';
+import { useSignUp } from '@/api/posts/use-create-account';
+import { SignUpForm } from '@/components/signup-form';
+import { useSoftKeyboardEffect } from '@/core/keyboard';
+import { FocusAwareStatusBar, showErrorMessage } from '@/ui';
 
-export default function CreateAccount() {
+export default function Login() {
+  useSoftKeyboardEffect();
   const router = useRouter();
 
+  const { mutate: createAccount, isLoading } = useSignUp();
+
+  const onSubmit = async (data: {
+    name: string;
+    email: string;
+    phone: string;
+    password: string;
+  }) => {
+    createAccount(data, {
+      onSuccess: () => {
+        router.push('/feed/congratulations');
+      },
+      onError: () => {
+        showErrorMessage('Error booking appointment');
+      },
+    });
+  };
   return (
     <>
       <FocusAwareStatusBar />
-      <View className="flex-1 justify-center p-4">
-        <Text>Forgot</Text>
-        <Button
-          testID="login-button"
-          label="REGISTER NOW"
-          onPress={() => {
-            router.replace('/');
-          }}
-        />
-      </View>
+      <SignUpForm onSubmit={onSubmit} isLoading={isLoading} />
     </>
   );
 }

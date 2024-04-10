@@ -1,16 +1,23 @@
+/* eslint-disable max-lines-per-function */
 import { zodResolver } from '@hookform/resolvers/zod';
-import { Link, useRouter } from 'expo-router';
+import { useRouter } from 'expo-router';
 import React from 'react';
 import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Button, ControlledInput, Image, Pressable, Text, View } from '@/ui';
+import { Button, ControlledInput, Image, Text, View } from '@/ui';
 const Logo = require('../../assets/transparentLogo.png');
 
 const schema = z.object({
+  name: z.string({
+    required_error: 'Name is required',
+  }),
   email: z.string({
     required_error: 'Email is required',
+  }),
+  phone: z.string({
+    required_error: 'Name is required',
   }),
   password: z
     .string({
@@ -21,11 +28,15 @@ const schema = z.object({
 
 export type FormType = z.infer<typeof schema>;
 
-export type LoginFormProps = {
+export type SignUpFormProps = {
   onSubmit?: SubmitHandler<FormType>;
+  isLoading?: boolean;
 };
 
-export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
+export const SignUpForm = ({
+  onSubmit = () => {},
+  isLoading = false,
+}: SignUpFormProps) => {
   const router = useRouter();
   const { handleSubmit, control } = useForm<FormType>({
     resolver: zodResolver(schema),
@@ -39,12 +50,24 @@ export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
         />
         <Text
           testID="form-title"
-          className="mt-8 max-w-[222px] pb-6 text-center text-[14px] text-[#A59E9E]"
+          className="mt-8 max-w-[222px] pb-6 text-center text-lg text-[#A59E9E]"
         >
-          Please enter your email & phone number to Login
+          Welcome to Pamba
         </Text>
       </View>
-      <View className="gap-y-4">
+      <View className="gap-y-2">
+        <ControlledInput
+          testID="email-input"
+          control={control}
+          name="name"
+          label="Full Name"
+        />
+        <ControlledInput
+          testID="email-input"
+          control={control}
+          name="phone"
+          label="Phone NUmber"
+        />
         <ControlledInput
           testID="email-input"
           control={control}
@@ -59,15 +82,11 @@ export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
           placeholder="***"
           secureTextEntry={true}
         />
-        <Link href="/forgot-password" asChild>
-          <Pressable>
-            <Text className="px-3 text-white">Forgot Password?</Text>
-          </Pressable>
-        </Link>
       </View>
       <Button
         testID="login-button"
-        label="Login"
+        label="Register Now"
+        loading={isLoading}
         onPress={handleSubmit(onSubmit)}
       />
       <View>
@@ -75,14 +94,14 @@ export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
           testID="form-title"
           className="mt-8  pb-6 text-center text-[14px] text-[#A59E9E]"
         >
-          Don't have an account?
+          Already have an account?
         </Text>
         <Button
           testID="login-button"
-          label="Sign Up"
+          label="Login"
           variant="outlined"
           onPress={() => {
-            router.replace('/create-account');
+            router.replace('/login');
           }}
         />
       </View>
