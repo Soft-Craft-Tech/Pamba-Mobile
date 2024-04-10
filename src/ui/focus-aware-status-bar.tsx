@@ -7,8 +7,8 @@ type Props = React.ComponentProps<typeof StatusBar>;
 export const FocusAwareStatusBar = (props: Props) => {
   const isFocused = useIsFocused();
   const { colorScheme } = useColorScheme();
-  const isDark = colorScheme === 'dark';
-  const barStyle = isDark ? 'light-content' : 'dark-content';
+  const isDark = colorScheme === 'light';
+  const barStyle = isDark ? 'light-content' : 'light-content';
 
   return isFocused ? <StatusBar barStyle={barStyle} {...props} /> : null;
 };

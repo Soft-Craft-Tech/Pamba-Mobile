@@ -11,6 +11,7 @@ import {
   Button,
   FocusAwareStatusBar,
   Modal,
+  SafeAreaView,
   ScrollView,
   Text,
   useModal,
@@ -27,19 +28,19 @@ export default function Settings() {
   const userData = getUserData();
 
   return (
-    <>
+    <SafeAreaView>
       <FocusAwareStatusBar />
       <ScrollView>
         <View className="flex-1 px-4 pt-16 ">
           <Text className="text-2xl font-bold text-[#000000]">Profile</Text>
-          <View className="mt-5 flex flex-row justify-between">
+          <View className="mt-5 flex flex-row justify-between overflow-hidden">
             <View className="flex flex-row gap-x-4">
               <View className="inline-flex h-20 w-20 items-center justify-center rounded-full bg-[#0F1C35] ">
                 <Text className="text-xl text-[#DB1471]">TW</Text>
               </View>
               <View>
                 <Text className="text-xl">{userData?.name}</Text>
-                <Text className="text-xl text-[#303535]">
+                <Text className="text-md text-[#303535]">
                   {userData?.email}
                 </Text>
               </View>
@@ -97,6 +98,6 @@ export default function Settings() {
           />
         </View>
       </ScrollView>
-    </>
+    </SafeAreaView>
   );
 }

@@ -14,6 +14,7 @@ import {
   FocusAwareStatusBar,
   Image,
   Pressable,
+  SafeAreaView,
   Text,
   View,
 } from '@/ui';
@@ -80,7 +81,7 @@ export default function Post() {
     (_, index) => <Rating key={index} color="#DB1471" />
   );
   return (
-    <View className="flex-1 p-3 ">
+    <SafeAreaView className="flex-1 p-3 ">
       <Stack.Screen
         options={{ title: data?.business?.category, headerBackTitle: 'Feed' }}
       />
@@ -102,7 +103,7 @@ export default function Post() {
             <View className="flex w-full flex-row items-center justify-between pr-10">
               <View className="flex flex-row items-center gap-x-2">
                 <LocationIcon />
-                <Text className="text-lg">{data?.business?.location}</Text>
+                <Text className="text-sm">{data?.business?.location}</Text>
               </View>
               <Pressable
                 onPress={() =>
@@ -115,7 +116,7 @@ export default function Post() {
             </View>
           </View>
         </View>
-        <View className="m-4 flex flex-row justify-between gap-x-1 overflow-hidden rounded-xl bg-[#0F1C35] p-2">
+        <View className="m-4 flex w-full flex-row justify-between gap-x-1 overflow-hidden rounded-xl bg-[#0F1C35] p-2">
           {Object.keys(tabs).map((tab) => (
             <Button
               key={tab}
@@ -130,6 +131,6 @@ export default function Post() {
         </View>
       </View>
       {tabs[activeTab].content}
-    </View>
+    </SafeAreaView>
   );
 }

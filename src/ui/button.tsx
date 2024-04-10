@@ -39,7 +39,7 @@ const button = tv({
       },
       ghost: {
         container: 'bg-[#fff] border-solid border-2 border-[#0F1C35]',
-        label: 'text-black',
+        label: 'text-black text-sm',
         indicator: 'text-black',
       },
       ghostVoke: {
