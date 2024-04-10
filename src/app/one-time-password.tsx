@@ -1,34 +1,33 @@
-import React, { useRef, useState } from 'react';
-import { TextInput } from 'react-native';
+import React from 'react';
 
 import { Button, Text, View } from '@/ui';
 
 interface OTPInputProps {}
 
 const OTPInput: React.FC<OTPInputProps> = () => {
-  const [otp, setOTP] = useState(['', '', '', '', '', '']);
-  const inputRefs = [
-    useRef<TextInput>(null),
-    useRef<TextInput>(null),
-    useRef<TextInput>(null),
-    useRef<TextInput>(null),
-    useRef<TextInput>(null),
-    useRef<TextInput>(null),
-  ];
+  // const [otp, setOTP] = useState(['', '', '', '', '', '']);
+  // const inputRefs = [
+  //   useRef<TextInput>(null),
+  //   useRef<TextInput>(null),
+  //   useRef<TextInput>(null),
+  //   useRef<TextInput>(null),
+  //   useRef<TextInput>(null),
+  //   useRef<TextInput>(null),
+  // ];
 
-  const handleOTPChange = (index: number, value: string) => {
-    if (isNaN(Number(value))) {
-      return;
-    }
+  // const handleOTPChange = (index: number, value: string) => {
+  //   if (isNaN(Number(value))) {
+  //     return;
+  //   }
 
-    const newOTP = [...otp];
-    newOTP[index] = value;
-    setOTP(newOTP);
+  //   const newOTP = [...otp];
+  //   newOTP[index] = value;
+  //   setOTP(newOTP);
 
-    if (index < 3 && value !== '') {
-      inputRefs[index + 1].current?.focus();
-    }
-  };
+  //   if (index < 6 && value !== '') {
+  //     inputRefs[index + 1].current?.focus();
+  //   }
+  // };
 
   return (
     <View className="flex-1 items-center justify-evenly bg-[#0F1C35]">
@@ -40,7 +39,7 @@ const OTPInput: React.FC<OTPInputProps> = () => {
           Code sent to +254246****. This code will expire in 01:30
         </Text>
         <View className="flex flex-row justify-center gap-x-4">
-          {otp.map((digit, index) => (
+          {/* {otp.map((digit, index) => (
             <TextInput
               key={index}
               ref={inputRefs[index]}
@@ -50,7 +49,7 @@ const OTPInput: React.FC<OTPInputProps> = () => {
               keyboardType="numeric"
               maxLength={1}
             />
-          ))}
+          ))} */}
         </View>
       </View>
       <Button label="Verify" className="mt-20 w-full" />
