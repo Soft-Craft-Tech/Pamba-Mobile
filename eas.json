@@ -1,10 +1,12 @@
 {
   "cli": {
-    "version": ">= 0.57.0"
+    "version": ">= 0.57.0",
+    "appVersionSource": "remote"
   },
   "build": {
     "production": {
       "channel": "production",
+      "autoIncrement": true,
       "distribution": "store",
       "pnpm": "8.15.4",
       "ios": {
