@@ -4,6 +4,7 @@ import Moment from 'moment';
 import * as React from 'react';
 
 import { useUpcoming } from '@/api';
+import { CancelAppointment } from '@/components/cancel-appointment';
 import {
   ActivityIndicator,
   Button,
@@ -21,9 +22,12 @@ import { Time } from '@/ui/icons/time';
 // eslint-disable-next-line max-lines-per-function
 export default function Post() {
   const local = useLocalSearchParams<{ id: string }>();
+  const [cancelAppointment, setIsCancelAppoinment] = React.useState(false);
 
   const { data, isLoading, isError } = useUpcoming();
   const postData = data?.find((item) => item.id.toString() === local.id);
+
+  console.log(postData);
 
   const stars = Array.from({ length: Math.floor(4.5) }, (_, index) => (
     <Rating key={index} color="#DB1471" />
@@ -114,10 +118,18 @@ export default function Post() {
           </View>
         </View>
         <View className="mb-2 flex flex-row justify-between gap-x-2">
-          <Button label="Cancel" className="w-1/2" variant="ghostVoke" />
+          <Button
+            label="Cancel"
+            className="w-1/2"
+            variant="ghostVoke"
+            onPress={() => {
+              setIsCancelAppoinment(!cancelAppointment);
+            }}
+          />
           <Button label="Reschedule" className=" w-1/2" />
         </View>
       </View>
+      {cancelAppointment && <CancelAppointment appointmentId={postData?.id} />}
     </View>
   );
 }
