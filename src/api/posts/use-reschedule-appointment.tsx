@@ -5,8 +5,8 @@ import { client } from '../common';
 import type { Post } from './types';
 
 type Variables = {
-  date: Date;
-  time: Date;
+  date: string;
+  time: string;
   params?: number | undefined;
 };
 
@@ -18,9 +18,10 @@ export const useRescheduleAppointent = createMutation<
   AxiosError
 >({
   mutationFn: async (variables) => {
+    console.log('Here', `/appointments/reschedule/${variables.params}`);
     return client({
-      url: `/appointments/cancel/${variables.params}`,
-      method: 'POST',
+      url: `/appointments/reschedule/${variables.params}`,
+      method: 'PUT',
       data: { date: variables.date, time: variables.date },
     }).then((response) => {
       return response.data;

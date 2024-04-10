@@ -20,7 +20,7 @@ export const useCancelAppointment = createMutation<
     console.log('Here', `/appointments/cancel/${variables.params}`);
     return client({
       url: `/appointments/cancel/${variables.params}`,
-      method: 'POST',
+      method: 'PUT',
       data: { comment: variables.comment },
     }).then((response) => {
       return response.data;

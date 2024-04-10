@@ -1,4 +1,3 @@
-import { router } from 'expo-router';
 import React from 'react';
 import { TextInput } from 'react-native';
 import { showMessage } from 'react-native-flash-message';
@@ -17,7 +16,6 @@ export const CancelAppointment: React.FC<{
       { params: appointmentId, comment: value },
       {
         onSuccess: () => {
-          router.push('/feed/congratulations');
           showMessage({
             message: 'Appointment cancelled succesfuly',
             type: 'success',

@@ -7,19 +7,22 @@ import { ScrollView } from 'react-native';
 import { type AllAppointments, useUpcoming } from '@/api';
 import { Card } from '@/components/card';
 import { ReccomendationsCard } from '@/components/reccomendations-card';
-import { getUserData } from '@/core/auth/utils';
+import { getToken, getUserData } from '@/core/auth/utils';
 import { EmptyList, FocusAwareStatusBar, Pressable, Text, View } from '@/ui';
 import BellIcon from '@/ui/icons/notification';
 
 export default function Feed() {
   const { data, isLoading, isError } = useUpcoming();
-  console.log(data);
+
+  const token = getToken();
   const [activeFilter, setActiveFilter] = useState(0);
   const renderItem = React.useCallback(
     ({ item }: { item: AllAppointments }) => <Card {...item} />,
     []
   );
   const router = useRouter();
+
+  console.log(token);
 
   const userData = getUserData();
 

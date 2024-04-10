@@ -82,7 +82,7 @@ export const LoginForm = ({ onSubmit = () => {} }: LoginFormProps) => {
           label="Sign Up"
           variant="outlined"
           onPress={() => {
-            router.replace('/one-time-password');
+            router.replace('/create-account');
           }}
         />
       </View>

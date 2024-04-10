@@ -22,6 +22,8 @@ export const RescheduleAppointment: React.FC<{
   const [mode, setMode] = useState<any | undefined>('date');
   const [datePicker, setDatePicker] = useState(false);
   const [timeKeeper, setTimePicker] = useState(false);
+  const testTime = Moment(time).format('HH:mm');
+  console.log(testTime);
 
   const onChangeDate = (
     _event: DateTimePickerEvent,
@@ -58,8 +60,10 @@ export const RescheduleAppointment: React.FC<{
   };
 
   const handlerescheduleAppointment = () => {
+    const newDate = Moment(date).format('DD-MM-YYYY');
+    const newTime = Moment(time).format('HH:mm');
     rescheduleAppointment(
-      { params: appointmentId, date, time },
+      { params: appointmentId, time: newTime, date: newDate },
       {
         onSuccess: () => {
           router.push('/feed/congratulations');
