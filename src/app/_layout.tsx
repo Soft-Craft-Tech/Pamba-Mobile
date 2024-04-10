@@ -43,6 +43,10 @@ function RootLayoutNav() {
         <Stack.Screen name="login" options={{ headerShown: false }} />
         <Stack.Screen name="landing" options={{ headerShown: false }} />
         <Stack.Screen
+          name="one-time-password"
+          options={{ headerShown: false }}
+        />
+        <Stack.Screen
           name="create-account"
           options={{
             headerShown: false,

@@ -20,7 +20,7 @@ export default function Login() {
   }) => {
     createAccount(data, {
       onSuccess: () => {
-        router.push('/feed/congratulations');
+        router.push('/one-time-password');
       },
       onError: () => {
         showErrorMessage('Error booking appointment');
