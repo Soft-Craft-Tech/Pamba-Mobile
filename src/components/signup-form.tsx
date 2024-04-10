@@ -66,7 +66,7 @@ export const SignUpForm = ({
           testID="email-input"
           control={control}
           name="phone"
-          label="Phone NUmber"
+          label="Phone Number"
         />
         <ControlledInput
           testID="email-input"
@@ -80,7 +80,7 @@ export const SignUpForm = ({
           name="password"
           label="Password"
           placeholder="***"
-          secureTextEntry={true}
+          secureTextEntry={false}
         />
       </View>
       <Button
