@@ -5,6 +5,7 @@ import * as React from 'react';
 
 import { useUpcoming } from '@/api';
 import { CancelAppointment } from '@/components/cancel-appointment';
+import { RescheduleAppointment } from '@/components/reschedule-appointment';
 import {
   ActivityIndicator,
   Button,
@@ -23,6 +24,7 @@ import { Time } from '@/ui/icons/time';
 export default function Post() {
   const local = useLocalSearchParams<{ id: string }>();
   const [cancelAppointment, setIsCancelAppoinment] = React.useState(false);
+  const [reschedule, setIsReschedule] = React.useState(false);
 
   const { data, isLoading, isError } = useUpcoming();
   const postData = data?.find((item) => item.id.toString() === local.id);
@@ -123,13 +125,22 @@ export default function Post() {
             className="w-1/2"
             variant="ghostVoke"
             onPress={() => {
+              setIsReschedule(false);
               setIsCancelAppoinment(!cancelAppointment);
             }}
           />
-          <Button label="Reschedule" className=" w-1/2" />
+          <Button
+            label="Reschedule"
+            className=" w-1/2"
+            onPress={() => {
+              setIsCancelAppoinment(false);
+              setIsReschedule(!reschedule);
+            }}
+          />
         </View>
       </View>
       {cancelAppointment && <CancelAppointment appointmentId={postData?.id} />}
+      {reschedule && <RescheduleAppointment appointmentId={postData?.id} />}
     </View>
   );
 }
