@@ -15,9 +15,13 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
   updates: {
-    fallbackToCacheTimeout: 0,
+    url: 'https://u.expo.dev/423b7dcd-50fc-49c8-b612-385fc35a4b07',
   },
   assetBundlePatterns: ['**/*'],
+  runtimeVersion: {
+    policy: 'appVersion',
+  },
+
   ios: {
     supportsTablet: true,
     bundleIdentifier: Env.BUNDLE_ID,
