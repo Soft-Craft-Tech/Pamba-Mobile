@@ -42,7 +42,7 @@ const OTP: React.FC<OTPInputProps> = () => {
         { otp: text, email: emailAdress.email },
         {
           onSuccess: () => {
-            router.push('/create-account');
+            router.push('/login');
           },
           onError: () => {
             showErrorMessage('Error Veirifying account');
