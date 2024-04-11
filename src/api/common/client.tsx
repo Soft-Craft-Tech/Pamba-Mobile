@@ -21,7 +21,6 @@ export const loginClient = async (email: string, password: string) => {
   try {
     const credentials = `${email}:${password}`;
     const credentialsBase64 = encode(credentials);
-
     const response = await client.post(
       '/clients/login',
       { username: email, password },
@@ -32,17 +31,14 @@ export const loginClient = async (email: string, password: string) => {
         },
       }
     );
-    console.log(response);
+
     return response.data;
   } catch (error: any) {
     if (error.response) {
-      console.error('Sign-in error:', error.response.status);
       throw error.response;
     } else if (error.request) {
-      console.error('Request error:', error.request);
       throw error.request;
     } else {
-      console.error('Error:', error.message);
       throw error.message;
     }
   }

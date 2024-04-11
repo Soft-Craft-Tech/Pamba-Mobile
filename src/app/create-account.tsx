@@ -3,6 +3,7 @@ import React from 'react';
 
 import { useSignUp } from '@/api/posts/use-create-account';
 import { SignUpForm } from '@/components/signup-form';
+import { setEmailAdress } from '@/core/auth/utils';
 import { useSoftKeyboardEffect } from '@/core/keyboard';
 import { FocusAwareStatusBar, showErrorMessage } from '@/ui';
 
@@ -18,6 +19,9 @@ export default function Login() {
     phone: string;
     password: string;
   }) => {
+    setEmailAdress({
+      email: data?.email,
+    });
     createAccount(data, {
       onSuccess: () => {
         router.push('/one-time-password');
