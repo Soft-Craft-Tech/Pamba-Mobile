@@ -6,13 +6,45 @@ import type {
   RegisterOptions,
 } from 'react-hook-form';
 import { useController } from 'react-hook-form';
-import type { TextInput, TextInputProps } from 'react-native';
-import { I18nManager, StyleSheet, View } from 'react-native';
+import type { TextInputProps } from 'react-native';
+import {
+  I18nManager,
+  StyleSheet,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from 'react-native';
 import { TextInput as NTextInput } from 'react-native';
+import type { SvgProps } from 'react-native-svg';
+import Svg, {
+  ClipPath,
+  Defs,
+  G,
+  Path as SvgPath,
+  Rect,
+} from 'react-native-svg';
 import { tv } from 'tailwind-variants';
 
 import colors from './colors';
 import { Text } from './text';
+
+const PasswordSvg = ({ color = '#838589', ...props }: SvgProps) => (
+  <Svg width={20} height={20} viewBox="0 0 20 20" fill="none" {...props}>
+    <G clipPath="url(#clip0)">
+      <SvgPath
+        fillRule="evenodd"
+        clipRule="evenodd"
+        d="M10 2.213c5.16 0 8.1 3.531 9.392 5.636.4.646.612 1.391.612 2.15 0 .76-.212 1.505-.612 2.151-1.292 2.105-4.192 5.637-9.392 5.637-5.16 0-8.1-3.531-9.392-5.637-.4-.646-.612-1.391-.612-2.15 0-.76.212-1.505.612-2.151C1.9 5.744 4.84 2.213 10 2.213zm0 13.9c4.349 0 6.862-3.037 7.972-4.842.237-.384.362-.827.362-1.283 0-.455-.125-.898-.362-1.283-1.11-1.805-3.622-4.922-7.972-4.922-4.349 0-6.861 3.046-7.971 4.846-.237.384-.362.827-.362 1.283 0 .455.125.898.362 1.283 1.11 1.805 3.622 4.922 7.972 4.922zm-2.315-5.535c.685-.458 1.49-.702 2.315-.702 1.105.003 2.164.442 2.945 1.221.782.781 1.221 1.84 1.222 3 0 .824-.244 1.63-.702 2.315-.458.685-1.108 1.219-1.869 1.534-.762.315-1.609.397-2.417.236-.808-.16-1.55-.557-2.133-1.14-.583-.583-.98-1.326-1.14-2.133-.16-.808.022-1.654.335-2.417.314-.761.849-1.411 1.534-1.869zm1.528 5.525c.411.275.893.422 1.393.422.663 0 1.299-.264 1.768-.732.469-.468.732-1.104.732-1.768 0-.5-.148-.982-.422-1.39-.274-.41-.665-.731-1.122-.919-.457-.188-.96-.138-1.445.03-.485.168-.93.405-1.279.765-.349.36-.55.805-.64 1.284-.09.48-.04.965.175 1.422.215.457.534.847.935 1.108z"
+        fill={color}
+      />
+    </G>
+    <Defs>
+      <ClipPath id="clip0">
+        <Rect width={20} height={20} fill="white" />
+      </ClipPath>
+    </Defs>
+  </Svg>
+);
 
 const inputTv = tv({
   slots: {
@@ -135,5 +167,37 @@ export function ControlledInput<T extends FieldValues>(
       {...inputProps}
       error={fieldState.error?.message}
     />
+  );
+}
+
+export function ControlledPasswordInput<T extends FieldValues>(
+  props: ControlledInputProps<T>
+) {
+  const { name, control, rules, label = 'Password' } = props;
+
+  const { field } = useController({ control, name, rules });
+  const [passwordVisible, setPasswordVisible] = React.useState(false);
+
+  const togglePasswordVisibility = () => {
+    setPasswordVisible(!passwordVisible);
+  };
+  return (
+    <>
+      <Text className="mb-1 text-lg text-white">{label}</Text>
+      <View className="flex flex-row items-center rounded-xl  border-[0.5px] border-neutral-300 bg-[#1b2840]  px-2.5 text-white">
+        <TextInput
+          className="h-[50px] flex-1 text-white"
+          secureTextEntry={!passwordVisible}
+          placeholder="Enter password"
+          autoCapitalize="none"
+          autoCorrect={false}
+          onChangeText={field.onChange}
+          value={(field.value as string) || ''}
+        />
+        <TouchableOpacity onPress={togglePasswordVisibility}>
+          <PasswordSvg />
+        </TouchableOpacity>
+      </View>
+    </>
   );
 }

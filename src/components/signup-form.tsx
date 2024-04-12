@@ -6,7 +6,14 @@ import type { SubmitHandler } from 'react-hook-form';
 import { useForm } from 'react-hook-form';
 import * as z from 'zod';
 
-import { Button, ControlledInput, Image, Text, View } from '@/ui';
+import {
+  Button,
+  ControlledInput,
+  ControlledPasswordInput,
+  Image,
+  Text,
+  View,
+} from '@/ui';
 const Logo = require('../../assets/transparentLogo.png');
 
 const schema = z.object({
@@ -74,7 +81,7 @@ export const SignUpForm = ({
           name="email"
           label="Email"
         />
-        <ControlledInput
+        <ControlledPasswordInput
           testID="password-input"
           control={control}
           name="password"
