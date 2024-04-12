@@ -9,7 +9,7 @@ import { Time } from '@/ui/icons/time';
 
 type Props = AllAppointments;
 
-export const Card = ({ id, time, date, comment, imgUrl }: Props) => {
+export const Card = ({ id, time, date, comment, imgUrl, cancelled }: Props) => {
   return (
     <Link href={`/feed/${id}`} asChild>
       <Pressable>
@@ -35,6 +35,7 @@ export const Card = ({ id, time, date, comment, imgUrl }: Props) => {
                 <Text className="text-white">{time.slice(0, -3)}</Text>
               </View>
             </View>
+            <Text className="px-3">{cancelled ? 'Cancelled' : ''}</Text>
           </View>
         </View>
       </Pressable>

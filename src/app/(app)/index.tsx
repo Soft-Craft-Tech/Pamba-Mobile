@@ -16,12 +16,7 @@ export default function Feed() {
   const { data, isLoading, isError } = useUpcoming();
   const { data: businessData } = useBusinessesQuery();
 
-  const currentDateTime = new Date();
-
-  const upcomingAppointents = data?.filter((appointment) => {
-    const createdAtDate = new Date(appointment?.create_at);
-    return createdAtDate > currentDateTime;
-  });
+  console.log(data);
 
   const [activeFilter, setActiveFilter] = useState(0);
   const renderItem = React.useCallback(
@@ -102,7 +97,7 @@ export default function Feed() {
           </View>
         ) : (
           <FlashList
-            data={upcomingAppointents}
+            data={data}
             renderItem={renderItem}
             keyExtractor={(_, index) => `item-${index}`}
             ListEmptyComponent={<EmptyList isLoading={isLoading} />}

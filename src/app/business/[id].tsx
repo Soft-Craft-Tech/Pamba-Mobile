@@ -100,7 +100,7 @@ export default function Post() {
               {data?.business?.name}
             </Text>
             <View className="mt-3 flex flex-row gap-x-3">{stars}</View>
-            <View className="flex w-full flex-row items-center justify-between pr-10">
+            <View className="flex w-full items-center pr-10">
               <View className="flex flex-row items-center gap-x-2">
                 <LocationIcon />
                 <Text className="text-sm">{data?.business?.location}</Text>
@@ -130,7 +130,7 @@ export default function Post() {
           ))}
         </View>
       </ScrollView>
-      <ScrollView className="p-3">{tabs[activeTab].content}</ScrollView>
+      <ScrollView className="px-3">{tabs[activeTab].content}</ScrollView>
     </ScrollView>
   );
 }

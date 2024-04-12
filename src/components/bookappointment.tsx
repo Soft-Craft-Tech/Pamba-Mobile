@@ -45,7 +45,7 @@ export const BookAppointment: React.FC<BookAppointmentProps> = ({ data }) => {
 
   const [service, setSelectedService] = useState(firstServiceId);
 
-  const [comment] = useState('');
+  const [comment] = useState('My Appointment');
 
   const [provider] = useState(9);
 
@@ -88,10 +88,10 @@ export const BookAppointment: React.FC<BookAppointmentProps> = ({ data }) => {
   };
   return (
     <View>
-      <View className="m-2 flex overflow-hidden  rounded-xl bg-white p-10 shadow-xl">
+      <View className="mx-2 my-1 flex overflow-hidden  rounded-xl bg-white p-10 shadow-xl">
         <Text>{data?.business.description}</Text>
       </View>
-      <View className="m-2 flex overflow-hidden rounded-xl bg-white p-10 shadow-xl">
+      <View className="mx-2 flex overflow-hidden rounded-xl bg-white p-10 shadow-xl">
         <Text className="text-2xl">Services</Text>
         <View className="flex flex-row flex-wrap gap-x-2">
           {data?.services?.map((serviceData) => (
@@ -107,7 +107,7 @@ export const BookAppointment: React.FC<BookAppointmentProps> = ({ data }) => {
           ))}
         </View>
       </View>
-      <View className="mt-2 flex flex-row justify-between gap-x-4 overflow-hidden px-10 pt-12">
+      <View className=" flex flex-row justify-between gap-x-4 overflow-hidden px-10 pt-12">
         <View className="w-1/2">
           <Text className="text-lg">Choose Date</Text>
           <Pressable
