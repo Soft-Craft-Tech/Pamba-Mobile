@@ -14,13 +14,14 @@ import BellIcon from '@/ui/icons/notification';
 
 export default function Feed() {
   const { data, isLoading, isError } = useUpcoming();
-  const {
-    data: businessData,
-    // isLoading: loadingBusinesses,
-    // isError: errorLoadingBusinesses,
-  } = useBusinessesQuery();
+  const { data: businessData } = useBusinessesQuery();
 
-  console.log(businessData?.[0]?.business_name);
+  const currentDateTime = new Date();
+
+  const upcomingAppointents = data?.filter((appointment) => {
+    const createdAtDate = new Date(appointment?.create_at);
+    return createdAtDate > currentDateTime;
+  });
 
   const [activeFilter, setActiveFilter] = useState(0);
   const renderItem = React.useCallback(
@@ -101,7 +102,7 @@ export default function Feed() {
           </View>
         ) : (
           <FlashList
-            data={data}
+            data={upcomingAppointents}
             renderItem={renderItem}
             keyExtractor={(_, index) => `item-${index}`}
             ListEmptyComponent={<EmptyList isLoading={isLoading} />}
