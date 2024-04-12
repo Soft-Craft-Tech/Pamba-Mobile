@@ -80,9 +80,9 @@ export const RescheduleAppointment: React.FC<{
   };
 
   return (
-    <View className="m-2 flex gap-y-6 overflow-hidden rounded-xl bg-white p-10 shadow-xl">
-      <Text className="mb-2 text-xl font-bold">Reschedule Apppointment</Text>
-      <View className="m-2 flex flex-row justify-between gap-x-4 overflow-hidden p-10">
+    <View className="flex overflow-hidden rounded-xl bg-white p-10 shadow-xl">
+      <Text className="text-xl font-bold">Reschedule Apppointment</Text>
+      <View className="flex flex-row justify-between gap-x-4 overflow-hidden p-4">
         <View className="w-1/2">
           <Text className="text-lg">Choose Date</Text>
           <Pressable

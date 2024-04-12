@@ -14,7 +14,7 @@ import {
   FocusAwareStatusBar,
   Image,
   Pressable,
-  SafeAreaView,
+  ScrollView,
   Text,
   View,
 } from '@/ui';
@@ -81,12 +81,12 @@ export default function Post() {
     (_, index) => <Rating key={index} color="#DB1471" />
   );
   return (
-    <SafeAreaView className="flex-1 p-3 ">
+    <ScrollView className="flex-1 p-3 ">
       <Stack.Screen
         options={{ title: data?.business?.category, headerBackTitle: 'Feed' }}
       />
       <FocusAwareStatusBar />
-      <View className="m-2 overflow-hidden rounded-xl  bg-white px-5 py-4 shadow-xl">
+      <ScrollView className="m-2 overflow-hidden rounded-xl  bg-white px-5 py-4 shadow-xl">
         <View className="flex  flex-row items-center">
           <Image
             className="inline-flex h-20 w-20 items-center justify-center rounded-full"
@@ -116,7 +116,7 @@ export default function Post() {
             </View>
           </View>
         </View>
-        <View className="m-4 flex w-full flex-row justify-between gap-x-1 overflow-hidden rounded-xl bg-[#0F1C35] p-2">
+        <View className="my-4 flex w-full flex-row justify-evenly overflow-hidden rounded-xl bg-[#0F1C35] p-2">
           {Object.keys(tabs).map((tab) => (
             <Button
               key={tab}
@@ -129,8 +129,8 @@ export default function Post() {
             />
           ))}
         </View>
-      </View>
-      {tabs[activeTab].content}
-    </SafeAreaView>
+      </ScrollView>
+      <ScrollView className="p-3">{tabs[activeTab].content}</ScrollView>
+    </ScrollView>
   );
 }

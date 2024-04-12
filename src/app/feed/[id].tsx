@@ -12,6 +12,7 @@ import {
   FocusAwareStatusBar,
   Image,
   Pressable,
+  ScrollView,
   Text,
   View,
 } from '@/ui';
@@ -55,7 +56,7 @@ export default function Post() {
   }
 
   return (
-    <View className="flex-1 p-3 ">
+    <ScrollView className="flex-1 p-3 ">
       <Stack.Screen
         options={{ title: postData?.name, headerBackTitle: 'Feed' }}
       />
@@ -109,7 +110,7 @@ export default function Post() {
             </View>
           </View>
         </View>
-        <View className="my-4 flex w-full  flex-row justify-between rounded-lg bg-[#F5F6FA] p-5">
+        <View className="my-2 flex w-full  flex-row justify-between rounded-lg bg-[#F5F6FA] p-5">
           <View className="flex flex-row items-center gap-x-4">
             <AppointmentSvg color="#0F1C35" />
             <Text>{Moment(postData?.create_at).format('DD-MM-YY')}</Text>
@@ -119,7 +120,7 @@ export default function Post() {
             <Text>{postData?.time.slice(0, -3)}</Text>
           </View>
         </View>
-        <View className="mb-2 flex flex-row justify-between gap-x-2">
+        <View className="flex flex-row justify-between gap-x-2">
           <Button
             label="Cancel"
             className="w-1/2"
@@ -141,6 +142,6 @@ export default function Post() {
       </View>
       {cancelAppointment && <CancelAppointment appointmentId={postData?.id} />}
       {reschedule && <RescheduleAppointment appointmentId={postData?.id} />}
-    </View>
+    </ScrollView>
   );
 }

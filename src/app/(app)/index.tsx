@@ -1,28 +1,33 @@
 /* eslint-disable max-lines-per-function */
 import { FlashList } from '@shopify/flash-list';
-import { useRouter } from 'expo-router';
+import { Link, useRouter } from 'expo-router';
 import React, { useState } from 'react';
 import { ScrollView } from 'react-native';
 
 import { type AllAppointments, useUpcoming } from '@/api';
+import { useBusinessesQuery } from '@/api/posts/use-businesses';
 import { Card } from '@/components/card';
 import { ReccomendationsCard } from '@/components/reccomendations-card';
-import { getToken, getUserData } from '@/core/auth/utils';
+import { getUserData } from '@/core/auth/utils';
 import { EmptyList, FocusAwareStatusBar, Pressable, Text, View } from '@/ui';
 import BellIcon from '@/ui/icons/notification';
 
 export default function Feed() {
   const { data, isLoading, isError } = useUpcoming();
+  const {
+    data: businessData,
+    // isLoading: loadingBusinesses,
+    // isError: errorLoadingBusinesses,
+  } = useBusinessesQuery();
 
-  const token = getToken();
+  console.log(businessData?.[0]?.business_name);
+
   const [activeFilter, setActiveFilter] = useState(0);
   const renderItem = React.useCallback(
     ({ item }: { item: AllAppointments }) => <Card {...item} />,
     []
   );
   const router = useRouter();
-
-  console.log(token);
 
   const userData = getUserData();
 
@@ -73,21 +78,20 @@ export default function Feed() {
       <Text className="text-xl font-bold text-[#000000]">Recomendations</Text>
       <View className="my-4">
         <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-          <ReccomendationsCard
-            imageUrl="https://example.com/image.jpg"
-            rating={4.5}
-          />
-          <ReccomendationsCard
-            imageUrl="https://example.com/image.jpg"
-            rating={4.5}
-          />
-          <ReccomendationsCard
-            imageUrl="https://example.com/image.jpg"
-            rating={4.5}
-          />
+          {businessData?.map(({ profile_img, slug, business_name }) => (
+            <Link href={`/business/${slug}`} asChild>
+              <Pressable key={slug}>
+                <ReccomendationsCard
+                  imageUrl={profile_img}
+                  rating={4.5}
+                  business_name={business_name}
+                />
+              </Pressable>
+            </Link>
+          ))}
         </ScrollView>
       </View>
-      <Text className="text-xl font-bold text-[#000000]">
+      <Text className="fbusiness_nameont-bold text-xl text-[#000000]">
         Upcoming Appointments
       </Text>
       <View className="mt-10 min-h-full">

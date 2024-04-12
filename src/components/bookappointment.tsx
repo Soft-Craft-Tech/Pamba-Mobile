@@ -107,7 +107,7 @@ export const BookAppointment: React.FC<BookAppointmentProps> = ({ data }) => {
           ))}
         </View>
       </View>
-      <View className="m-2 flex flex-row justify-between gap-x-4 overflow-hidden p-10">
+      <View className="mt-2 flex flex-row justify-between gap-x-4 overflow-hidden px-10 pt-12">
         <View className="w-1/2">
           <Text className="text-lg">Choose Date</Text>
           <Pressable
