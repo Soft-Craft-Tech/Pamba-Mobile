@@ -39,6 +39,7 @@ export default function TabLayout() {
           headerShown: false,
           title: 'Home',
           tabBarIcon: ({ color }) => <HomeIcon color={color} />,
+          tabBarActiveTintColor: '#DB1471',
           headerRight: () => <CreateNewPostLink />,
           tabBarTestID: 'feed-tab',
         }}
@@ -50,6 +51,7 @@ export default function TabLayout() {
           title: 'Search',
           headerShown: false,
           tabBarIcon: ({ color }) => <SearchSvg color={color} />,
+          tabBarActiveTintColor: '#DB1471',
           tabBarTestID: 'style-tab',
         }}
       />
@@ -59,6 +61,7 @@ export default function TabLayout() {
           title: 'Appointments',
           headerShown: false,
           tabBarIcon: ({ color }) => <AppointmentSvg color={color} />,
+          tabBarActiveTintColor: '#DB1471',
           tabBarTestID: 'settings-tab',
         }}
       />
@@ -68,6 +71,7 @@ export default function TabLayout() {
           title: 'Settings',
           headerShown: false,
           tabBarIcon: ({ color }) => <SettingsIcon color={color} />,
+          tabBarActiveTintColor: '#DB1471',
           tabBarTestID: 'settings-tab',
         }}
       />
