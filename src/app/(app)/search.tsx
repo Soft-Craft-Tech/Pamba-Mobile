@@ -58,11 +58,13 @@ export default function Style() {
         />
       </View>
       <FlashList
+        // persistentScrollbar={true}
         data={filteredData}
         renderItem={renderItem}
         keyExtractor={(_, index) => `item-${index}`}
         ListEmptyComponent={<EmptyList isLoading={isLoading} />}
         estimatedItemSize={300}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

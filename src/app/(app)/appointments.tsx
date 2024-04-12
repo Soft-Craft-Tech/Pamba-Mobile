@@ -33,6 +33,7 @@ export default function Style() {
         keyExtractor={(_, index) => `item-${index}`}
         ListEmptyComponent={<EmptyList isLoading={isLoading} />}
         estimatedItemSize={30}
+        showsVerticalScrollIndicator={false}
       />
     </View>
   );

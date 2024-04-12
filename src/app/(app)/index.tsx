@@ -106,6 +106,7 @@ export default function Feed() {
             keyExtractor={(_, index) => `item-${index}`}
             ListEmptyComponent={<EmptyList isLoading={isLoading} />}
             estimatedItemSize={3}
+            showsVerticalScrollIndicator={false}
           />
         )}
       </View>
