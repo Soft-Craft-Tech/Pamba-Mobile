@@ -18,7 +18,10 @@ export const ReccomendationsCard = ({
   ));
 
   return (
-    <View className="ml-2 w-[200px] rounded-xl bg-white shadow-xl">
+    <View
+      key={business_name}
+      className="ml-2 w-[200px] rounded-xl bg-white shadow-xl"
+    >
       <View className="flex h-[100px]  items-end justify-end  bg-[#DB1471] ">
         <ImageBackground source={{ uri: imageUrl }} style={styles.image}>
           <View className="flex flex-row">{stars}</View>
