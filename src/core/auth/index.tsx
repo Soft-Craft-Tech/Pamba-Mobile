@@ -1,6 +1,7 @@
 import { create } from 'zustand';
 
 import { loginClient } from '@/api';
+import { showErrorMessage } from '@/ui';
 
 import { createSelectors } from '../utils';
 import type { TokenType } from './utils';
@@ -25,7 +26,7 @@ const useAuthStore = create<AuthState>((set) => ({
       setUserData(client);
       set({ status: 'signIn', token: authToken });
     } catch (error) {
-      console.error('Sign-in error:', error);
+      showErrorMessage('Wrong email or Password');
       throw error;
     }
   },
@@ -42,7 +43,7 @@ const useAuthStore = create<AuthState>((set) => ({
         set({ status: 'signOut', token: null });
       }
     } catch (e) {
-      console.error('Hydration error:', e);
+      showErrorMessage('Hydration error');
       set({ status: 'signOut', token: null });
     }
   },

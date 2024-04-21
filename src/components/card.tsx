@@ -12,7 +12,7 @@ type Props = AllAppointments;
 export const Card = ({ id, time, date, comment, imgUrl, cancelled }: Props) => {
   return (
     <Link href={`/feed/${id}`} asChild>
-      <Pressable>
+      <Pressable key={id}>
         <View className="m-2 flex h-[100px] flex-row items-center justify-center overflow-hidden rounded-xl  bg-white shadow-xl">
           <Image
             className="inline-flex h-20 w-20 items-center justify-center rounded-full"

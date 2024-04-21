@@ -15,9 +15,7 @@ export default function Login() {
     try {
       await signIn(data.email, data.password);
       router.push('/');
-    } catch (error) {
-      console.error('Sign-in error:', error);
-    }
+    } catch (error) {}
   };
   return (
     <>
