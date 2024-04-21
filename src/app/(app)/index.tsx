@@ -8,22 +8,23 @@ import { type AllAppointments, useUpcoming } from '@/api';
 import { useBusinessesQuery } from '@/api/posts/use-businesses';
 import { Card } from '@/components/card';
 import { ReccomendationsCard } from '@/components/reccomendations-card';
-import { getUserData } from '@/core/auth/utils';
+import { getToken, getUserData } from '@/core/auth/utils';
 import { EmptyList, FocusAwareStatusBar, Pressable, Text, View } from '@/ui';
 import BellIcon from '@/ui/icons/notification';
 
 export default function Feed() {
   const { data, isLoading, isError } = useUpcoming();
   const { data: businessData } = useBusinessesQuery();
-
-  console.log(data);
-
   const [activeFilter, setActiveFilter] = useState(0);
   const renderItem = React.useCallback(
     ({ item }: { item: AllAppointments }) => <Card {...item} />,
     []
   );
   const router = useRouter();
+
+  const token = getToken();
+
+  console.log(token);
 
   const userData = getUserData();
 
