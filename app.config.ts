@@ -10,7 +10,7 @@ export default ({ config }: ConfigContext): ExpoConfig => ({
   owner: Env.EXPO_ACCOUNT_OWNER,
   scheme: Env.SCHEME,
   slug: 'pamba',
-  version: '0.0.2',
+  version: '0.0.3',
   orientation: 'portrait',
   icon: './assets/icon.png',
   userInterfaceStyle: 'automatic',
