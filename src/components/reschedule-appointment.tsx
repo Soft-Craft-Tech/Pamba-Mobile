@@ -14,7 +14,6 @@ import DropDown from '@/ui/icons/drop-down';
 export const RescheduleAppointment: React.FC<{
   appointmentId: number | undefined;
 }> = ({ appointmentId }) => {
-  // const [value, onChangeText] = React.useState('Write a comment');
   const { mutate: rescheduleAppointment, isLoading } =
     useRescheduleAppointent();
   const [date, setDate] = React.useState(new Date(1598051730000));
@@ -22,8 +21,6 @@ export const RescheduleAppointment: React.FC<{
   const [mode, setMode] = useState<any | undefined>('date');
   const [datePicker, setDatePicker] = useState(false);
   const [timeKeeper, setTimePicker] = useState(false);
-  const testTime = Moment(time).format('HH:mm');
-  console.log(testTime);
 
   const onChangeDate = (
     _event: DateTimePickerEvent,
@@ -122,14 +119,6 @@ export const RescheduleAppointment: React.FC<{
           />
         )}
       </View>
-      {/* <TextInput
-        editable
-        className="rounded-lg border border-slate-500  p-4 align-top"
-        multiline
-        maxLength={40}
-        onChangeText={(text) => onChangeText(text)}
-        value={value}
-      /> */}
       <Button
         label="Submit"
         loading={isLoading}

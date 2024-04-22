@@ -18,7 +18,6 @@ export const useRescheduleAppointent = createMutation<
   AxiosError
 >({
   mutationFn: async (variables) => {
-    console.log('Here', `/appointments/reschedule/${variables.params}`);
     return client({
       url: `/appointments/reschedule/${variables.params}`,
       method: 'PUT',
