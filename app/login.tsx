@@ -3,7 +3,7 @@ import DividerContainer from "@/components/DividerContainer";
 import SocialIcons from "@/components/SocialIcons";
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
-import { Link } from "expo-router";
+import { Link, router } from "expo-router";
 import {
   SafeAreaView,
   StyleSheet,
@@ -18,6 +18,7 @@ import { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { showNotification } from "@/hooks/toastNotication";
+import { useIsFirstTime } from "@/constants/store-is-first-time";
 
 const schema = z.object({
   username: z
@@ -43,6 +44,7 @@ export type FormType = z.infer<typeof schema>;
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
+  const [_, setIsFirstTime] = useIsFirstTime();
   const {
     handleSubmit,
     control,
@@ -50,6 +52,8 @@ export default function LoginScreen() {
   } = useForm<FormType>({ resolver: zodResolver(schema) });
   const onSubmit = (data: any) => {
     showNotification("Error", "Login Success");
+    setIsFirstTime(false);
+    router.push("/");
   };
   // const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
   //   return console.log(errors);
