@@ -17,6 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { showNotification } from "@/hooks/toastNotication";
 
 const schema = z.object({
   username: z
@@ -48,7 +49,7 @@ export default function LoginScreen() {
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
   const onSubmit = (data: any) => {
-    console.log(data);
+    showNotification("Error", "Login Success");
   };
   // const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
   //   return console.log(errors);
@@ -85,15 +86,23 @@ export default function LoginScreen() {
         <View style={styles.passwordContainer}>
           <Controller
             control={control}
-            render={({ field: { onChange, onBlur, value } }) => (
-              <TextInput
-                style={styles.input}
-                placeholder="Password"
-                secureTextEntry={!showPassword}
-                onBlur={onBlur}
-                onChangeText={(value) => onChange(value)}
-                value={value}
-              />
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  secureTextEntry={!showPassword}
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  value={value}
+                />
+                {errors.password && (
+                  <Text style={styles.errorMessage}>{error?.message}</Text>
+                )}
+              </>
             )}
             name="password"
             rules={{ required: true }}
@@ -207,5 +216,7 @@ const styles = StyleSheet.create({
   },
   errorMessage: {
     color: "red",
+    fontSize: 8,
+    marginBottom: 5,
   },
 });
