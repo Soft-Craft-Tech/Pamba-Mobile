@@ -13,11 +13,71 @@ import {
   TouchableOpacity,
   ScrollView,
 } from "react-native";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import CustomButton from "@/components/Button";
+
+const schema = z.object({
+  fullName: z
+    .string({
+      required_error: "Name is required",
+    })
+    .refine((value) => /^[a-zA-Z\s]*$/.test(value), {
+      message: "Only Alphabet letters allowed",
+    }),
+  phoneNumber: z
+    .string({ required_error: "Phone Number is required" })
+    .min(10, "Phone must be at least 10 characters long")
+    .max(10, "Password must not exceed 10 characters")
+    .refine(
+      (value) => /^(?:[0-9-()/.]\s?){6,15}[0-9]{1}$/.test(value),
+      "Invalid Phone number"
+    ),
+
+  email: z
+    .string({
+      required_error: "Email is required",
+    })
+    .email("Invalid email format"),
+  gender: z.string({
+    required_error: "Gender is required",
+  }),
+  password: z
+    .string({
+      required_error: "Password is required",
+    })
+    .min(6, "Password must be at least 6 characters long")
+    .max(20, "Password must not exceed 20 characters"),
+  terms: z.boolean({
+    required_error: "Accept Terms to Continue",
+  }),
+});
+
+type FormValues = {
+  fullName: string;
+  phoneNumber: string;
+  gender: string;
+};
+
+export type FormType = z.infer<typeof schema>;
 
 export default function CreateAccountScreen() {
-  const [username, setUsername] = useState("");
-  const [activeRadio, setActiveRadio] = React.useState("");
-  const [isChecked, setChecked] = useState(false);
+  const [showPassword, setShowPassword] = useState(false);
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormType>({ resolver: zodResolver(schema) });
+  const onSubmit = (data: any) => {
+    const transformedPhoneNumber = "+254" + data.phoneNumber.slice(1);
+    const transformedData = {
+      ...data,
+      phoneNumber: transformedPhoneNumber,
+    };
+
+    console.log(transformedData);
+  };
 
   return (
     <ScrollView>
@@ -27,23 +87,56 @@ export default function CreateAccountScreen() {
         </View>
         <Text style={styles.welcomeText}>Create Account</Text>
         <View style={styles.formContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Name"
-            value={username}
-            onChangeText={setUsername}
+          <Controller
+            control={control}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <>
+                <TextInput
+                  style={styles.input}
+                  onBlur={onBlur}
+                  placeholder="Full Name"
+                  onChangeText={(value) => onChange(value)}
+                  value={value}
+                />
+                {errors.fullName && (
+                  <Text style={styles.errorMessage}>{error?.message}</Text>
+                )}
+              </>
+            )}
+            name="fullName"
+            rules={{ required: true }}
           />
-          <View style={styles.countryCode}>
-            <View style={styles.dialCode}>
-              <Text style={styles.textCode}>+254</Text>
-            </View>
-            <TextInput
-              style={styles.inputCode}
-              placeholder="Phone Number"
-              value={username}
-              onChangeText={setUsername}
-            />
-          </View>
+
+          <Controller
+            control={control}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <>
+                <View style={styles.countryCode}>
+                  <View style={styles.dialCode}>
+                    <Text style={styles.textCode}>+254</Text>
+                  </View>
+                  <TextInput
+                    style={styles.inputCode}
+                    onBlur={onBlur}
+                    placeholder="Phone Number"
+                    onChangeText={(value) => onChange(value.toLowerCase())}
+                    value={value}
+                  />
+                </View>
+                {errors.email && (
+                  <Text style={styles.errorMessage}>{error?.message}</Text>
+                )}
+              </>
+            )}
+            name="phoneNumber"
+            rules={{ required: true }}
+          />
           <View style={styles.helperContainer}>
             <Text style={styles.helperText}>
               We collect your phone number for notification purposes
@@ -52,72 +145,128 @@ export default function CreateAccountScreen() {
           <View style={styles.genderContainer}>
             <Text>Gender</Text>
             <View style={styles.genderBox}>
-              <View style={styles.radioContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setActiveRadio("male");
-                  }}
-                >
-                  <View
-                    style={
-                      activeRadio === "male"
-                        ? styles.activeRadio
-                        : styles.radioButton
-                    }
-                  />
-                </TouchableOpacity>
-                <Text>Male</Text>
-              </View>
-              <View style={styles.radioContainer}>
-                <TouchableOpacity
-                  onPress={() => {
-                    setActiveRadio("female");
-                  }}
-                >
-                  <View
-                    style={
-                      activeRadio === "female"
-                        ? styles.activeRadio
-                        : styles.radioButton
-                    }
-                  />
-                </TouchableOpacity>
-                <Text>Female</Text>
-              </View>
+              <Controller
+                name="gender"
+                control={control}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <View style={styles.radioContainer}>
+                      <TouchableOpacity onPress={() => onChange("male")}>
+                        <View
+                          style={
+                            value === "male"
+                              ? styles.activeRadio
+                              : styles.radioButton
+                          }
+                        />
+                      </TouchableOpacity>
+                      <Text>Male</Text>
+                    </View>
+                    <View style={styles.radioContainer}>
+                      <TouchableOpacity onPress={() => onChange("female")}>
+                        <View
+                          style={
+                            value === "female"
+                              ? styles.activeRadio
+                              : styles.radioButton
+                          }
+                        />
+                      </TouchableOpacity>
+                      <Text>Female</Text>
+                      {errors.gender && (
+                        <Text style={styles.genderError}>{error?.message}</Text>
+                      )}
+                    </View>
+                  </>
+                )}
+              />
             </View>
           </View>
-          <TextInput
-            style={styles.input}
-            placeholder="Name"
-            value={username}
-            onChangeText={setUsername}
+          <Controller
+            control={control}
+            rules={{ required: true }}
+            name="email"
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Email"
+                  onBlur={onBlur}
+                  value={value}
+                  onChangeText={(value) => onChange(value)}
+                />
+                {errors.email && (
+                  <Text style={styles.errorMessage}>{error?.message}</Text>
+                )}
+              </>
+            )}
           />
-          <View style={styles.passwordContainer}>
-            <TextInput
-              style={styles.input}
-              placeholder="Password"
-              secureTextEntry
-            />
-            <TouchableOpacity style={styles.eyeIcon}>
-              <Ionicons size={24} name="eye-off" />
-            </TouchableOpacity>
-          </View>
-          <View style={styles.rememberContainer}>
-            <Checkbox
-              color={isChecked ? "#007B99" : undefined}
-              value={isChecked}
-              onValueChange={setChecked}
-            />
-            <Link href="/forgot-password">
-              <Text>{`Accept `}</Text>
-              <Text style={styles.forgotText}>Terms and conditions</Text>
-              <Text>{` and `}</Text>
-              <Text style={styles.forgotText}>Privacy Policy</Text>
-            </Link>
-          </View>
-          <TouchableOpacity style={styles.button}>
-            <Text style={styles.buttonText}>Register</Text>
-          </TouchableOpacity>
+          <Controller
+            control={control}
+            rules={{ required: true }}
+            name="password"
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <>
+                <View style={styles.passwordContainer}>
+                  <TextInput
+                    style={styles.input}
+                    placeholder="Password"
+                    secureTextEntry={!showPassword}
+                    value={value}
+                    onBlur={onBlur}
+                    onChangeText={(value) => onChange(value)}
+                  />
+                  <TouchableOpacity
+                    onPress={() => setShowPassword(!showPassword)}
+                    style={styles.eyeIcon}
+                  >
+                    <Ionicons size={24} name="eye-off" />
+                  </TouchableOpacity>
+                </View>
+                {errors.password && (
+                  <Text style={styles.errorMessage}>{error?.message}</Text>
+                )}
+              </>
+            )}
+          />
+          <Controller
+            control={control}
+            name="terms"
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <>
+                <View style={styles.rememberContainer}>
+                  <Checkbox
+                    color={value ? "#007B99" : undefined}
+                    value={value}
+                    onValueChange={(newValue) => onChange(newValue)}
+                  />
+                  <Link href="/password-success">
+                    <Text>{`Accept `}</Text>
+                    <Text style={styles.forgotText}>Terms and conditions</Text>
+                    <Text>{` and `}</Text>
+                    <Text style={styles.forgotText}>Privacy Policy</Text>
+                  </Link>
+                </View>
+                {errors.terms && (
+                  <Text style={styles.errorMessage}>{error?.message}</Text>
+                )}
+              </>
+            )}
+          />
+          <CustomButton
+            onPress={handleSubmit(onSubmit)}
+            buttonText="REGISTER"
+          />
           <View style={styles.dividerContainer}>
             <View style={styles.divider} />
             <Text style={styles.orText}>or</Text>
@@ -200,7 +349,6 @@ const styles = StyleSheet.create({
   passwordContainer: {
     width: "100%",
     position: "relative",
-    marginBottom: 10,
   },
   textCode: {
     color: "#8C8C8C",
@@ -255,7 +403,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
     gap: 3,
     width: "100%",
-    marginBottom: 30,
+    marginBottom: 10,
   },
   rememberText: {
     color: "#333",
@@ -308,5 +456,11 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     color: "#007B99",
+  },
+  genderError: { color: "red", fontSize: 8 },
+  errorMessage: {
+    color: "red",
+    fontSize: 8,
+    marginTop: -10,
   },
 });

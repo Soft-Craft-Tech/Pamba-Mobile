@@ -1,7 +1,9 @@
+import CustomButton from "@/components/Button";
+import DividerContainer from "@/components/DividerContainer";
+import SocialIcons from "@/components/SocialIcons";
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 import { Link } from "expo-router";
-import { useState } from "react";
 import {
   SafeAreaView,
   StyleSheet,
@@ -11,12 +13,46 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import { useForm, Controller } from "react-hook-form";
+import { useState } from "react";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+
+const schema = z.object({
+  username: z
+    .string({
+      required_error: "Email is required",
+    })
+    .email("Invalid email format"),
+  password: z.string({
+    required_error: "Password is required",
+  }),
+  rememberMe: z.boolean({
+    required_error: "Password is required",
+  }),
+});
+
+type FormValues = {
+  username: string;
+  password: string;
+  rememberMe: any;
+};
+
+export type FormType = z.infer<typeof schema>;
 
 export default function LoginScreen() {
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [isChecked, setChecked] = useState(false);
-
+  const [showPassword, setShowPassword] = useState(false);
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormType>({ resolver: zodResolver(schema) });
+  const onSubmit = (data: any) => {
+    console.log(data);
+  };
+  // const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
+  //   return console.log(errors);
+  // };
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoContainer}>
@@ -24,30 +60,64 @@ export default function LoginScreen() {
       </View>
       <Text style={styles.welcomeText}>Welcome Back</Text>
       <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
+        <Controller
+          control={control}
+          render={({
+            field: { onChange, onBlur, value },
+            fieldState: { error },
+          }) => (
+            <>
+              <TextInput
+                style={styles.input}
+                onBlur={onBlur}
+                placeholder="Username or Email"
+                onChangeText={(value) => onChange(value.toLowerCase())}
+                value={value}
+              />
+              {errors.username && (
+                <Text style={styles.errorMessage}>{error?.message}</Text>
+              )}
+            </>
+          )}
+          name="username"
+          rules={{ required: true }}
         />
         <View style={styles.passwordContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-            value={password}
-            onChangeText={setPassword}
+          <Controller
+            control={control}
+            render={({ field: { onChange, onBlur, value } }) => (
+              <TextInput
+                style={styles.input}
+                placeholder="Password"
+                secureTextEntry={!showPassword}
+                onBlur={onBlur}
+                onChangeText={(value) => onChange(value)}
+                value={value}
+              />
+            )}
+            name="password"
+            rules={{ required: true }}
           />
-          <TouchableOpacity style={styles.eyeIcon}>
-            <Ionicons size={24} name="eye-off" />
+          <TouchableOpacity
+            style={styles.eyeIcon}
+            onPress={() => setShowPassword(!showPassword)}
+          >
+            <Ionicons size={24} name={showPassword ? "eye" : "eye-off"} />
           </TouchableOpacity>
         </View>
         <View style={styles.rememberContainer}>
           <View style={styles.checkBoxContainer}>
-            <Checkbox
-              color={isChecked ? "#007B99" : undefined}
-              value={isChecked}
-              onValueChange={setChecked}
+            <Controller
+              control={control}
+              name="rememberMe"
+              defaultValue={false}
+              render={({ field: { onChange, value } }) => (
+                <Checkbox
+                  color={value ? "#007B99" : undefined}
+                  value={value}
+                  onValueChange={(newValue) => onChange(newValue)}
+                />
+              )}
             />
             <Text style={styles.rememberText}>Remember me</Text>
           </View>
@@ -55,28 +125,9 @@ export default function LoginScreen() {
             <Text style={styles.forgotText}>Forgot password?</Text>
           </Link>
         </View>
-        <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Login</Text>
-        </TouchableOpacity>
-        <View style={styles.dividerContainer}>
-          <View style={styles.divider} />
-          <Text style={styles.orText}>or</Text>
-          <View style={styles.divider} />
-        </View>
-        <View style={styles.socialIconsContainer}>
-          <TouchableOpacity>
-            <Ionicons size={24} name="logo-google" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons size={24} name="logo-twitter" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons size={24} name="logo-linkedin" />
-          </TouchableOpacity>
-          <TouchableOpacity>
-            <Ionicons size={24} name="logo-github" />
-          </TouchableOpacity>
-        </View>
+        <CustomButton onPress={handleSubmit(onSubmit)} buttonText="Login" />
+        <DividerContainer />
+        <SocialIcons />
         <View style={styles.signupContainer}>
           <Text style={styles.signupText}>Don't have an account? </Text>
           <Link href="/create-account">
@@ -142,40 +193,6 @@ const styles = StyleSheet.create({
   forgotText: {
     color: "#007B99",
   },
-  button: {
-    backgroundColor: "#DB1471",
-    padding: 15,
-    borderRadius: 25,
-    marginBottom: 20,
-  },
-  buttonText: {
-    color: "#fff",
-    fontSize: 16,
-    textAlign: "center",
-  },
-  dividerContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    marginBottom: 30,
-  },
-  divider: {
-    flex: 1,
-    height: 2,
-    backgroundColor: "#ddd",
-  },
-  orText: {
-    marginHorizontal: 10,
-    color: "#333",
-  },
-  socialIconsContainer: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    width: "100%",
-    marginBottom: 30,
-  },
-  socialIcon: {
-    fontSize: 24,
-  },
   signupContainer: {
     flexDirection: "row",
     alignItems: "center",
@@ -187,5 +204,8 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     color: "#007B99",
+  },
+  errorMessage: {
+    color: "red",
   },
 });

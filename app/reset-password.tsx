@@ -1,6 +1,7 @@
 // import { Ionicons } from "@expo/vector-icons";
 // import Checkbox from "expo-checkbox";
 // import { Link } from "expo-router";
+import { Ionicons } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { useState } from "react";
 import {
@@ -13,7 +14,7 @@ import {
   TouchableOpacity,
 } from "react-native";
 
-export default function ForgotPassword() {
+export default function ResetPassword() {
   const [username, setUsername] = useState("");
 
   return (
@@ -22,18 +23,30 @@ export default function ForgotPassword() {
         <Image source={require("@/assets/images/black-logo.png")} />
       </View>
       <Text style={styles.welcomeText}>Forgot Password?</Text>
-      <Text style={styles.welcomeText}>
-        We will send you reset instructions to your email
-      </Text>
+      <Text style={styles.welcomeText}>Create a secure Password</Text>
       <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
-        />
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+          />
+          <TouchableOpacity style={styles.eyeIcon}>
+            <Ionicons size={24} name="eye-off" />
+          </TouchableOpacity>
+        </View>
+        <View style={styles.passwordContainer}>
+          <TextInput
+            style={styles.input}
+            placeholder="Password"
+            secureTextEntry
+          />
+          <TouchableOpacity style={styles.eyeIcon}>
+            <Ionicons size={24} name="eye-off" />
+          </TouchableOpacity>
+        </View>
         <TouchableOpacity style={styles.button}>
-          <Text style={styles.buttonText}>Submit</Text>
+          <Text style={styles.buttonText}>Reset Password</Text>
         </TouchableOpacity>
         <View style={styles.signupContainer}>
           <Text style={styles.signupText}>Remember your password?</Text>
@@ -63,6 +76,16 @@ const styles = StyleSheet.create({
     color: "rgba(79, 82, 83, 1)",
   },
   formContainer: { padding: 20, width: "100%" },
+  passwordContainer: {
+    width: "100%",
+    position: "relative",
+    marginBottom: 10,
+  },
+  eyeIcon: {
+    position: "absolute",
+    right: 10,
+    top: 15,
+  },
   input: {
     width: "100%",
     padding: 15,
@@ -71,24 +94,6 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     backgroundColor: "#fff",
-  },
-  checkBoxContainer: {
-    flexDirection: "row",
-    gap: 4,
-    alignItems: "center",
-  },
-  rememberContainer: {
-    flexDirection: "row",
-    alignItems: "center",
-    justifyContent: "space-between",
-    width: "100%",
-    marginBottom: 30,
-  },
-  rememberText: {
-    color: "#333",
-  },
-  forgotText: {
-    color: "#007B99",
   },
   button: {
     backgroundColor: "#DB1471",
