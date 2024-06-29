@@ -4,7 +4,11 @@ import React, { useEffect } from "react";
 import { StyleSheet, View, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
-const StatusBanner: React.FC = ({}) => {
+interface StatusBannerProps {
+  onPress: () => void;
+}
+
+const StatusBanner: React.FC<StatusBannerProps> = ({ onPress }) => {
   const [isLoading, setIsLoading] = React.useState(true);
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -29,7 +33,7 @@ const StatusBanner: React.FC = ({}) => {
         <View style={styles.statusContainer}>
           <View style={styles.bannerHeader}>
             <Text style={styles.profileText}>Incomplete Profile</Text>
-            <TouchableOpacity>
+            <TouchableOpacity onPress={onPress}>
               <Text style={styles.profileText}>X</Text>
             </TouchableOpacity>
           </View>
