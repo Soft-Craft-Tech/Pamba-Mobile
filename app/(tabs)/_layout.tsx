@@ -1,6 +1,5 @@
-import { Redirect, Tabs } from "expo-router";
+import { Redirect, Tabs, useRouter } from "expo-router";
 import React from "react";
-
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
@@ -9,13 +8,38 @@ import { AntDesign, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import Avatar from "@/components/Avatar";
 import { TouchableOpacity } from "react-native-gesture-handler";
 
+const commonHeaderOptions = {
+  headerShown: true,
+  headerRight: () => <Feather name="bell" size={24} color="black" />,
+  tabBarActiveTintColor: "#DB1471",
+  headerRightContainerStyle: { paddingRight: 20 },
+  headerStyle: {
+    elevation: 0,
+    shadowOpacity: 0,
+    borderBottomWidth: 0,
+    backgroundColor: "#F6F6F9",
+  },
+  headerLeftContainerStyle: { paddingLeft: 20 },
+};
+
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const [isFirstTime] = useIsFirstTime();
+  const router = useRouter();
 
   if (isFirstTime) {
     return <Redirect href="/onboarding" />;
   }
+
+  const backArrowHeaderLeft = () => (
+    <TouchableOpacity
+      onPress={() => {
+        router.back();
+      }}
+    >
+      <Ionicons name="arrow-back" size={24} color="black" />
+    </TouchableOpacity>
+  );
 
   return (
     <Tabs
@@ -28,21 +52,7 @@ export default function TabLayout() {
         name="index"
         options={{
           title: "Home",
-          tabBarActiveTintColor: "#DB1471",
-          headerShown: true,
-          headerRight: () => <Feather name="bell" size={24} color="black" />,
-          headerRightContainerStyle: {
-            paddingRight: 20,
-          },
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-            backgroundColor: "#F6F6F9",
-          },
-          headerLeftContainerStyle: {
-            paddingLeft: 20,
-          },
+          ...commonHeaderOptions,
           headerLeft: () => <Avatar />,
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
@@ -56,27 +66,9 @@ export default function TabLayout() {
         name="all-appointments"
         options={{
           title: "Appointments",
-          tabBarActiveTintColor: "#DB1471",
-          headerShown: true,
-          headerRight: () => <Feather name="bell" size={24} color="black" />,
-          headerRightContainerStyle: {
-            paddingRight: 20,
-          },
-          headerTitleStyle: {
-            display: "none",
-          },
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-            backgroundColor: "#F6F6F9",
-          },
-          headerLeftContainerStyle: {
-            paddingLeft: 20,
-          },
-          headerLeft: () => (
-            <Ionicons name="arrow-back" size={24} color="black" />
-          ),
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
           tabBarIcon: ({ color }) => (
             <AntDesign name="calendar" size={24} color={color} />
           ),
@@ -86,30 +78,23 @@ export default function TabLayout() {
         name="search"
         options={{
           title: "Search",
-          tabBarActiveTintColor: "#DB1471",
-          headerShown: true,
-          headerRight: () => <Feather name="bell" size={24} color="black" />,
-          headerRightContainerStyle: {
-            paddingRight: 20,
-          },
-          headerTitleStyle: {
-            display: "none",
-          },
-          headerStyle: {
-            elevation: 0,
-            shadowOpacity: 0,
-            borderBottomWidth: 0,
-            backgroundColor: "#F6F6F9",
-          },
-          headerLeftContainerStyle: {
-            paddingLeft: 20,
-          },
-          headerLeft: () => (
-            <Ionicons name="arrow-back" size={24} color="black" />
-          ),
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
           tabBarIcon: ({ color }) => (
             <FontAwesome name="search" size={24} color={color} />
           ),
+        }}
+      />
+      <Tabs.Screen
+        name="all-shops/[id]"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
         }}
       />
     </Tabs>

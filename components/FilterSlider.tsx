@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import React from "react";
 import {
   ScrollView,
@@ -10,6 +11,7 @@ import {
 const categories = ["Massage", "Hairdressing", "Barber shop", "Spa", "Nails"];
 
 const FilterSlider = () => {
+  const router = useRouter();
   return (
     <View style={styles.container}>
       <ScrollView
@@ -18,7 +20,11 @@ const FilterSlider = () => {
         style={styles.scrollView}
       >
         {categories.map((category, index) => (
-          <TouchableOpacity key={index} style={styles.button}>
+          <TouchableOpacity
+            onPress={() => router.push(`/all-shops/${category}`)}
+            key={index}
+            style={styles.button}
+          >
             <Text style={styles.buttonText}>{category}</Text>
           </TouchableOpacity>
         ))}

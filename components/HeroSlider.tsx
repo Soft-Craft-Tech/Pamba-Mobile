@@ -1,6 +1,8 @@
 import React, { useRef, useEffect } from "react";
 import { Dimensions, StyleSheet, Text, View, FlatList } from "react-native";
 import { ImageBackground } from "expo-image";
+import { Link, useRouter } from "expo-router";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 const { width } = Dimensions.get("window");
 const CARD_WIDTH = width * 0.6;
@@ -10,6 +12,7 @@ const data = ["violet", "indigo", "blue", "orange", "green"];
 
 export default function CardCarousel() {
   const flatListRef = useRef<FlatList<string> | null>(null);
+  const router = useRouter();
 
   useEffect(() => {
     if (flatListRef.current) {
@@ -26,18 +29,20 @@ export default function CardCarousel() {
         showsHorizontalScrollIndicator={false}
         snapToInterval={CARD_WIDTH + SPACING}
         decelerationRate="fast"
-        renderItem={({ item }) => {
+        renderItem={({}) => {
           return (
-            <ImageBackground
-              source={require("@/assets/images/hero-bg.png")}
-              style={styles.backgroundImage}
-            >
-              <View style={styles.overlay}>
-                <Text style={styles.text}>
-                  Find the best hair stylist for you
-                </Text>
-              </View>
-            </ImageBackground>
+            <TouchableOpacity onPress={() => router.push("/search")}>
+              <ImageBackground
+                source={require("@/assets/images/hero-bg.png")}
+                style={styles.backgroundImage}
+              >
+                <View style={styles.overlay}>
+                  <Text style={styles.text}>
+                    Find the best hair stylist for you
+                  </Text>
+                </View>
+              </ImageBackground>
+            </TouchableOpacity>
           );
         }}
         keyExtractor={(item) => item}
