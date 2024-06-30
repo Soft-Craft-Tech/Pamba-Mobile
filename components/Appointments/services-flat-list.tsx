@@ -39,8 +39,17 @@ const servicesData: any = [
   },
 ];
 
-const ServicesList = () => {
+interface ServiceListProps {
+  title?: string;
+  linkText?: string;
+}
+
+const ServicesList: React.FC<ServiceListProps> = ({
+  title = "Services",
+  linkText = "See All",
+}) => {
   const [isLoading, setIsLoading] = React.useState(true);
+
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
@@ -51,9 +60,9 @@ const ServicesList = () => {
   return (
     <View style={styles.container}>
       <View style={styles.titleContainer}>
-        <Text style={styles.leftTitle}>Services</Text>
+        <Text style={styles.leftTitle}>{title}</Text>
         <Link href="/search">
-          <Text style={styles.leftTitle}>See All</Text>
+          <Text style={styles.leftTitle}>{linkText}</Text>
         </Link>
       </View>
       {isLoading ? (
