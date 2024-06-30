@@ -37,6 +37,7 @@ export default function TabLayout() {
             elevation: 0,
             shadowOpacity: 0,
             borderBottomWidth: 0,
+            backgroundColor: "#F6F6F9",
           },
           headerLeftContainerStyle: {
             paddingLeft: 20,
