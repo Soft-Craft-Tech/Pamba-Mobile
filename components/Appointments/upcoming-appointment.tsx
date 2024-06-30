@@ -1,4 +1,5 @@
 import { formatDate } from "@/hooks/dateUtility";
+import { Link, useRouter } from "expo-router";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
@@ -25,32 +26,39 @@ interface AppointmentProp {
 }
 
 const UpcomingAppointments: React.FC<AppointmentProp> = ({ data, title }) => {
+  const router = useRouter();
   return (
     <View style={styles.container}>
       {title && <Text style={styles.greetingsText}>Upcoming Appointments</Text>}
       {data?.map(({ date, title, attendant, id }) => (
-        <View key={id} style={styles.appointmentCard}>
-          <View style={styles.dateSection}>
-            <View style={styles.calendarCard}>
-              <Text style={styles.calendarText}>
-                {formatDate(date).getDayNumber()}
-              </Text>
-              <Text style={styles.calendarText}>
-                {formatDate(date).getMonthName()}
-              </Text>
+        <TouchableOpacity
+          onPress={() => {
+            router.replace(`/appointments/${id}`);
+          }}
+        >
+          <View key={id} style={styles.appointmentCard}>
+            <View style={styles.dateSection}>
+              <View style={styles.calendarCard}>
+                <Text style={styles.calendarText}>
+                  {formatDate(date).getDayNumber()}
+                </Text>
+                <Text style={styles.calendarText}>
+                  {formatDate(date).getMonthName()}
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.cardTitle}>{title}</Text>
+                <Text style={styles.attendantName}>{attendant}</Text>
+                <Text style={styles.dayText}>
+                  {formatDate(date).getDayNameAndTime()}
+                </Text>
+              </View>
             </View>
-            <View>
-              <Text style={styles.cardTitle}>{title}</Text>
-              <Text style={styles.attendantName}>{attendant}</Text>
-              <Text style={styles.dayText}>
-                {formatDate(date).getDayNameAndTime()}
-              </Text>
-            </View>
+            <TouchableOpacity>
+              <Text style={styles.editText}>Edit</Text>
+            </TouchableOpacity>
           </View>
-          <TouchableOpacity>
-            <Text style={styles.editText}>Edit</Text>
-          </TouchableOpacity>
-        </View>
+        </TouchableOpacity>
       ))}
     </View>
   );

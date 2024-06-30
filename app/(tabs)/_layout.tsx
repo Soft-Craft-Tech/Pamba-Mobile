@@ -97,6 +97,39 @@ export default function TabLayout() {
           tabBarButton: () => null,
         }}
       />
+      <Tabs.Screen
+        name="business-profile/[id]"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="appointments/[id]"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="book-appointment/[id]"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
     </Tabs>
   );
 }

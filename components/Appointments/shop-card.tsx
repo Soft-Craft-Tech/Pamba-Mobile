@@ -4,23 +4,15 @@ import { AntDesign } from "@expo/vector-icons";
 import { Link } from "expo-router";
 import { Image } from "expo-image";
 
-export interface ServiceCardProps {
+export interface ShopCardProps {
   service_id: string;
   imageUri: string;
   title: string;
-  ratingTime: string;
-  price: string;
 }
 
-const ServiceCard: React.FC<ServiceCardProps> = ({
-  service_id,
-  imageUri,
-  title,
-  ratingTime,
-  price,
-}) => {
+const ShopCard: React.FC<ShopCardProps> = ({ service_id, imageUri, title }) => {
   return (
-    <Link href={`/book-appointment/${service_id}`} asChild>
+    <Link href={`/business-profile/${service_id}`} asChild>
       <Pressable style={styles.container}>
         <View style={styles.card}>
           <Image
@@ -29,13 +21,17 @@ const ServiceCard: React.FC<ServiceCardProps> = ({
             }}
             style={styles.image}
           />
-          <Text style={styles.title}>{title?.slice(0, 19)}</Text>
-
-          <View style={styles.ratingContainer}>
-            <AntDesign name="clockcircleo" size={14} color="#8C8C8C" />
-            <Text style={styles.ratingText}>{ratingTime}</Text>
+          <View style={styles.lowerSection}>
+            <Text style={styles.title}>{title?.slice(0, 19)}</Text>
+            <Text style={styles.location}>124, street Lavington Nairobi</Text>
+            <View style={styles.ratingContainer}>
+              <View style={styles.rating}>
+                <AntDesign name="star" size={12} color="#DB1471" />
+                <Text>4.9</Text>
+              </View>
+              <Text style={styles.ratingText}>104 reviews</Text>
+            </View>
           </View>
-          <Text style={styles.price}>{price}</Text>
         </View>
       </Pressable>
     </Link>
@@ -69,7 +65,7 @@ const styles = StyleSheet.create({
   },
   ratingContainer: {
     flexDirection: "row",
-    gap: 2,
+    justifyContent: "space-between",
     alignItems: "center",
   },
   ratingText: {
@@ -82,6 +78,23 @@ const styles = StyleSheet.create({
     color: "#808080",
     marginLeft: 4,
   },
+  location: {
+    fontSize: 10,
+    fontWeight: "400",
+    color: "#8C8C8C",
+  },
+  rating: {
+    flexDirection: "row",
+    alignItems: "center",
+    backgroundColor: "#DB147114",
+    paddingVertical: 2,
+    paddingHorizontal: 7,
+    borderRadius: 40,
+    gap: 10,
+  },
+  lowerSection: {
+    gap: 10,
+  },
 });
 
-export default ServiceCard;
+export default ShopCard;
