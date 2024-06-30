@@ -52,7 +52,7 @@ const ServicesList = () => {
     <View style={styles.container}>
       <View style={styles.titleContainer}>
         <Text style={styles.leftTitle}>Services</Text>
-        <Link href="">
+        <Link href="/search">
           <Text style={styles.leftTitle}>See All</Text>
         </Link>
       </View>

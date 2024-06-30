@@ -50,7 +50,7 @@ const HomeScreen = () => {
         {isLoading ? (
           <UpcomingSkeleton />
         ) : (
-          <UpcomingAppointments data={appointmentsData} />
+          <UpcomingAppointments data={appointmentsData} title />
         )}
         <ServicesList />
       </StandardView>

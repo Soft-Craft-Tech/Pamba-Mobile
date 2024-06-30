@@ -5,8 +5,9 @@ import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
 import { useIsFirstTime } from "@/constants/store-is-first-time";
-import { Feather } from "@expo/vector-icons";
+import { AntDesign, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import Avatar from "@/components/Avatar";
+import { TouchableOpacity } from "react-native-gesture-handler";
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
@@ -26,7 +27,7 @@ export default function TabLayout() {
       <Tabs.Screen
         name="index"
         options={{
-          title: "",
+          title: "Home",
           tabBarActiveTintColor: "#DB1471",
           headerShown: true,
           headerRight: () => <Feather name="bell" size={24} color="black" />,
@@ -52,15 +53,62 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="explore"
+        name="all-appointments"
         options={{
-          title: "Explore",
+          title: "Appointments",
           tabBarActiveTintColor: "#DB1471",
-          tabBarIcon: ({ color, focused }) => (
-            <TabBarIcon
-              name={focused ? "code-slash" : "code-slash-outline"}
-              color={color}
-            />
+          headerShown: true,
+          headerRight: () => <Feather name="bell" size={24} color="black" />,
+          headerRightContainerStyle: {
+            paddingRight: 20,
+          },
+          headerTitleStyle: {
+            display: "none",
+          },
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+            backgroundColor: "#F6F6F9",
+          },
+          headerLeftContainerStyle: {
+            paddingLeft: 20,
+          },
+          headerLeft: () => (
+            <Ionicons name="arrow-back" size={24} color="black" />
+          ),
+          tabBarIcon: ({ color }) => (
+            <AntDesign name="calendar" size={24} color={color} />
+          ),
+        }}
+      />
+      <Tabs.Screen
+        name="search"
+        options={{
+          title: "Search",
+          tabBarActiveTintColor: "#DB1471",
+          headerShown: true,
+          headerRight: () => <Feather name="bell" size={24} color="black" />,
+          headerRightContainerStyle: {
+            paddingRight: 20,
+          },
+          headerTitleStyle: {
+            display: "none",
+          },
+          headerStyle: {
+            elevation: 0,
+            shadowOpacity: 0,
+            borderBottomWidth: 0,
+            backgroundColor: "#F6F6F9",
+          },
+          headerLeftContainerStyle: {
+            paddingLeft: 20,
+          },
+          headerLeft: () => (
+            <Ionicons name="arrow-back" size={24} color="black" />
+          ),
+          tabBarIcon: ({ color }) => (
+            <FontAwesome name="search" size={24} color={color} />
           ),
         }}
       />

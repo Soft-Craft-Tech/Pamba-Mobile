@@ -1,0 +1,199 @@
+import UpcomingAppointments from "@/components/Appointments/upcoming-appointment";
+import React from "react";
+import {
+  Dimensions,
+  StyleSheet,
+  Text,
+  TouchableOpacity,
+  View,
+  LayoutChangeEvent,
+  ViewStyle,
+  TextStyle,
+} from "react-native";
+import Animated, {
+  interpolate,
+  scrollTo,
+  useAnimatedRef,
+  useAnimatedScrollHandler,
+  useAnimatedStyle,
+  useDerivedValue,
+  useSharedValue,
+  SharedValue,
+  AnimatedRef,
+  interpolateColor,
+} from "react-native-reanimated";
+
+const appointmentsData = [
+  {
+    date: "2024-05-01T08:30:00Z",
+    title: "Basic Pedicure",
+    attendant: "Jane",
+    id: 1,
+  },
+  {
+    date: "2024-07-12T18:30:00Z",
+    title: "Braiding",
+    attendant: "Jane",
+    id: 2,
+  },
+];
+
+const { width } = Dimensions.get("screen");
+
+const headers: string[] = ["New appointments", "Upcoming appointments"];
+
+type HeaderWidths = {
+  [key: number]: SharedValue<number>;
+};
+
+const getHeaderWidths = (): HeaderWidths => {
+  const obj: HeaderWidths = {};
+  headers.forEach((_, i) => {
+    obj[i] = useSharedValue(0);
+  });
+  return obj;
+};
+
+export default function ScrollableTabViewReanimated() {
+  const headerWidths: HeaderWidths = getHeaderWidths();
+  const scrollX: SharedValue<number> = useSharedValue(0);
+  const bottomScrollRef: AnimatedRef<Animated.ScrollView> = useAnimatedRef();
+  const activeTab: SharedValue<number> = useSharedValue(0);
+  useDerivedValue(() => {
+    scrollTo(bottomScrollRef, activeTab.value * width, 0, true);
+  });
+
+  const scrollHandler = useAnimatedScrollHandler((event) => {
+    scrollX.value = event.contentOffset.x;
+  });
+  const barWidthStyle = useAnimatedStyle(() => {
+    const barWidth = interpolate(
+      scrollX.value,
+      [0, width],
+      [headerWidths[0].value, headerWidths[1].value]
+    );
+    const moveValue = interpolate(
+      scrollX.value,
+      [0, width],
+      [0, headerWidths[0].value]
+    );
+    return {
+      width: barWidth,
+      transform: [{ translateX: moveValue }],
+    };
+  });
+  const getTabStyle = (index: number) => {
+    return useAnimatedStyle(() => {
+      const activeColor = "#DB1471";
+      const inactiveColor = "#000000";
+      const color = interpolateColor(
+        scrollX.value,
+        [width * (index - 1), width * index, width * (index + 1)],
+        [inactiveColor, activeColor, inactiveColor]
+      );
+      return {
+        color: color,
+      };
+    });
+  };
+
+  const onPressHeader = (index: number) => {
+    activeTab.value = index;
+  };
+
+  return (
+    <View style={styles.container}>
+      <View style={styles.tabContainer}>
+        {headers.map((item, index) => (
+          <View
+            onLayout={(e: LayoutChangeEvent) =>
+              (headerWidths[index].value = e.nativeEvent.layout.width)
+            }
+            key={item}
+            style={styles.tabWrapper}
+          >
+            <TouchableOpacity
+              style={styles.headerItem}
+              onPress={() => onPressHeader(index)}
+            >
+              <Animated.Text style={[styles.tabText, getTabStyle(index)]}>
+                {item}
+              </Animated.Text>
+            </TouchableOpacity>
+          </View>
+        ))}
+      </View>
+      <Animated.View style={[styles.bar, barWidthStyle]} />
+      <Animated.ScrollView
+        ref={bottomScrollRef}
+        pagingEnabled
+        horizontal
+        showsHorizontalScrollIndicator={false}
+        onScroll={scrollHandler}
+      >
+        {headers.map((item, index) => (
+          <TabContent index={index} key={item} />
+        ))}
+      </Animated.ScrollView>
+    </View>
+  );
+}
+
+interface TabContentProps {
+  index: number;
+}
+
+function TabContent({ index }: TabContentProps) {
+  return (
+    <View style={styles.tabContent}>
+      {index === 0 ? (
+        <UpcomingAppointments data={appointmentsData} />
+      ) : (
+        <UpcomingAppointments data={appointmentsData} />
+      )}
+    </View>
+  );
+}
+
+interface Styles {
+  container: ViewStyle;
+  tabContainer: ViewStyle;
+  tabWrapper: ViewStyle;
+  headerItem: ViewStyle;
+  bar: ViewStyle;
+  tabContent: ViewStyle;
+  tabText: TextStyle;
+  txt: TextStyle;
+}
+
+const styles = StyleSheet.create<Styles>({
+  container: {
+    flex: 1,
+    backgroundColor: "#F6F6F9",
+  },
+  tabContainer: {
+    flexDirection: "row",
+  },
+  tabWrapper: {
+    flex: 1,
+  },
+  headerItem: {
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  bar: {
+    height: 3,
+    backgroundColor: "#DB1471",
+  },
+  tabContent: {
+    width: width,
+    height: "100%",
+  },
+  txt: {
+    fontSize: 24,
+  },
+  tabText: {
+    fontSize: 12,
+    fontWeight: "600",
+  },
+});

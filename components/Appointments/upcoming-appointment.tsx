@@ -21,12 +21,13 @@ interface UpcomingAppointmentsProps {
 
 interface AppointmentProp {
   data: UpcomingAppointmentsProps[];
+  title?: boolean;
 }
 
-const UpcomingAppointments: React.FC<AppointmentProp> = ({ data }) => {
+const UpcomingAppointments: React.FC<AppointmentProp> = ({ data, title }) => {
   return (
     <View style={styles.container}>
-      <Text style={styles.greetingsText}>Upcoming Appointments</Text>
+      {title && <Text style={styles.greetingsText}>Upcoming Appointments</Text>}
       {data?.map(({ date, title, attendant, id }) => (
         <View key={id} style={styles.appointmentCard}>
           <View style={styles.dateSection}>
