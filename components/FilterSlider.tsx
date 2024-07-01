@@ -8,7 +8,13 @@ import {
   View,
 } from "react-native";
 
-const categories = ["Massage", "Hairdressing", "Barber shop", "Spa", "Nails"];
+const caregoryName = [
+  { itemName: "Massage", id: 1 },
+  { itemName: "Hairdressing", id: 2 },
+  { itemName: "Barber shop", id: 3 },
+  { itemName: "Spa", id: 4 },
+  { itemName: "Nails", id: 5 },
+];
 
 const FilterSlider = () => {
   const router = useRouter();
@@ -19,13 +25,13 @@ const FilterSlider = () => {
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}
       >
-        {categories.map((category, index) => (
+        {caregoryName.map(({ itemName, id }) => (
           <TouchableOpacity
-            onPress={() => router.push(`/all-shops/${category}`)}
-            key={index}
+            onPress={() => router.push(`/all-shops/${itemName}`)}
+            key={id}
             style={styles.button}
           >
-            <Text style={styles.buttonText}>{category}</Text>
+            <Text style={styles.buttonText}>{itemName}</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>

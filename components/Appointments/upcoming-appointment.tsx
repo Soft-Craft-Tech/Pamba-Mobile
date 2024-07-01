@@ -33,11 +33,12 @@ const UpcomingAppointments: React.FC<AppointmentProp> = ({
       {title && <Text style={styles.greetingsText}>Upcoming Appointments</Text>}
       {data?.map(({ date, title, attendant, id }) => (
         <TouchableOpacity
+          key={id}
           onPress={() => {
             router.replace(`/appointments/${id}`);
           }}
         >
-          <View key={id} style={styles.appointmentCard}>
+          <View style={styles.appointmentCard}>
             <View style={styles.dateSection}>
               <View style={styles.calendarCard}>
                 <Text style={styles.calendarText}>

@@ -6,6 +6,7 @@ import { useEffect } from "react";
 import "react-native-reanimated";
 import { NotifierWrapper } from "react-native-notifier";
 import { GestureHandlerRootView } from "react-native-gesture-handler";
+import { useIsFirstTime } from "@/constants/store-is-first-time";
 
 // Prevent the splash screen from auto-hiding before asset loading is complete.
 SplashScreen.preventAutoHideAsync();
