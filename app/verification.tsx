@@ -1,12 +1,28 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
+import React, { useState, useEffect } from "react";
+import {
+  View,
+  Text,
+  TouchableOpacity,
+  StyleSheet,
+  Dimensions,
+  SafeAreaView,
+} from "react-native";
 import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
-// import { MotiView } from "moti";
-// import { Skeleton } from "moti/skeleton";
+import { useRouter } from "expo-router";
+
+const { width } = Dimensions.get("window");
 
 export default function OTPVerification() {
   const [otp, setOtp] = useState("");
+  const [fontSize, setFontSize] = useState(24);
+  const [otpSize, setOtpSize] = useState(40);
+  const router = useRouter();
+
+  useEffect(() => {
+    setFontSize(Math.min(24, width * 0.06));
+    setOtpSize(Math.min(40, width * 0.1));
+  }, []);
 
   const handleOtpChange = (value: string) => {
     if (otp.length < 5) {
@@ -19,81 +35,93 @@ export default function OTPVerification() {
   };
 
   const renderOtpInputs = () => {
-    const inputs = [];
-    for (let i = 0; i < 5; i++) {
-      inputs.push(
-        <View key={i} style={styles.otpCircle}>
-          <Text style={styles.otpText}>{otp[i] || ""}</Text>
-        </View>
-      );
-    }
-    return inputs;
+    return Array.from({ length: 5 }, (_, i) => (
+      <View
+        key={i}
+        style={[
+          styles.otpCircle,
+          { width: otpSize, height: otpSize, borderRadius: otpSize / 2 },
+        ]}
+      >
+        <Text style={[styles.otpText, { fontSize: fontSize * 0.8 }]}>
+          {otp[i] || ""}
+        </Text>
+      </View>
+    ));
   };
 
-  // const viewArray = Array.from({ length: 5 }, (_, index) => index + 1);
-
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-      <Text style={styles.title}>OTP Verification</Text>
-      <Text style={styles.subtitle}>
-        Please check your email abc@gmail.com to see the verification code
-      </Text>
-      <Text style={styles.subtitle}>Input Pin Code (5-digit)</Text>
-      {/* <MotiView
-        transition={{
-          type: "timing",
-        }}
-        style={[styles.padded]}
-        animate={{ backgroundColor: "#ffffff" }}
-      >
-        {viewArray.map((item) => (
-          <Skeleton
-            key={item}
-            colorMode="light"
-            radius="round"
-            height={36}
-            width={36}
-          />
-        ))}
-      </MotiView> */}
-      <View style={styles.otpContainer}>{renderOtpInputs()}</View>
-      <View style={styles.keypadContainer}>
-        {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
-          <TouchableOpacity
-            key={num}
-            style={styles.keypadButton}
-            onPress={() => handleOtpChange(num.toString())}
-          >
-            <Text style={styles.keypadButtonText}>{num}</Text>
-          </TouchableOpacity>
-        ))}
-        <TouchableOpacity
-          style={styles.keypadButton}
-          onPress={() => handleOtpChange("0")}
-        >
-          <Text style={styles.keypadButtonText}>0</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          style={[styles.keypadButton, styles.clearButton]}
-          onPress={clearLastInput}
-        >
-          <MaterialIcons name="cancel" size={24} color="white" />
-        </TouchableOpacity>
-        <View />
-        <TouchableOpacity style={[styles.keypadButton, styles.clearButton]}>
-          <Text style={styles.clearButtonText}>SUBMIT</Text>
-        </TouchableOpacity>
-        <View />
-      </View>
-
-      <TouchableOpacity onPress={() => console.log("Resend OTP")}>
-        <Text>
-          Didn't get a code?
-          <Text style={styles.resendText}>{` Resend`}</Text>
+      <View style={styles.contentContainer}>
+        <Text style={[styles.title, { fontSize: fontSize * 1.2 }]}>
+          OTP Verification
         </Text>
-      </TouchableOpacity>
-    </View>
+        <Text style={[styles.subtitle, { fontSize: fontSize * 0.6 }]}>
+          Please check your email abc@gmail.com to see the verification code
+        </Text>
+        <Text style={[styles.subtitle, { fontSize: fontSize * 0.6 }]}>
+          Input Pin Code (5-digit)
+        </Text>
+        <View style={styles.otpContainer}>{renderOtpInputs()}</View>
+        <View style={styles.keypadContainer}>
+          {[1, 2, 3, 4, 5, 6, 7, 8, 9].map((num) => (
+            <TouchableOpacity
+              key={num}
+              style={[
+                styles.keypadButton,
+                { width: width * 0.23, height: width * 0.23 },
+              ]}
+              onPress={() => handleOtpChange(num.toString())}
+            >
+              <Text style={[styles.keypadButtonText, { fontSize: fontSize }]}>
+                {num}
+              </Text>
+            </TouchableOpacity>
+          ))}
+          <TouchableOpacity
+            style={[
+              styles.keypadButton,
+              { width: width * 0.25, height: width * 0.25 },
+            ]}
+            onPress={() => handleOtpChange("0")}
+          >
+            <Text style={[styles.keypadButtonText, { fontSize: fontSize }]}>
+              0
+            </Text>
+          </TouchableOpacity>
+          <TouchableOpacity
+            style={[
+              styles.keypadButton,
+              styles.clearButton,
+              { width: width * 0.25, height: width * 0.25 },
+            ]}
+            onPress={clearLastInput}
+          >
+            <MaterialIcons name="backspace" size={fontSize} color="white" />
+          </TouchableOpacity>
+        </View>
+        <TouchableOpacity
+          onPress={() => {
+            router.replace("/login");
+          }}
+          style={[styles.submitButton, { width: width * 0.8 }]}
+        >
+          <Text style={[styles.submitButtonText, { fontSize: fontSize * 0.7 }]}>
+            SUBMIT
+          </Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={() => console.log("Resend OTP")}
+          style={styles.resendContainer}
+        >
+          <Text style={{ fontSize: fontSize * 0.6 }}>
+            Didn't get a code?
+            <Text style={styles.resendText}>{` Resend`}</Text>
+          </Text>
+        </TouchableOpacity>
+      </View>
+    </SafeAreaView>
   );
 }
 
@@ -101,20 +129,22 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#fff",
+    paddingHorizontal: 5,
+  },
+  contentContainer: {
+    flex: 1,
     alignItems: "center",
     justifyContent: "center",
     paddingHorizontal: 20,
   },
   title: {
-    fontSize: 24,
     fontWeight: "bold",
     marginBottom: 10,
   },
   subtitle: {
-    fontSize: 14,
     color: "gray",
     textAlign: "center",
-    marginBottom: 30,
+    marginBottom: 20,
   },
   otpContainer: {
     flexDirection: "row",
@@ -123,53 +153,51 @@ const styles = StyleSheet.create({
     marginBottom: 30,
   },
   otpCircle: {
-    width: 40,
-    height: 40,
-    borderRadius: 20,
     borderWidth: 1,
-    borderColor: "#FF1493",
+    borderColor: "#DB1471",
     marginHorizontal: 5,
     justifyContent: "center",
     alignItems: "center",
   },
   otpText: {
-    fontSize: 20,
-    color: "#FF1493",
+    color: "#DB1471",
   },
   keypadContainer: {
     flexDirection: "row",
     flexWrap: "wrap",
     justifyContent: "center",
-    width: "80%",
+    width: "100%",
+    marginBottom: 20,
   },
   keypadButton: {
-    width: "30%",
-    aspectRatio: 1,
     justifyContent: "center",
     alignItems: "center",
     borderWidth: 1,
     borderColor: "#ddd",
     borderRadius: 1000,
-    margin: 5,
+    margin: "1%",
   },
   keypadButtonText: {
-    fontSize: 24,
+    color: "#000",
   },
   clearButton: {
-    backgroundColor: "#FF1493",
+    backgroundColor: "#DB1471",
   },
-  clearButtonText: {
+  submitButton: {
+    backgroundColor: "#DB1471",
+    padding: 15,
+    borderRadius: 10,
+    alignItems: "center",
+    marginBottom: 20,
+  },
+  submitButtonText: {
     color: "white",
-    fontSize: 16,
     fontWeight: "bold",
+  },
+  resendContainer: {
+    marginTop: 10,
   },
   resendText: {
     color: "#007B99",
-    marginTop: 20,
-  },
-  padded: {
-    padding: 16,
-    flexDirection: "row",
-    gap: 5,
   },
 });
