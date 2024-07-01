@@ -23,6 +23,5 @@ const styles = StyleSheet.create({
   padded: {
     marginTop: 10,
     gap: 8,
-    paddingHorizontal: 20,
   },
 });

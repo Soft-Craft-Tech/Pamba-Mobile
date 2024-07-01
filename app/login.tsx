@@ -51,7 +51,7 @@ export default function LoginScreen() {
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
   const onSubmit = (data: any) => {
-    showNotification("Error", "Login Success");
+    // showNotification("Error", "Login Success");
     setIsFirstTime(false);
     router.push("/");
   };

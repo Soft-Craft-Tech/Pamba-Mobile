@@ -3,15 +3,7 @@ import { Link, useRouter } from "expo-router";
 import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
-const appointmentsData = [
-  {
-    date: "2024-05-01T08:30:00Z",
-    title: "Basic Pedicure",
-    attendant: "Jane",
-    id: 1,
-  },
-];
+import UpcomingSkeleton from "./upcoming-skeleton";
 
 interface UpcomingAppointmentsProps {
   date: string;
@@ -23,10 +15,19 @@ interface UpcomingAppointmentsProps {
 interface AppointmentProp {
   data: UpcomingAppointmentsProps[];
   title?: boolean;
+  isLoading?: boolean;
 }
 
-const UpcomingAppointments: React.FC<AppointmentProp> = ({ data, title }) => {
+const UpcomingAppointments: React.FC<AppointmentProp> = ({
+  data,
+  title,
+  isLoading,
+}) => {
   const router = useRouter();
+
+  if (isLoading) {
+    return <UpcomingSkeleton />;
+  }
   return (
     <View style={styles.container}>
       {title && <Text style={styles.greetingsText}>Upcoming Appointments</Text>}
@@ -68,7 +69,7 @@ export default UpcomingAppointments;
 
 const styles = StyleSheet.create({
   container: {
-    paddingHorizontal: 20,
+    paddingHorizontal: 0,
   },
   greetingsText: {
     fontSize: 16,

@@ -188,6 +188,7 @@ const styles = StyleSheet.create<Styles>({
   tabContent: {
     width: width,
     height: "100%",
+    paddingHorizontal: 20,
   },
   txt: {
     fontSize: 24,

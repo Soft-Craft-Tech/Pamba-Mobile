@@ -6,17 +6,10 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 interface StatusBannerProps {
   onPress: () => void;
+  isLoading: boolean;
 }
 
-const StatusBanner: React.FC<StatusBannerProps> = ({ onPress }) => {
-  const [isLoading, setIsLoading] = React.useState(true);
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 4000);
-
-    return () => clearTimeout(timer);
-  }, []);
+const StatusBanner: React.FC<StatusBannerProps> = ({ onPress, isLoading }) => {
   return (
     <>
       {isLoading ? (

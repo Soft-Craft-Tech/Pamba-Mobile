@@ -9,7 +9,7 @@ import {
   Dimensions,
   LayoutChangeEvent,
 } from "react-native";
-import { AntDesign, EvilIcons, Ionicons } from "@expo/vector-icons";
+import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import Animated, {
   useSharedValue,
   useAnimatedScrollHandler,
@@ -21,8 +21,8 @@ import Animated, {
   interpolateColor,
 } from "react-native-reanimated";
 import StandardView from "@/components/StandardView";
-import ServiceCard from "@/components/Appointments/servce-card";
 import { Searchbar } from "react-native-paper";
+import ServiceCard from "@/components/Appointments/servce-card";
 
 const { width } = Dimensions.get("screen");
 
@@ -102,6 +102,40 @@ const BeautySquareSalon: React.FC = () => {
     activeTab.value = index;
   };
 
+  const renderTabContent = () => {
+    return (
+      <Animated.ScrollView
+        ref={bottomScrollRef}
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={scrollHandler}
+        scrollEventThrottle={16}
+      >
+        <View style={styles.tabContent}>
+          <Text style={styles.sectionTitle}>Services</Text>
+          <FlatList
+            data={services}
+            renderItem={({ item }) => <ServiceCard data={item as any} />}
+            keyExtractor={(item) => item.service_id.toString()}
+            numColumns={2}
+            getItemLayout={(_, index) => ({
+              length: 120,
+              offset: 120 * index,
+              index,
+            })}
+          />
+        </View>
+        <View style={styles.tabContent}>
+          <Text>Review content goes here</Text>
+        </View>
+        <View style={styles.tabContent}>
+          <Text>Gallery content goes here</Text>
+        </View>
+      </Animated.ScrollView>
+    );
+  };
+
   return (
     <View style={styles.container}>
       <StandardView>
@@ -111,9 +145,7 @@ const BeautySquareSalon: React.FC = () => {
           }}
           style={styles.salonImage}
         />
-
         <Text style={styles.title}>Beauty Square Salon</Text>
-
         <Searchbar
           placeholder="Search"
           onChangeText={setSearchQuery}
@@ -122,7 +154,6 @@ const BeautySquareSalon: React.FC = () => {
             console.log("Search submitted:", searchQuery);
           }}
         />
-
         <View style={styles.ratingContainer}>
           <View style={styles.rating}>
             <AntDesign name="star" size={12} color="#DB1471" />
@@ -130,13 +161,11 @@ const BeautySquareSalon: React.FC = () => {
           </View>
           <Text style={styles.ratingText}>104 reviews</Text>
         </View>
-
         <Text style={styles.salonName}>Beauty Square Salon</Text>
         <Text style={styles.location}>
           <EvilIcons name="location" size={24} color="black" />
           Lavington area, Nairobi, Kenya
         </Text>
-
         <View style={styles.tabContainer}>
           {tabs.map((item, index) => (
             <View
@@ -158,35 +187,7 @@ const BeautySquareSalon: React.FC = () => {
           ))}
         </View>
         <Animated.View style={[styles.tabIndicator, barWidthStyle]} />
-        <Animated.ScrollView
-          ref={bottomScrollRef}
-          horizontal
-          pagingEnabled
-          showsHorizontalScrollIndicator={false}
-          onScroll={scrollHandler}
-          scrollEventThrottle={16}
-        >
-          <View style={styles.tabContent}>
-            <Text style={styles.sectionTitle}>Services</Text>
-            <FlatList
-              data={services}
-              renderItem={({ item }) => <ServiceCard {...(item as any)} />}
-              keyExtractor={(item: any) => item.service_id.toString()}
-              numColumns={2}
-              getItemLayout={(_, index) => ({
-                length: 120,
-                offset: 120 * index,
-                index,
-              })}
-            />
-          </View>
-          <View style={styles.tabContent}>
-            <Text>Review content goes here</Text>
-          </View>
-          <View style={styles.tabContent}>
-            <Text>Gallery content goes here</Text>
-          </View>
-        </Animated.ScrollView>
+        {renderTabContent()}
       </StandardView>
     </View>
   );
@@ -196,11 +197,6 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: "#F6F6F9",
-  },
-  header: {
-    flexDirection: "row",
-    justifyContent: "space-between",
-    padding: 10,
   },
   salonImage: {
     width: "100%",
@@ -213,38 +209,6 @@ const styles = StyleSheet.create({
     color: "#DB1471",
     padding: 10,
   },
-  searchBar: {
-    flexDirection: "row",
-    alignItems: "center",
-    margin: 10,
-    padding: 10,
-    backgroundColor: "#f0f0f0",
-    borderRadius: 20,
-  },
-  searchText: {
-    marginLeft: 10,
-    color: "gray",
-  },
-  tabs: {
-    flexDirection: "row",
-    justifyContent: "space-around",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  tab: {
-    padding: 10,
-  },
-  activeTab: {
-    padding: 10,
-    borderBottomWidth: 2,
-    borderBottomColor: "pink",
-  },
-  tabText: {
-    color: "gray",
-  },
-  activeTabText: {
-    color: "pink",
-  },
   ratingContainer: {
     flexDirection: "row",
     justifyContent: "space-between",
@@ -255,7 +219,6 @@ const styles = StyleSheet.create({
     fontSize: 14,
     fontFamily: "raleway",
     color: "#8C8C8C",
-    display: "none",
   },
   rating: {
     flexDirection: "row",
@@ -264,7 +227,6 @@ const styles = StyleSheet.create({
     paddingVertical: 2,
     paddingHorizontal: 7,
     borderRadius: 40,
-    gap: 10,
   },
   salonName: {
     fontSize: 18,
@@ -281,27 +243,6 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
     padding: 10,
   },
-  serviceItem: {
-    flex: 1,
-    margin: 5,
-    padding: 10,
-    backgroundColor: "#f9f9f9",
-    borderRadius: 10,
-  },
-  serviceImage: {
-    width: "100%",
-    height: 100,
-    borderRadius: 10,
-  },
-  serviceName: {
-    fontSize: 16,
-    fontWeight: "bold",
-    marginTop: 5,
-  },
-  serviceDetails: {
-    fontSize: 14,
-    color: "gray",
-  },
   tabContainer: {
     flexDirection: "row",
     borderBottomWidth: 1,
@@ -317,6 +258,12 @@ const styles = StyleSheet.create({
   tabContent: {
     width: width,
     paddingHorizontal: 10,
+  },
+  tabText: {
+    color: "gray",
+  },
+  tab: {
+    padding: 10,
   },
 });
 
