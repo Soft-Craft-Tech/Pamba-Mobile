@@ -1,34 +1,43 @@
-import React from "react";
+import ServiceCard from "@/components/Appointments/servce-card";
+import StandardView from "@/components/StandardView";
+import { AntDesign, EvilIcons } from "@expo/vector-icons";
+import React, { useState, useRef } from "react";
 import {
   View,
   Text,
-  Image,
   StyleSheet,
-  FlatList,
-  TouchableOpacity,
+  ScrollView,
   Dimensions,
-  LayoutChangeEvent,
+  TouchableOpacity,
+  NativeSyntheticEvent,
+  NativeScrollEvent,
+  SafeAreaView,
+  Image,
+  FlatList,
 } from "react-native";
-import { AntDesign, EvilIcons } from "@expo/vector-icons";
-import Animated, {
-  useSharedValue,
-  useAnimatedScrollHandler,
-  useAnimatedStyle,
-  interpolate,
-  useDerivedValue,
-  scrollTo,
-  useAnimatedRef,
-  interpolateColor,
-} from "react-native-reanimated";
-import StandardView from "@/components/StandardView";
 import { Searchbar } from "react-native-paper";
-import ServiceCard from "@/components/Appointments/servce-card";
 
-const { width } = Dimensions.get("screen");
+const { width } = Dimensions.get("window");
 
-const tabs = ["About", "Review", "Gallery"];
+const tabs: string[] = ["About", "Review", "Gallery"];
 
-const services = [
+const servicesData = [
+  {
+    service_id: 1,
+    imageUri:
+      "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: "Product One",
+    ratingTime: "45 mins",
+    price: "$100",
+  },
+  {
+    service_id: 2,
+    imageUri:
+      "https://plus.unsplash.com/premium_photo-1677098574666-8f97d913d9cd?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+    title: "Product One",
+    ratingTime: "45 mins",
+    price: "$100",
+  },
   {
     service_id: 3,
     imageUri:
@@ -47,97 +56,27 @@ const services = [
   },
 ];
 
-const BeautySquareSalon: React.FC = () => {
+const BusinessSquareSalon: React.FC = () => {
+  const [currentTab, setCurrentTab] = useState<number>(0);
   const [searchQuery, setSearchQuery] = React.useState("");
-  const headerWidths = tabs.reduce((acc, _, index) => {
-    acc[index] = useSharedValue(0);
-    return acc;
-  }, {} as { [key: number]: Animated.SharedValue<number> });
+  const scrollViewRef = useRef<ScrollView>(null);
 
-  const scrollX = useSharedValue(0);
-  const bottomScrollRef = useAnimatedRef<Animated.ScrollView>();
-  const activeTab = useSharedValue(0);
-
-  useDerivedValue(() => {
-    scrollTo(bottomScrollRef, activeTab.value * width, 0, true);
-  });
-
-  const scrollHandler = useAnimatedScrollHandler((event) => {
-    scrollX.value = event.contentOffset.x;
-  });
-
-  const barWidthStyle = useAnimatedStyle(() => {
-    const barWidth = interpolate(
-      scrollX.value,
-      [0, width, width * 2],
-      [headerWidths[0].value, headerWidths[1].value, headerWidths[2].value]
-    );
-    const moveValue = interpolate(
-      scrollX.value,
-      [0, width, width * 2],
-      [0, headerWidths[0].value, headerWidths[0].value + headerWidths[1].value]
-    );
-    return {
-      width: barWidth,
-      transform: [{ translateX: moveValue }],
-    };
-  });
-
-  const getTabStyle = (index: number) => {
-    return useAnimatedStyle(() => {
-      const activeColor = "pink";
-      const inactiveColor = "gray";
-      const color = interpolateColor(
-        scrollX.value,
-        [width * (index - 1), width * index, width * (index + 1)],
-        [inactiveColor, activeColor, inactiveColor]
-      );
-      return {
-        color: color,
-      };
-    });
+  const handleScroll = (event: NativeSyntheticEvent<NativeScrollEvent>) => {
+    const tabIndex = Math.round(event.nativeEvent.contentOffset.x / width);
+    setCurrentTab(tabIndex);
   };
 
-  const onPressTab = (index: number) => {
-    activeTab.value = index;
+  const handleTabPress = (index: number) => {
+    setCurrentTab(index);
+    scrollViewRef.current?.scrollTo({ x: width * index, animated: true });
   };
 
-  const renderTabContent = () => {
-    return (
-      <Animated.ScrollView
-        ref={bottomScrollRef}
-        horizontal
-        pagingEnabled
-        showsHorizontalScrollIndicator={false}
-        onScroll={scrollHandler}
-        scrollEventThrottle={16}
-      >
-        <View style={styles.tabContent}>
-          <Text style={styles.sectionTitle}>Services</Text>
-          <FlatList
-            data={services}
-            renderItem={({ item }) => <ServiceCard data={item as any} />}
-            keyExtractor={(item) => item.service_id.toString()}
-            numColumns={2}
-            getItemLayout={(_, index) => ({
-              length: 120,
-              offset: 120 * index,
-              index,
-            })}
-          />
-        </View>
-        <View style={styles.tabContent}>
-          <Text>Review content goes here</Text>
-        </View>
-        <View style={styles.tabContent}>
-          <Text>Gallery content goes here</Text>
-        </View>
-      </Animated.ScrollView>
-    );
-  };
+  const renderServiceCard = ({ item }: { item: (typeof servicesData)[0] }) => (
+    <ServiceCard data={item as any} />
+  );
 
   return (
-    <View style={styles.container}>
+    <SafeAreaView style={styles.container}>
       <StandardView>
         <Image
           source={{
@@ -146,50 +85,83 @@ const BeautySquareSalon: React.FC = () => {
           style={styles.salonImage}
         />
         <Text style={styles.title}>Beauty Square Salon</Text>
-        <Searchbar
-          placeholder="Search"
-          onChangeText={setSearchQuery}
-          value={searchQuery}
-          onSubmitEditing={() => {
-            console.log("Search submitted:", searchQuery);
-          }}
-        />
-        <View style={styles.ratingContainer}>
-          <View style={styles.rating}>
-            <AntDesign name="star" size={12} color="#DB1471" />
-            <Text>4.9</Text>
-          </View>
-          <Text style={styles.ratingText}>104 reviews</Text>
-        </View>
-        <Text style={styles.salonName}>Beauty Square Salon</Text>
-        <Text style={styles.location}>
-          <EvilIcons name="location" size={24} color="black" />
-          Lavington area, Nairobi, Kenya
-        </Text>
-        <View style={styles.tabContainer}>
-          {tabs.map((item, index) => (
-            <View
-              key={item}
-              style={styles.tabWrapper}
-              onLayout={(e: LayoutChangeEvent) =>
-                (headerWidths[index].value = e.nativeEvent.layout.width)
-              }
+        {currentTab === 0 && (
+          <Searchbar
+            placeholder="Search"
+            onChangeText={setSearchQuery}
+            value={searchQuery}
+            onSubmitEditing={() => {
+              console.log("Search submitted:", searchQuery);
+            }}
+          />
+        )}
+        <View style={styles.tabBar}>
+          {tabs.map((tab, index) => (
+            <TouchableOpacity
+              key={index}
+              style={styles.tabItem}
+              onPress={() => handleTabPress(index)}
             >
-              <TouchableOpacity
-                style={styles.tab}
-                onPress={() => onPressTab(index)}
+              <View
+                style={[
+                  styles.tabText,
+                  currentTab === index && styles.activeTabText,
+                ]}
               >
-                <Animated.Text style={[styles.tabText, getTabStyle(index)]}>
-                  {item}
-                </Animated.Text>
-              </TouchableOpacity>
-            </View>
+                <Text
+                  style={[
+                    styles.blackText,
+                    currentTab === index && styles.activeText,
+                  ]}
+                >
+                  {tab}
+                </Text>
+              </View>
+            </TouchableOpacity>
           ))}
         </View>
-        <Animated.View style={[styles.tabIndicator, barWidthStyle]} />
-        {renderTabContent()}
       </StandardView>
-    </View>
+      <ScrollView
+        horizontal
+        pagingEnabled
+        showsHorizontalScrollIndicator={false}
+        onScroll={handleScroll}
+        scrollEventThrottle={16}
+        ref={scrollViewRef}
+      >
+        {tabs.map((tab, index) => (
+          <View key={index} style={[styles.scene, { width }]}>
+            {index === 0 && (
+              <View>
+                <StandardView>
+                  <View style={styles.ratingContainer}>
+                    <View style={styles.rating}>
+                      <AntDesign name="star" size={12} color="#DB1471" />
+                      <Text>4.9</Text>
+                    </View>
+                    <View />
+                  </View>
+                  <Text style={styles.salonName}>Beauty Square Salon</Text>
+                  <Text style={styles.location}>
+                    <EvilIcons name="location" size={24} color="black" />
+                    Lavington area, Nairobi, Kenya
+                  </Text>
+                  <Text style={styles.subTitle}>Services</Text>
+                </StandardView>
+                <FlatList
+                  data={servicesData}
+                  renderItem={renderServiceCard}
+                  keyExtractor={(item) => item.service_id.toString()}
+                  numColumns={2}
+                  showsVerticalScrollIndicator={false}
+                />
+              </View>
+            )}
+            {index === 1 && <Text>Hello</Text>}
+          </View>
+        ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 
@@ -198,16 +170,54 @@ const styles = StyleSheet.create({
     flex: 1,
     backgroundColor: "#F6F6F9",
   },
-  salonImage: {
-    width: "100%",
-    height: 200,
-    borderRadius: 10,
-  },
   title: {
     fontSize: 24,
     fontWeight: "700",
     color: "#DB1471",
     padding: 10,
+  },
+  subTitle: {
+    fontSize: 16,
+    fontWeight: "700",
+    color: "#3F3F3F",
+    textTransform: "capitalize",
+    marginTop: 5,
+  },
+  salonImage: {
+    width: "100%",
+    height: 200,
+    borderRadius: 10,
+  },
+  tabBar: {
+    flexDirection: "row",
+    paddingTop: 20,
+    backgroundColor: "#f8f8f8",
+    borderBottomWidth: 1,
+    borderBottomColor: "#ddd",
+  },
+  tabItem: {
+    flex: 1,
+    alignItems: "center",
+    padding: 16,
+  },
+  tabText: {
+    paddingHorizontal: 25,
+    paddingVertical: 10,
+    borderRadius: 32,
+  },
+  activeText: { color: "#fff" },
+  blackText: { color: "#828188" },
+  activeTabText: {
+    paddingHorizontal: 25,
+    paddingVertical: 10,
+    backgroundColor: "#DB1471",
+    borderRadius: 32,
+  },
+  scene: {
+    flex: 1,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#fff",
   },
   ratingContainer: {
     flexDirection: "row",
@@ -238,33 +248,6 @@ const styles = StyleSheet.create({
     color: "gray",
     paddingHorizontal: 10,
   },
-  sectionTitle: {
-    fontSize: 16,
-    fontWeight: "bold",
-    padding: 10,
-  },
-  tabContainer: {
-    flexDirection: "row",
-    borderBottomWidth: 1,
-    borderBottomColor: "#e0e0e0",
-  },
-  tabWrapper: {
-    flex: 1,
-  },
-  tabIndicator: {
-    height: 2,
-    backgroundColor: "pink",
-  },
-  tabContent: {
-    width: width,
-    paddingHorizontal: 10,
-  },
-  tabText: {
-    color: "gray",
-  },
-  tab: {
-    padding: 10,
-  },
 });
 
-export default BeautySquareSalon;
+export default BusinessSquareSalon;

@@ -32,6 +32,15 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {
+        "origin": false
+      },
+      "eas": {
+        "projectId": "291a330a-5693-4520-a94c-0c7fd78ccd86"
+      }
+    },
+    "owner": "martinki"
   }
 }
