@@ -10,7 +10,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 
 const commonHeaderOptions = {
   headerShown: true,
-  headerRight: () => <Feather name="bell" size={24} color="black" />,
   tabBarActiveTintColor: "#DB1471",
   headerRightContainerStyle: { paddingRight: 20 },
   headerStyle: {
@@ -54,6 +53,11 @@ export default function TabLayout() {
           title: "Home",
           ...commonHeaderOptions,
           headerLeft: () => <Avatar />,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
           tabBarIcon: ({ color, focused }) => (
             <TabBarIcon
               name={focused ? "home" : "home-outline"}
@@ -69,6 +73,11 @@ export default function TabLayout() {
           ...commonHeaderOptions,
           headerTitleStyle: { display: "none" },
           headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
           tabBarIcon: ({ color }) => (
             <AntDesign name="calendar" size={24} color={color} />
           ),
@@ -81,6 +90,11 @@ export default function TabLayout() {
           ...commonHeaderOptions,
           headerTitleStyle: { display: "none" },
           headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
           tabBarIcon: ({ color }) => (
             <FontAwesome name="search" size={24} color={color} />
           ),
@@ -93,6 +107,11 @@ export default function TabLayout() {
           ...commonHeaderOptions,
           headerTitleStyle: { display: "none" },
           headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
           tabBarShowLabel: false,
           tabBarButton: () => null,
         }}
@@ -105,6 +124,11 @@ export default function TabLayout() {
           headerTitleStyle: { display: "none" },
           headerLeft: backArrowHeaderLeft,
           tabBarShowLabel: false,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
           tabBarButton: () => null,
         }}
       />
@@ -115,12 +139,33 @@ export default function TabLayout() {
           ...commonHeaderOptions,
           headerTitleStyle: { display: "none" },
           headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
           tabBarShowLabel: false,
           tabBarButton: () => null,
         }}
       />
       <Tabs.Screen
         name="book-appointment/[id]"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="notifications"
         options={{
           title: "",
           ...commonHeaderOptions,
