@@ -1,5 +1,6 @@
 import ServiceCard from "@/components/Appointments/servce-card";
 import StandardView from "@/components/StandardView";
+import Reviews from "@/components/review";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
 import React, { useState, useRef } from "react";
 import {
@@ -157,7 +158,7 @@ const BusinessSquareSalon: React.FC = () => {
                 />
               </View>
             )}
-            {index === 1 && <Text>Hello</Text>}
+            {index === 1 && <Reviews />}
           </View>
         ))}
       </ScrollView>
