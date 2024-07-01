@@ -1,7 +1,4 @@
-// import { Ionicons } from "@expo/vector-icons";
-// import Checkbox from "expo-checkbox";
-// import { Link } from "expo-router";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   SafeAreaView,
@@ -15,6 +12,7 @@ import {
 
 export default function ForgotPassword() {
   const [username, setUsername] = useState("");
+  const router = useRouter();
 
   return (
     <SafeAreaView style={styles.container}>
@@ -32,7 +30,12 @@ export default function ForgotPassword() {
           value={username}
           onChangeText={setUsername}
         />
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          onPress={() => {
+            router.push("/reset-password");
+          }}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>Submit</Text>
         </TouchableOpacity>
         <View style={styles.signupContainer}>

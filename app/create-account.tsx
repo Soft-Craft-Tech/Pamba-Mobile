@@ -1,6 +1,6 @@
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
-import { Link } from "expo-router";
+import { Link, useRouter } from "expo-router";
 import React from "react";
 import { useState } from "react";
 import {
@@ -64,6 +64,7 @@ export type FormType = z.infer<typeof schema>;
 
 export default function CreateAccountScreen() {
   const [showPassword, setShowPassword] = useState(false);
+  const router = useRouter();
   const {
     handleSubmit,
     control,
@@ -75,6 +76,8 @@ export default function CreateAccountScreen() {
       ...data,
       phoneNumber: transformedPhoneNumber,
     };
+
+    router.push("/verification");
 
     console.log(transformedData);
   };

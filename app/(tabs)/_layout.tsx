@@ -33,7 +33,7 @@ export default function TabLayout() {
   const backArrowHeaderLeft = () => (
     <TouchableOpacity
       onPress={() => {
-        router.back();
+        router.canGoBack();
       }}
     >
       <Ionicons name="arrow-back" size={24} color="black" />

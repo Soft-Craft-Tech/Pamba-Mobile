@@ -14,7 +14,7 @@ const LaunchPad = () => {
     <>
       <View style={styles.container}>
         <ImageBackground
-          source={require("@/assets/images/launchpad.png")}
+          source={require("@/assets/images/launchpad.jpeg")}
           style={styles.backgroundImage}
           imageStyle={{ borderRadius: 10 }}
         >

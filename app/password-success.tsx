@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import {
   SafeAreaView,
   StyleSheet,
@@ -8,6 +9,7 @@ import {
 } from "react-native";
 
 export default function PasswordSuccess() {
+  const router = useRouter();
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoContainer}>
@@ -18,7 +20,12 @@ export default function PasswordSuccess() {
         Your password has been reset successfully.
       </Text>
       <View style={styles.formContainer}>
-        <TouchableOpacity style={styles.button}>
+        <TouchableOpacity
+          onPress={() => {
+            router.push("/login");
+          }}
+          style={styles.button}
+        >
           <Text style={styles.buttonText}>Back to Login</Text>
         </TouchableOpacity>
       </View>

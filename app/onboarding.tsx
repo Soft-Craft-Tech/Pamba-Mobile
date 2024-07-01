@@ -1,92 +1,187 @@
+import { ImageBackground } from "expo-image";
 import { useRouter } from "expo-router";
-import React, { useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import {
   View,
   Text,
   StyleSheet,
   TouchableOpacity,
-  ImageBackground,
   Image,
+  Dimensions,
+  ImageSourcePropType,
 } from "react-native";
+import { SafeAreaView } from "react-native-safe-area-context";
+import {
+  GestureHandlerRootView,
+  Gesture,
+  GestureDetector,
+} from "react-native-gesture-handler";
+import Animated, {
+  useSharedValue,
+  useAnimatedStyle,
+  withTiming,
+  runOnJS,
+  interpolateColor,
+} from "react-native-reanimated";
 
-const Onboarding = () => {
-  const images = [
-    require("@/assets/images/carousel-one.png"),
-    require("@/assets/images/carousel-two.png"),
-    require("@/assets/images/carousel-three.png"),
-    require("@/assets/images/carousel-four.png"),
-    require("@/assets/images/carousel-five.png"),
-  ];
-  const [currentImage, setCurrentImage] = useState(0);
+const { width: SCREEN_WIDTH } = Dimensions.get("window");
+const CAROUSEL_INTERVAL = 5000;
+
+const images: ImageSourcePropType[] = [
+  require("@/assets/images/carousel-one.jpeg"),
+  require("@/assets/images/carousel-two.jpeg"),
+  require("@/assets/images/carousel-three.jpeg"),
+  require("@/assets/images/carousel-four.jpeg"),
+  require("@/assets/images/carousel-five.jpeg"),
+];
+
+const Onboarding: React.FC = () => {
   const router = useRouter();
+  const translateX = useSharedValue(0);
+  const currentIndex = useSharedValue(0);
+
+  const handleJoinPress = useCallback(() => {
+    router.push("/launchpad");
+  }, [router]);
+
+  const setCurrentIndex = (index: number) => {
+    currentIndex.value = index;
+  };
 
   useEffect(() => {
     const intervalId = setInterval(() => {
-      setCurrentImage((prevImage) => (prevImage + 1) % images.length);
-    }, 2000);
+      const nextIndex = (currentIndex.value + 1) % images.length;
+      translateX.value = withTiming(-nextIndex * SCREEN_WIDTH, {
+        duration: 500,
+      });
+      runOnJS(setCurrentIndex)(nextIndex);
+    }, CAROUSEL_INTERVAL);
 
     return () => clearInterval(intervalId);
   }, []);
 
+  const gesture = Gesture.Pan()
+    .onUpdate((e) => {
+      translateX.value = e.translationX + currentIndex.value * -SCREEN_WIDTH;
+    })
+    .onEnd((e) => {
+      const threshold = SCREEN_WIDTH / 3;
+      if (Math.abs(e.velocityX) > 500 || Math.abs(e.translationX) > threshold) {
+        if (e.velocityX > 0) {
+          const newIndex = Math.max(0, currentIndex.value - 1);
+          translateX.value = withTiming(-newIndex * SCREEN_WIDTH, {
+            duration: 500,
+          });
+          runOnJS(setCurrentIndex)(newIndex);
+        } else {
+          const newIndex = Math.min(images.length - 1, currentIndex.value + 1);
+          translateX.value = withTiming(-newIndex * SCREEN_WIDTH, {
+            duration: 500,
+          });
+          runOnJS(setCurrentIndex)(newIndex);
+        }
+      } else {
+        translateX.value = withTiming(-currentIndex.value * SCREEN_WIDTH, {
+          duration: 500,
+        });
+      }
+    });
+
+  const animatedStyle = useAnimatedStyle(() => ({
+    transform: [{ translateX: translateX.value }],
+  }));
+
+  const renderPaginationDots = () => (
+    <View style={styles.pagination}>
+      {images.map((_, index) => {
+        const dotStyle = useAnimatedStyle(() => {
+          const backgroundColor = interpolateColor(
+            currentIndex.value,
+            [index - 1, index, index + 1],
+            ["#ffffff", "#DB1471", "#ffffff"]
+          );
+          return { backgroundColor };
+        });
+
+        return <Animated.View key={index} style={[styles.dot, dotStyle]} />;
+      })}
+    </View>
+  );
+
   return (
-    <>
-      <View style={styles.container}>
-        <ImageBackground
-          source={images[currentImage]}
-          style={styles.backgroundImage}
-          imageStyle={{ borderRadius: 10 }}
-        >
-          <View style={styles.overlay}>
-            <View style={styles.logoContainer}>
-              <Image source={require("@/assets/images/inside-logo.png")} />
-            </View>
-            <View style={styles.bottomContainer}>
-              <Text style={styles.title}>Where Style Meets Convenience</Text>
-              <Text style={styles.subtitle}>
-                Enjoy a seamless and efficient way to book your Spa, Salon, or
-                Barber sessions with Pamba!
-              </Text>
-              <TouchableOpacity
-                onPress={() => router.push("/launchpad")}
-                style={styles.button}
+    <GestureHandlerRootView style={styles.container}>
+      <SafeAreaView style={styles.container}>
+        <GestureDetector gesture={gesture}>
+          <Animated.View style={[styles.carouselContainer, animatedStyle]}>
+            {images.map((image, index) => (
+              <ImageBackground
+                key={index}
+                source={image}
+                style={styles.backgroundImage}
+                imageStyle={styles.backgroundImageStyle}
               >
-                <Text style={styles.buttonText}>Join our family</Text>
-              </TouchableOpacity>
-              <View style={styles.pagination}>
-                {images.map((item, index) => (
-                  <View
-                    key={item}
-                    style={
-                      currentImage === index ? styles.activeDot : styles.dot
-                    }
-                  ></View>
-                ))}
-              </View>
-            </View>
-          </View>
-        </ImageBackground>
-      </View>
-    </>
+                <View style={styles.overlay}>
+                  <View style={styles.logoContainer}>
+                    <Image
+                      source={require("@/assets/images/inside-logo.png")}
+                    />
+                  </View>
+                  <View style={styles.bottomContainer}>
+                    <Text style={styles.title}>
+                      Where Style Meets Convenience
+                    </Text>
+                    <Text style={styles.subtitle}>
+                      Enjoy a seamless and efficient way to book your Spa,
+                      Salon, or Barber sessions with Pamba!
+                    </Text>
+                    <TouchableOpacity
+                      onPress={handleJoinPress}
+                      style={styles.button}
+                    >
+                      <Text style={styles.buttonText}>Join our family</Text>
+                    </TouchableOpacity>
+                    {renderPaginationDots()}
+                  </View>
+                </View>
+              </ImageBackground>
+            ))}
+          </Animated.View>
+        </GestureDetector>
+      </SafeAreaView>
+    </GestureHandlerRootView>
   );
 };
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
+    backgroundColor: "black",
+  },
+  carouselContainer: {
+    flex: 1,
+    flexDirection: "row",
   },
   backgroundImage: {
-    flex: 1,
+    width: SCREEN_WIDTH,
+    height: "100%",
     justifyContent: "center",
     alignItems: "center",
   },
+  backgroundImageStyle: {
+    borderRadius: 10,
+  },
   overlay: {
-    flex: 1,
+    ...StyleSheet.absoluteFillObject,
     backgroundColor: "rgba(0, 0, 0, 0.5)",
-    justifyContent: "space-evenly",
+    justifyContent: "space-between",
     alignItems: "center",
     padding: 20,
   },
   logoContainer: {
+    marginTop: 20,
+  },
+  bottomContainer: {
+    alignItems: "center",
     marginBottom: 20,
   },
   title: {
@@ -104,13 +199,15 @@ const styles = StyleSheet.create({
   },
   button: {
     backgroundColor: "#DB1471",
-    padding: 15,
+    paddingVertical: 15,
+    paddingHorizontal: 30,
     borderRadius: 25,
     marginBottom: 20,
   },
   buttonText: {
     color: "#fff",
     fontSize: 16,
+    fontWeight: "600",
     textAlign: "center",
   },
   pagination: {
@@ -120,20 +217,8 @@ const styles = StyleSheet.create({
   dot: {
     height: 4,
     width: 24,
-    backgroundColor: "#fff",
     borderRadius: 5,
     margin: 5,
-  },
-  activeDot: {
-    height: 4,
-    width: 24,
-    backgroundColor: "#DB1471",
-    borderRadius: 5,
-    margin: 5,
-  },
-  bottomContainer: {
-    flex: 0.2,
-    gap: 20,
   },
 });
 
