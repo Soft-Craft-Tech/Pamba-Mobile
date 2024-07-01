@@ -1,4 +1,5 @@
 import ServiceCard from "@/components/Appointments/servce-card";
+import GalleryLayout from "@/components/Gallery";
 import StandardView from "@/components/StandardView";
 import Reviews from "@/components/review";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
@@ -100,6 +101,7 @@ const BusinessSquareSalon: React.FC = () => {
           {tabs.map((tab, index) => (
             <TouchableOpacity
               key={index}
+              disabled
               style={styles.tabItem}
               onPress={() => handleTabPress(index)}
             >
@@ -159,6 +161,7 @@ const BusinessSquareSalon: React.FC = () => {
               </View>
             )}
             {index === 1 && <Reviews />}
+            {index === 2 && <GalleryLayout />}
           </View>
         ))}
       </ScrollView>
