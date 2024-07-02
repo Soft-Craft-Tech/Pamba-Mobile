@@ -5,17 +5,31 @@ import {
   Text,
   TouchableOpacity,
   ScrollView,
-  Image,
   StyleSheet,
 } from "react-native";
 import { TimerPickerModal } from "react-native-timer-picker";
 import * as Haptics from "expo-haptics";
+import { Dropdown } from "react-native-element-dropdown";
+import { Avatar } from "react-native-paper";
+import CustomButton from "@/components/Button";
+import { FontAwesome5 } from "@expo/vector-icons";
 
 type TimeObj = {
   hours: number;
   minutes: number;
   seconds: number;
 };
+
+const data = [
+  { label: "Item 1", value: "1" },
+  { label: "Item 2", value: "2" },
+  { label: "Item 3", value: "3" },
+  { label: "Item 4", value: "4" },
+  { label: "Item 5", value: "5" },
+  { label: "Item 6", value: "6" },
+  { label: "Item 7", value: "7" },
+  { label: "Item 8", value: "8" },
+];
 
 const convertTo24HourFormat = (timeObj: TimeObj): string => {
   const { hours, minutes } = timeObj;
@@ -27,8 +41,10 @@ const convertTo24HourFormat = (timeObj: TimeObj): string => {
 const PickDate = () => {
   const [selectedDay, setSelectedDay] = useState("Fri");
   const [showPicker, setShowPicker] = useState(false);
+  const [value, setValue] = useState(null);
+  const [isFocus, setIsFocus] = useState(false);
 
-  const [selectedTime, setSelectedTime] = useState("SelectTime");
+  const [selectedTime, setSelectedTime] = useState("Select Time");
 
   const days = [
     { day: "Fri", date: "03 Feb", slots: 16 },
@@ -61,7 +77,6 @@ const PickDate = () => {
       <TouchableOpacity onPress={() => setShowPicker(true)}>
         <TimerPickerModal
           visible={showPicker}
-          use12HourPicker
           hourLabel=":"
           minuteLabel=""
           hideSeconds
@@ -83,22 +98,51 @@ const PickDate = () => {
           }}
         />
         <Text style={styles.subHeader}>Choose a slot for your haircut</Text>
+
         <View style={styles.timeInput}>
-          <Text>{selectedTime} HRS</Text>
+          <Text>
+            {`${selectedTime} ${selectedTime !== "Select Time" ? "HRS" : ""}`}
+          </Text>
         </View>
       </TouchableOpacity>
       <Text style={styles.subHeader}>Select service provider</Text>
       <View style={styles.providerContainer}>
-        <Image
-          source={{ uri: "https://example.com/provider-image.jpg" }}
-          style={styles.providerImage}
+        <Dropdown
+          style={[styles.dropdown, isFocus && { borderColor: "#DB1471" }]}
+          placeholderStyle={styles.placeholderStyle}
+          selectedTextStyle={styles.selectedTextStyle}
+          inputSearchStyle={styles.inputSearchStyle}
+          iconStyle={styles.iconStyle}
+          data={data}
+          search
+          maxHeight={300}
+          labelField="label"
+          valueField="value"
+          placeholder={!isFocus ? "Olivia Rhae (Optional)" : "..."}
+          searchPlaceholder="Search..."
+          value={value}
+          onFocus={() => setIsFocus(true)}
+          onBlur={() => setIsFocus(false)}
+          onChange={(item) => {
+            setValue(item.value as any);
+            setIsFocus(false);
+          }}
+          renderLeftIcon={() => (
+            <Avatar.Image
+              size={30}
+              source={{ uri: "https://i.pravatar.cc/150?img=27" }}
+            />
+          )}
         />
-        <Text>Olivia Rhye (optional)</Text>
       </View>
-
-      <TouchableOpacity style={styles.bookButton}>
-        <Text style={styles.bookButtonText}>Book PickDateointment</Text>
-      </TouchableOpacity>
+      <View style={styles.calendarSelect}>
+        <Text style={styles.different}>Need a different day?</Text>
+        <View style={styles.leftSection}>
+          <FontAwesome5 name="calendar-check" size={24} color="#007B99" />
+          <Text style={styles.selectText}>SELECT DATE</Text>
+        </View>
+      </View>
+      <CustomButton buttonText="Book Appointment" />
     </View>
   );
 };
@@ -129,7 +173,11 @@ const styles = StyleSheet.create({
   timeSlotContainer: { flexDirection: "row", flexWrap: "wrap" },
   timeSlot: { padding: 10, borderWidth: 1, borderRadius: 5, margin: 5 },
   selectedTime: { backgroundColor: "lightblue" },
-  providerContainer: { flexDirection: "row", alignItems: "center" },
+  providerContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    marginBottom: 20,
+  },
   providerImage: { width: 40, height: 40, borderRadius: 20, marginRight: 10 },
   bookButton: {
     backgroundColor: "pink",
@@ -147,6 +195,61 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     marginBottom: 10,
     backgroundColor: "#fff",
+  },
+  dropdown: {
+    height: 50,
+    borderColor: "gray",
+    borderWidth: 0.5,
+    borderRadius: 8,
+    paddingHorizontal: 8,
+    width: "100%",
+    backgroundColor: "#fff",
+  },
+  icon: {
+    marginRight: 5,
+  },
+  label: {
+    position: "absolute",
+    backgroundColor: "white",
+    left: 22,
+    top: 8,
+    zIndex: 999,
+    paddingHorizontal: 8,
+    fontSize: 14,
+  },
+  placeholderStyle: {
+    fontSize: 16,
+    marginLeft: 20,
+  },
+  selectedTextStyle: {
+    fontSize: 16,
+    marginLeft: 20,
+  },
+  iconStyle: {
+    width: 20,
+    height: 20,
+  },
+  inputSearchStyle: {
+    height: 40,
+    fontSize: 16,
+  },
+  calendarSelect: {
+    flexDirection: "row",
+    alignItems: "center",
+    justifyContent: "space-between",
+    marginBottom: 20,
+  },
+  leftSection: {
+    flexDirection: "row",
+    gap: 3,
+    alignItems: "center",
+  },
+  selectText: {
+    color: "#007B99",
+  },
+  different: {
+    fontSize: 14,
+    fontWeight: "600",
   },
 });
 
