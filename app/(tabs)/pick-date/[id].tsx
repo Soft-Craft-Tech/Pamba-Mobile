@@ -1,4 +1,5 @@
-import React, { useState } from "react";
+import { LinearGradient } from "expo-linear-gradient";
+import React, { useRef, useState } from "react";
 import {
   View,
   Text,
@@ -7,9 +8,26 @@ import {
   Image,
   StyleSheet,
 } from "react-native";
+import { TimerPickerModal } from "react-native-timer-picker";
+import * as Haptics from "expo-haptics";
+
+type TimeObj = {
+  hours: number;
+  minutes: number;
+  seconds: number;
+};
+
+const convertTo24HourFormat = (timeObj: TimeObj): string => {
+  const { hours, minutes, seconds } = timeObj;
+  const formattedHours = String(hours).padStart(2, "0");
+  const formattedMinutes = String(minutes).padStart(2, "0");
+  const formattedSeconds = String(seconds).padStart(2, "0");
+  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+};
 
 const PickDate = () => {
   const [selectedDay, setSelectedDay] = useState("Fri");
+  const [showPicker, setShowPicker] = useState(false);
 
   const days = [
     { day: "Fri", date: "03 Feb", slots: 16 },
@@ -39,9 +57,33 @@ const PickDate = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
-
-      <Text style={styles.subHeader}>Choose a slot for your haircut</Text>
-
+      <TouchableOpacity onPress={() => setShowPicker(true)}>
+        <TimerPickerModal
+          visible={showPicker}
+          use12HourPicker
+          hourLabel=":"
+          minuteLabel=""
+          hideSeconds
+          setIsVisible={setShowPicker}
+          onConfirm={(pickedDuration) => {
+            console.log(pickedDuration);
+            console.log(convertTo24HourFormat(pickedDuration));
+            setShowPicker(false);
+          }}
+          modalTitle="Select Time"
+          onCancel={() => setShowPicker(false)}
+          closeOnOverlayPress
+          LinearGradient={LinearGradient}
+          Haptics={Haptics}
+          styles={{
+            theme: "light",
+          }}
+          modalProps={{
+            overlayOpacity: 0.2,
+          }}
+        />
+        <Text style={styles.subHeader}>Choose a slot for your haircut</Text>
+      </TouchableOpacity>
       <Text style={styles.subHeader}>Select service provider</Text>
       <View style={styles.providerContainer}>
         <Image
