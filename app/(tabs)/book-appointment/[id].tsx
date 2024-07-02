@@ -1,6 +1,6 @@
 import React, { useEffect, useMemo, useRef } from "react";
 import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { Link, useLocalSearchParams } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
 
@@ -54,45 +54,53 @@ const SERVICES_DATA: ServiceData[] = [
 const SALON_IMAGE_URI =
   "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
-const HeaderComponent: React.FC<{ id: string | undefined }> = ({ id }) => (
-  <StandardView>
-    <Image
-      source={{ uri: SALON_IMAGE_URI }}
-      style={styles.salonImage}
-      accessible={true}
-      accessibilityLabel="Salon image"
-    />
-    <View style={styles.lowerContainer}>
-      <Text style={styles.appointmentTitle}>Beauty square salon {id}</Text>
-      <View style={styles.contactBox}>
-        <Ionicons name="call-outline" size={12} color="black" />
-        <Text style={styles.contactText}>0700123456</Text>
+const HeaderComponent: React.FC<{ id: string | undefined }> = ({ id }) => {
+  const router = useRouter();
+  return (
+    <StandardView>
+      <Image
+        source={{ uri: SALON_IMAGE_URI }}
+        style={styles.salonImage}
+        accessible={true}
+        accessibilityLabel="Salon image"
+      />
+      <View style={styles.lowerContainer}>
+        <Text style={styles.appointmentTitle}>Beauty square salon {id}</Text>
+        <View style={styles.contactBox}>
+          <Ionicons name="call-outline" size={12} color="black" />
+          <Text style={styles.contactText}>0700123456</Text>
+        </View>
+        <View style={styles.contactBox}>
+          <EvilIcons name="location" size={16} color="black" />
+          <Text style={styles.contactText}>Lavington area, Nairobi. Kenya</Text>
+        </View>
+        <View style={styles.contactBox}>
+          <EvilIcons name="location" size={16} color="black" />
+          <Link href={"https/maps/lavington/shop"}>
+            <Text style={styles.locationLink}>https/maps/lavington/shop</Text>
+          </Link>
+        </View>
+        <Text style={styles.serviceTitle}>Stylish Haircut</Text>
+        <Text style={styles.durationText}>
+          1 hour 15 minutes - 1 hour 40 mins
+        </Text>
+        <Text style={styles.amountText}>Ksh 1000</Text>
+        <Text style={styles.serviceDescription}>
+          Feel the thrill of a fresh start as our talented stylists bring your
+          vision to life with our signature stylish haircut. We're not just
+          cutting hair; we're sculpting confidence, one snip at a time.
+        </Text>
+        <CustomButton
+          onPress={() => {
+            router.push(`/pick-date/${id}`);
+          }}
+          buttonText="Book Appointment"
+        />
+        <Text style={styles.leftTitle}>Other Services</Text>
       </View>
-      <View style={styles.contactBox}>
-        <EvilIcons name="location" size={16} color="black" />
-        <Text style={styles.contactText}>Lavington area, Nairobi. Kenya</Text>
-      </View>
-      <View style={styles.contactBox}>
-        <EvilIcons name="location" size={16} color="black" />
-        <Link href={"https/maps/lavington/shop"}>
-          <Text style={styles.locationLink}>https/maps/lavington/shop</Text>
-        </Link>
-      </View>
-      <Text style={styles.serviceTitle}>Stylish Haircut</Text>
-      <Text style={styles.durationText}>
-        1 hours 15 minutes - 1 hour 40 mins
-      </Text>
-      <Text style={styles.amountText}>Ksh 1000</Text>
-      <Text style={styles.serviceDescription}>
-        Feel the thrill of a fresh start as our talented stylists bring your
-        vision to life with our signature stylish haircut. We're not just
-        cutting hair; we're sculpting confidence, one snip at a time.
-      </Text>
-      <CustomButton buttonText="Book Appointment" />
-      <Text style={styles.leftTitle}>Other Services</Text>
-    </View>
-  </StandardView>
-);
+    </StandardView>
+  );
+};
 
 const BookAppointment: React.FC = () => {
   const local = useLocalSearchParams<{ id: string }>();

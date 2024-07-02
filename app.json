@@ -8,8 +8,12 @@
     "scheme": "myapp",
     "userInterfaceStyle": "automatic",
     "splash": {
+      "image": "./assets/images/splash@3x.png",
       "resizeMode": "contain",
-      "backgroundColor": "#DB1471"
+      "backgroundColor": "#DB1471",
+      "mdpi": "./assets/images/splash.png",
+      "xhdpi": "./assets/images/splash@2x.png",
+      "xxhdpi": "./assets/images/splash@3x.png"
     },
     "ios": {
       "supportsTablet": true,
