@@ -1,5 +1,5 @@
 import { LinearGradient } from "expo-linear-gradient";
-import React, { useRef, useState } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -18,16 +18,17 @@ type TimeObj = {
 };
 
 const convertTo24HourFormat = (timeObj: TimeObj): string => {
-  const { hours, minutes, seconds } = timeObj;
+  const { hours, minutes } = timeObj;
   const formattedHours = String(hours).padStart(2, "0");
   const formattedMinutes = String(minutes).padStart(2, "0");
-  const formattedSeconds = String(seconds).padStart(2, "0");
-  return `${formattedHours}:${formattedMinutes}:${formattedSeconds}`;
+  return `${formattedHours}:${formattedMinutes}`;
 };
 
 const PickDate = () => {
   const [selectedDay, setSelectedDay] = useState("Fri");
   const [showPicker, setShowPicker] = useState(false);
+
+  const [selectedTime, setSelectedTime] = useState("SelectTime");
 
   const days = [
     { day: "Fri", date: "03 Feb", slots: 16 },
@@ -66,8 +67,7 @@ const PickDate = () => {
           hideSeconds
           setIsVisible={setShowPicker}
           onConfirm={(pickedDuration) => {
-            console.log(pickedDuration);
-            console.log(convertTo24HourFormat(pickedDuration));
+            setSelectedTime(convertTo24HourFormat(pickedDuration));
             setShowPicker(false);
           }}
           modalTitle="Select Time"
@@ -83,6 +83,9 @@ const PickDate = () => {
           }}
         />
         <Text style={styles.subHeader}>Choose a slot for your haircut</Text>
+        <View style={styles.timeInput}>
+          <Text>{selectedTime} HRS</Text>
+        </View>
       </TouchableOpacity>
       <Text style={styles.subHeader}>Select service provider</Text>
       <View style={styles.providerContainer}>
@@ -136,6 +139,15 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   bookButtonText: { color: "white", fontWeight: "bold" },
+  timeInput: {
+    width: "100%",
+    padding: 15,
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 5,
+    marginBottom: 10,
+    backgroundColor: "#fff",
+  },
 });
 
 export default PickDate;
