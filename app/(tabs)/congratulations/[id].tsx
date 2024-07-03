@@ -1,4 +1,3 @@
-import StandardView from "@/components/StandardView";
 import { useRouter } from "expo-router";
 import {
   SafeAreaView,

@@ -1,36 +1,10 @@
 import CustomButton from "@/components/Button";
+import { CustomInput } from "@/components/CustomInput";
 import React from "react";
 import { StyleSheet, Text, View } from "react-native";
 import { Avatar, TextInput as PaperInput } from "react-native-paper";
 import { DatePickerInput } from "react-native-paper-dates";
 import { SafeAreaProvider } from "react-native-safe-area-context";
-
-const CustomInput = ({
-  label,
-  text,
-  onChange,
-  rightIcon,
-}: {
-  label: string;
-  text: string;
-  onChange: () => void;
-  rightIcon?: React.ReactNode;
-}) => {
-  return (
-    <PaperInput
-      label={label}
-      mode="outlined"
-      textColor="black"
-      activeOutlineColor="#DB1471"
-      outlineStyle={{
-        borderColor: "#D9D9D9",
-      }}
-      value={text}
-      onChangeText={onChange}
-      right={rightIcon}
-    />
-  );
-};
 
 const ProfileSettings = () => {
   const [text, setText] = React.useState("");
