@@ -1,29 +1,147 @@
-import { StyleSheet, Text, View } from "react-native";
+import { FormType } from "@/app/create-account";
+import { AntDesign, Feather } from "@expo/vector-icons";
+import { useState } from "react";
+import { Controller, useForm } from "react-hook-form";
+import {
+  StyleSheet,
+  Text,
+  TextInput,
+  TouchableOpacity,
+  View,
+} from "react-native";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import CustomButton from "@/components/Button";
+import { useRouter } from "expo-router";
+
+const schema = z.object({
+  gender: z.string({
+    required_error: "Gender is required",
+  }),
+});
 
 const ConfirmAppointment = () => {
+  const router = useRouter();
+  const {
+    control,
+    formState: { errors },
+  } = useForm<FormType>({ resolver: zodResolver(schema) });
   return (
-    <View style={styles.dividerContainer}>
-      <View style={styles.divider} />
-      <Text style={styles.orText}>or</Text>
-      <View style={styles.divider} />
+    <View style={styles.container}>
+      <Text style={styles.header}>Additional Information</Text>
+      <Text style={styles.different}>Haircut appointment</Text>
+      <View style={styles.calendarSelect}>
+        <View style={styles.leftSection}>
+          <Feather name="calendar" size={24} color="black" />
+          <Text>Fir, Mar 3</Text>
+        </View>
+        <View style={styles.leftSection}>
+          <AntDesign name="clockcircleo" size={24} color="black" />
+          <Text>2:00PM EAT</Text>
+        </View>
+      </View>
+      <TextInput style={styles.input} placeholder="Notes" multiline />
+      <View style={styles.genderContainer}>
+        <Text>How do you want to be notified?</Text>
+        <View style={styles.genderBox}>
+          <Controller
+            name="gender"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <>
+                <View style={styles.radioContainer}>
+                  <TouchableOpacity onPress={() => onChange("male")}>
+                    <View
+                      style={
+                        value === "male"
+                          ? styles.activeRadio
+                          : styles.radioButton
+                      }
+                    />
+                  </TouchableOpacity>
+                  <Text>Sms</Text>
+                </View>
+                <View style={styles.radioContainer}>
+                  <TouchableOpacity onPress={() => onChange("female")}>
+                    <View
+                      style={
+                        value === "female"
+                          ? styles.activeRadio
+                          : styles.radioButton
+                      }
+                    />
+                  </TouchableOpacity>
+                  <Text>Whatsapp</Text>
+                </View>
+              </>
+            )}
+          />
+        </View>
+      </View>
+      <CustomButton
+        onPress={() => {
+          router.push(`/confirm-appointment/${23}`);
+        }}
+        buttonText="Book Appointment"
+      />
     </View>
   );
 };
 
 const styles = StyleSheet.create({
-  dividerContainer: {
+  container: { padding: 20, backgroundColor: "#F6F6F9", gap: 20 },
+  header: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
+  calendarSelect: {
     flexDirection: "row",
     alignItems: "center",
-    marginBottom: 30,
+    gap: 40,
+    marginBottom: 20,
   },
-  divider: {
-    flex: 1,
-    height: 2,
-    backgroundColor: "#ddd",
+  leftSection: {
+    flexDirection: "row",
+    gap: 3,
+    alignItems: "center",
   },
-  orText: {
-    marginHorizontal: 10,
-    color: "#333",
+
+  different: {
+    fontSize: 14,
+    fontWeight: "600",
+  },
+  input: {
+    borderWidth: 1,
+    borderColor: "#ddd",
+    borderRadius: 4,
+    padding: 8,
+    marginBottom: 16,
+    minHeight: 100,
+  },
+  genderContainer: {
+    gap: 4,
+    marginBottom: 4,
+  },
+  radioContainer: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 4,
+  },
+  radioButton: {
+    height: 20,
+    width: 20,
+    borderWidth: 2,
+    borderColor: "rgba(140, 140, 140, 1)",
+    borderRadius: 50,
+  },
+  activeRadio: {
+    height: 20,
+    width: 20,
+    borderWidth: 5,
+    borderRadius: 50,
+    borderColor: "#007B99",
+  },
+  genderBox: {
+    flexDirection: "row",
+    gap: 5,
   },
 });
 

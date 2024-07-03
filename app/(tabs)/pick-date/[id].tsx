@@ -15,6 +15,7 @@ import { Avatar } from "react-native-paper";
 import CustomButton from "@/components/Button";
 import { FontAwesome5 } from "@expo/vector-icons";
 import DatePicker from "react-native-modern-datepicker";
+import { useRouter } from "expo-router";
 type TimeObj = {
   hours: number;
   minutes: number;
@@ -40,6 +41,7 @@ const convertTo24HourFormat = (timeObj: TimeObj): string => {
 };
 
 const PickDate = () => {
+  const router = useRouter();
   const [selectedDay, setSelectedDay] = useState("Fri");
   const [showPicker, setShowPicker] = useState(false);
   const [value, setValue] = useState(null);
@@ -179,7 +181,12 @@ const PickDate = () => {
         </View>
       </Modal>
 
-      <CustomButton buttonText="Book Appointment" />
+      <CustomButton
+        onPress={() => {
+          router.push(`/confirm-appointment/${23}`);
+        }}
+        buttonText="Book Appointment"
+      />
     </View>
   );
 };
