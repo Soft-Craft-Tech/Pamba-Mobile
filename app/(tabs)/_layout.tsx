@@ -288,7 +288,7 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
-        name="privacy-safety"
+        name="privacy-policy/[id]"
         options={{
           title: "",
           ...commonHeaderOptions,

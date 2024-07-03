@@ -1,9 +1,9 @@
 import { StyleSheet, Text, View } from "react-native";
 
-const PrivacySafety = () => {
+const TermsAndConditions = () => {
   return (
     <View style={styles.container}>
-      <Text style={styles.header}>Privacy Safety</Text>
+      <Text style={styles.header}>Profile Settings</Text>
     </View>
   );
 };
@@ -13,4 +13,4 @@ const styles = StyleSheet.create({
   header: { fontSize: 18, fontWeight: "bold", marginBottom: 10 },
 });
 
-export default PrivacySafety;
+export default TermsAndConditions;
