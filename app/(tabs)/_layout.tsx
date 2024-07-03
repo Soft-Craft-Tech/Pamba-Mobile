@@ -101,6 +101,23 @@ export default function TabLayout() {
         }}
       />
       <Tabs.Screen
+        name="profile"
+        options={{
+          title: "Profile",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          tabBarIcon: ({ color }) => (
+            <Feather name="user" size={24} color="black" />
+          ),
+        }}
+      />
+      <Tabs.Screen
         name="all-shops/[id]"
         options={{
           title: "",
@@ -213,6 +230,70 @@ export default function TabLayout() {
           title: "",
           ...commonHeaderOptions,
           headerTitleStyle: { display: "none" },
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="profile-settings"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="password-security"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="help-support"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="privacy-safety"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
           headerRight: () => (
             <TouchableOpacity onPress={() => router.push("/notifications")}>
               <Feather name="bell" size={24} color="black" />
