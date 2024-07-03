@@ -61,7 +61,7 @@ const Profile = () => {
         <View style={styles.divider} />
         <TouchableOpacity
           onPress={() => {
-            router.push(`/privacy-policy/${1}`);
+            router.push(`/privacy-policy/${"Privacy And Safety"}`);
           }}
           style={styles.itemWrapper}
         >

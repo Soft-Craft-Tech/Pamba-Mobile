@@ -253,12 +253,19 @@ export default function CreateAccountScreen() {
                     value={value}
                     onValueChange={(newValue) => onChange(newValue)}
                   />
-                  <Link href="/password-success">
+                  <Text>
                     <Text>{`Accept `}</Text>
-                    <Text style={styles.forgotText}>Terms and conditions</Text>
+                    <Link href={`/privacy-policy/${"Terms and Conditions"}`}>
+                      <Text style={styles.forgotText}>
+                        Terms and conditions
+                      </Text>
+                    </Link>
+
                     <Text>{` and `}</Text>
-                    <Text style={styles.forgotText}>Privacy Policy</Text>
-                  </Link>
+                    <Link href={`/privacy-policy/${"Privacy Policy"}`}>
+                      <Text style={styles.forgotText}>Privacy Policy</Text>
+                    </Link>
+                  </Text>
                 </View>
                 {errors.terms && (
                   <Text style={styles.errorMessage}>{error?.message}</Text>
