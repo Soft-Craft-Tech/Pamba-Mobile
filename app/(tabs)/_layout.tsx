@@ -191,6 +191,38 @@ export default function TabLayout() {
           tabBarButton: () => null,
         }}
       />
+      <Tabs.Screen
+        name="confirm-appointment/[id]"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
+      <Tabs.Screen
+        name="congratulations/[id]"
+        options={{
+          title: "",
+          ...commonHeaderOptions,
+          headerTitleStyle: { display: "none" },
+          headerLeft: backArrowHeaderLeft,
+          headerRight: () => (
+            <TouchableOpacity onPress={() => router.push("/notifications")}>
+              <Feather name="bell" size={24} color="black" />
+            </TouchableOpacity>
+          ),
+          tabBarShowLabel: false,
+          tabBarButton: () => null,
+        }}
+      />
     </Tabs>
   );
 }

@@ -6,6 +6,7 @@ import {
   TouchableOpacity,
   ScrollView,
   StyleSheet,
+  Modal,
 } from "react-native";
 import { TimerPickerModal } from "react-native-timer-picker";
 import * as Haptics from "expo-haptics";
@@ -13,7 +14,7 @@ import { Dropdown } from "react-native-element-dropdown";
 import { Avatar } from "react-native-paper";
 import CustomButton from "@/components/Button";
 import { FontAwesome5 } from "@expo/vector-icons";
-
+import DatePicker from "react-native-modern-datepicker";
 type TimeObj = {
   hours: number;
   minutes: number;
@@ -45,6 +46,8 @@ const PickDate = () => {
   const [isFocus, setIsFocus] = useState(false);
 
   const [selectedTime, setSelectedTime] = useState("Select Time");
+  const [openCalendar, setOpenCalendar] = useState(false);
+  const [selectedDate, setSelectedDate] = useState("");
 
   const days = [
     { day: "Fri", date: "03 Feb", slots: 16 },
@@ -74,6 +77,11 @@ const PickDate = () => {
           </TouchableOpacity>
         ))}
       </ScrollView>
+      {selectedDate !== "" && (
+        <View style={styles.selectedDate}>
+          <Text>Selected Date: {selectedDate}</Text>
+        </View>
+      )}
       <TouchableOpacity onPress={() => setShowPicker(true)}>
         <TimerPickerModal
           visible={showPicker}
@@ -137,11 +145,40 @@ const PickDate = () => {
       </View>
       <View style={styles.calendarSelect}>
         <Text style={styles.different}>Need a different day?</Text>
-        <View style={styles.leftSection}>
+        <TouchableOpacity
+          onPress={() => {
+            setOpenCalendar(true);
+          }}
+          style={styles.leftSection}
+        >
           <FontAwesome5 name="calendar-check" size={24} color="#007B99" />
           <Text style={styles.selectText}>SELECT DATE</Text>
-        </View>
+        </TouchableOpacity>
       </View>
+      <Modal animationType="fade" transparent={true} visible={openCalendar}>
+        <View style={styles.centerdView}>
+          <View style={styles.modalView}>
+            <DatePicker
+              options={{
+                backgroundColor: "#FFFFFF",
+                textHeaderColor: "#1C1C1C",
+                textDefaultColor: "#1C1C1C",
+                selectedTextColor: "#DB1471",
+                mainColor: "#1C1C1C",
+                textSecondaryColor: "#DB1471",
+                borderColor: "#1C1C1C",
+              }}
+              mode="datepicker"
+              style={{ borderRadius: 10, borderWidth: 0 }}
+              onDateChange={(selectedDate) => {
+                setSelectedDate(selectedDate);
+                setOpenCalendar(false);
+              }}
+            />
+          </View>
+        </View>
+      </Modal>
+
       <CustomButton buttonText="Book Appointment" />
     </View>
   );
@@ -250,6 +287,19 @@ const styles = StyleSheet.create({
   different: {
     fontSize: 14,
     fontWeight: "600",
+  },
+  centerdView: {
+    flex: 1,
+    justifyContent: "center",
+  },
+  modalView: {
+    marginHorizontal: 10,
+    alignItems: "center",
+    justifyContent: "center",
+    borderRadius: 8,
+  },
+  selectedDate: {
+    marginTop: 10,
   },
 });
 
