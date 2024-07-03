@@ -56,6 +56,14 @@ export default function RootLayout() {
               name="password-success"
               options={{ headerShown: false }}
             />
+            <Stack.Screen
+              name="terms/[id]"
+              options={{
+                title: "",
+                headerTitleAlign: "center",
+                headerBackTitleVisible: false,
+              }}
+            />
             <Stack.Screen name="+not-found" />
           </Stack>
         </NotifierWrapper>

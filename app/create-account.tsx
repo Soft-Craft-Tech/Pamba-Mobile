@@ -255,14 +255,14 @@ export default function CreateAccountScreen() {
                   />
                   <Text>
                     <Text>{`Accept `}</Text>
-                    <Link href={`/privacy-policy/${"Terms and Conditions"}`}>
+                    <Link href={`/terms/${"Terms and Conditions"}`}>
                       <Text style={styles.forgotText}>
                         Terms and conditions
                       </Text>
                     </Link>
 
                     <Text>{` and `}</Text>
-                    <Link href={`/privacy-policy/${"Privacy Policy"}`}>
+                    <Link href={`/terms/${"Privacy Policy"}`}>
                       <Text style={styles.forgotText}>Privacy Policy</Text>
                     </Link>
                   </Text>
