@@ -30,7 +30,8 @@ export default function CongratulationsScreen() {
         </TouchableOpacity>
       </View>
       <Text style={styles.bottomText}>
-        Congratulations! Your appointment has been successfully booked.
+        If you need to make any changes or cancel your appointment, please do so
+        at least 24 hours in advance.
       </Text>
     </SafeAreaView>
   );
