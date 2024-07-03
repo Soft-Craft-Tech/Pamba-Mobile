@@ -1,12 +1,13 @@
 import CustomButton from "@/components/Button";
 import StandardView from "@/components/StandardView";
-import { useLocalSearchParams } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { formatDate } from "@/hooks/dateUtility";
 
 const SingleAppointment = () => {
+  const router = useRouter();
   const local = useLocalSearchParams<{ id: string }>();
   const date = "2024-05-01T08:30:00Z";
   return (
@@ -43,7 +44,13 @@ const SingleAppointment = () => {
           </View>
           <View style={styles.buttons}>
             <CustomButton buttonText="Cancel" width="46%" variant="outline" />
-            <CustomButton buttonText="Reschedule" width="46%" />
+            <CustomButton
+              onPress={() => {
+                router.push(`/pick-date/${12}`);
+              }}
+              buttonText="Reschedule"
+              width="46%"
+            />
           </View>
         </View>
       </StandardView>

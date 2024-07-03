@@ -1,6 +1,5 @@
 import { FormType } from "@/app/create-account";
 import { AntDesign, Feather } from "@expo/vector-icons";
-import { useState } from "react";
 import { Controller, useForm } from "react-hook-form";
 import {
   StyleSheet,

@@ -35,12 +35,15 @@ const ProfileSettings = () => {
             <DatePickerInput
               locale="en"
               label="Birthdate"
+              withModal={false}
               value={inputDate}
               activeOutlineColor="#DB1471"
               outlineStyle={{
                 borderColor: "#D9D9D9",
               }}
-              onChange={(d) => setInputDate(d as any)}
+              onChange={(d) => {
+                setInputDate(d as any);
+              }}
               inputMode="start"
               style={{ width: 200, marginTop: 10 }}
               mode="outlined"
