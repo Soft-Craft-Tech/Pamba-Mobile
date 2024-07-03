@@ -81,7 +81,7 @@ const ConfirmAppointment = () => {
       </View>
       <CustomButton
         onPress={() => {
-          router.push(`/confirm-appointment/${23}`);
+          router.push(`/congratulations/${23}`);
         }}
         buttonText="Book Appointment"
       />

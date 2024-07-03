@@ -213,7 +213,6 @@ export default function TabLayout() {
           title: "",
           ...commonHeaderOptions,
           headerTitleStyle: { display: "none" },
-          headerLeft: backArrowHeaderLeft,
           headerRight: () => (
             <TouchableOpacity onPress={() => router.push("/notifications")}>
               <Feather name="bell" size={24} color="black" />
