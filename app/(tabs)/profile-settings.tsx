@@ -5,10 +5,12 @@ import { StyleSheet, Text, View } from "react-native";
 import { Avatar, TextInput as PaperInput } from "react-native-paper";
 import { DatePickerInput } from "react-native-paper-dates";
 import { SafeAreaProvider } from "react-native-safe-area-context";
+import { useSession } from "../ctx";
 
 const ProfileSettings = () => {
   const [text, setText] = React.useState("");
   const [inputDate, setInputDate] = React.useState(new Date());
+  const { signOut } = useSession();
 
   return (
     <SafeAreaProvider>

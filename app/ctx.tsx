@@ -1,7 +1,6 @@
 import React from "react";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import axios, { AxiosError, AxiosResponse } from "axios";
-import { encode } from "base-64";
 
 import { useStorageState } from "@/core/useStorageState";
 import { showNotification } from "@/hooks/toastNotication";
@@ -23,7 +22,7 @@ interface User {
 
 interface AuthContextType {
   signIn: (email: string, password: string) => Promise<void>;
-  signOut: () => Promise<void>;
+  signOut: () => void; // Changed from Promise<void> to void
   session: User | null;
   isLoading: boolean;
 }
@@ -118,19 +117,11 @@ export function SessionProvider({
     },
   });
 
-  const signOutMutation = useMutation<void, AxiosError, void>({
-    mutationFn: async () => {
-      await postWithoutAuthorization("/signout");
-    },
-    onSuccess: () => {
-      setSession(null);
-      setStoredSession(null);
-      queryClient.clear();
-    },
-    onError: (error: AxiosError) => {
-      console.error("Sign out error:", error);
-    },
-  });
+  const signOut = () => {
+    setSession(null);
+    setStoredSession(null);
+    queryClient.clear();
+  };
 
   const contextValue: AuthContextType = {
     signIn: async (username: string, password: string) => {
@@ -142,12 +133,9 @@ export function SessionProvider({
         throw error;
       }
     },
-    signOut: async () => {
-      await signOutMutation.mutateAsync();
-    },
+    signOut,
     session,
-    isLoading:
-      isLoading || signInMutation.isPending || signOutMutation.isPending,
+    isLoading: isLoading || signInMutation.isPending,
   };
 
   return (

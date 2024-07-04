@@ -18,6 +18,7 @@ import { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "./ctx";
+import { useIsFirstTime } from "@/constants/store-is-first-time";
 
 const schema = z.object({
   username: z

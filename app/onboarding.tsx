@@ -23,6 +23,7 @@ import Animated, {
   runOnJS,
   interpolateColor,
 } from "react-native-reanimated";
+import { useIsFirstTime } from "@/constants/store-is-first-time";
 
 const { width: SCREEN_WIDTH } = Dimensions.get("window");
 const CAROUSEL_INTERVAL = 5000;
@@ -36,12 +37,16 @@ const images: ImageSourcePropType[] = [
 ];
 
 const Onboarding: React.FC = () => {
+  const [isFirstTime, setIsFirstTime] = useIsFirstTime();
   const router = useRouter();
   const translateX = useSharedValue(0);
   const currentIndex = useSharedValue(0);
 
+  console.log(isFirstTime);
+
   const handleJoinPress = useCallback(() => {
     router.push("/launchpad");
+    setIsFirstTime(!isFirstTime);
   }, [router]);
 
   const setCurrentIndex = (index: number) => {

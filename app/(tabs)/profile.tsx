@@ -7,9 +7,11 @@ import {
 } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { StyleSheet, Text, TouchableOpacity, View } from "react-native";
+import { useSession } from "../ctx";
 
 const Profile = () => {
   const router = useRouter();
+  const { signOut } = useSession();
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Settings</Text>
@@ -76,7 +78,7 @@ const Profile = () => {
         <View style={styles.divider} />
         <TouchableOpacity
           onPress={() => {
-            router.push("/login");
+            signOut();
           }}
           style={styles.itemWrapper}
         >

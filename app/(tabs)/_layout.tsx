@@ -7,6 +7,7 @@ import { AntDesign, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import Avatar from "@/components/Avatar";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useSession } from "../ctx";
+import { useIsFirstTime } from "@/constants/store-is-first-time";
 
 const commonHeaderOptions = {
   headerShown: true,
@@ -24,10 +25,15 @@ const commonHeaderOptions = {
 export default function TabLayout() {
   const colorScheme = useColorScheme();
   const router = useRouter();
-  const { session, isLoading } = useSession();
+  const { session } = useSession();
+  const [isFirstTime] = useIsFirstTime();
   console.log("Here", session);
 
-  if (!session) {
+  if (!session && isFirstTime) {
+    return <Redirect href="/launchpad" />;
+  }
+
+  if (!session && !isFirstTime) {
     return <Redirect href="/onboarding" />;
   }
 
