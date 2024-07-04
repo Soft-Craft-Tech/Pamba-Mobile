@@ -17,3 +17,15 @@ export type ResendOtpVariables = {
 export type PasswordRequestVariables = {
   email: string;
 };
+
+export type SessionData = {
+  authToken: string;
+  client: {
+    email: string;
+    id: number;
+    name: string;
+    phone: string;
+    verified: boolean;
+  };
+  message: string;
+};

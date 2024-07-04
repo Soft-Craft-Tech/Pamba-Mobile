@@ -26,7 +26,9 @@ const LaunchPad = () => {
               <Text style={styles.buttonText}>Login</Text>
             </TouchableOpacity>
             <TouchableOpacity
-              onPress={() => router.push("/create-account")}
+              onPress={() => {
+                router.push("/create-account");
+              }}
               style={styles.secondaryButton}
             >
               <Text style={styles.secondaryButtonText}>Create account</Text>

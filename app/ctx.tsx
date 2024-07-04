@@ -5,6 +5,7 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 import { useStorageState } from "@/core/useStorageState";
 import { showNotification } from "@/hooks/toastNotication";
 import { axiosClient } from "./axiosClient";
+import { setItem } from "@/core/storage";
 
 interface ErrorResponse {
   message: string;
@@ -98,7 +99,7 @@ export function SessionProvider({
       return response.data;
     },
     onSuccess: (data: User) => {
-      console.log("Sign in successful. Data:", data);
+      setItem("userData", data);
       setSession((prevSession) => {
         console.log("Updating session from:", prevSession, "to:", data);
         return data;

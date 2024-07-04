@@ -44,17 +44,22 @@ export type FormType = z.infer<typeof schema>;
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
-  const { signIn, isLoading } = useSession();
+  const { signIn } = useSession();
+  const [isPending, setIsPending] = useState(false);
+
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
   const onSubmit = async (data: any) => {
+    setIsPending(true);
     try {
       await signIn(data.username, data.password);
+      setIsPending(false);
       router.push("/");
     } catch (err) {
+      setIsPending(false);
       console.log("Here");
     }
   };
@@ -140,7 +145,7 @@ export default function LoginScreen() {
           </Link>
         </View>
         <CustomButton
-          loading={isLoading}
+          loading={isPending}
           onPress={handleSubmit(onSubmit)}
           buttonText="Login"
         />
