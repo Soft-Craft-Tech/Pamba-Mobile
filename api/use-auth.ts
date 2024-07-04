@@ -9,7 +9,7 @@ type SignupVariables = {
 
 type VerifcationVariables = {
   email: string;
-  otp: string;
+  otp?: string;
 };
 
 type SignupResponse = {
@@ -27,6 +27,13 @@ export function useSignupMutation() {
 export function useVerificationMutation() {
   return useApiMutation<SignupResponse, VerifcationVariables>(
     "/clients/verify-otp",
+    "post"
+  );
+}
+
+export function useResendOtp() {
+  return useApiMutation<SignupResponse, VerifcationVariables>(
+    "/clients/resend-otp",
     "post"
   );
 }

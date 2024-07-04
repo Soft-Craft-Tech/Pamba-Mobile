@@ -11,7 +11,7 @@ import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { getEmail } from "@/api/utils";
-import { useVerificationMutation } from "@/api/use-auth";
+import { useResendOtp, useVerificationMutation } from "@/api/use-auth";
 import CustomButton from "@/components/Button";
 
 const { width } = Dimensions.get("window");
@@ -23,6 +23,7 @@ export default function OTPVerification() {
   const [otpSize, setOtpSize] = useState(40);
   const router = useRouter();
   const { mutate: verify, isPending, isSuccess } = useVerificationMutation();
+  const { mutate: resendOtp, isPending: isPendingOtp } = useResendOtp();
 
   useEffect(() => {
     setFontSize(Math.min(24, width * 0.06));
@@ -118,13 +119,13 @@ export default function OTPVerification() {
         </View>
         <View style={[{ width: width * 0.8 }]}>
           <CustomButton
-            loading={isPending}
+            loading={isPending || isPendingOtp}
             onPress={handleSubmit}
             buttonText="Submit"
           />
         </View>
         <TouchableOpacity
-          onPress={() => console.log("Resend OTP")}
+          onPress={() => resendOtp({ email: emailAdress })}
           style={styles.resendContainer}
         >
           <Text style={{ fontSize: fontSize * 0.6 }}>
