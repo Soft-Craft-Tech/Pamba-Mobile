@@ -3,11 +3,11 @@ import React from "react";
 import { TabBarIcon } from "@/components/navigation/TabBarIcon";
 import { Colors } from "@/constants/Colors";
 import { useColorScheme } from "@/hooks/useColorScheme";
-import { useIsFirstTime } from "@/constants/store-is-first-time";
 import { AntDesign, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import Avatar from "@/components/Avatar";
 import { TouchableOpacity } from "react-native-gesture-handler";
-
+import { useSession } from "../ctx";
+import { Text } from "react-native";
 const commonHeaderOptions = {
   headerShown: true,
   tabBarActiveTintColor: "#DB1471",
@@ -23,10 +23,14 @@ const commonHeaderOptions = {
 
 export default function TabLayout() {
   const colorScheme = useColorScheme();
-  const [isFirstTime] = useIsFirstTime();
   const router = useRouter();
+  const { session, isLoading } = useSession();
 
-  if (isFirstTime) {
+  if (isLoading) {
+    return null;
+  }
+
+  if (!session) {
     return <Redirect href="/onboarding" />;
   }
 
