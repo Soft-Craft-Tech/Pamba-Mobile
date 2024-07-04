@@ -71,7 +71,9 @@ export default function OTPVerification() {
           OTP Verification
         </Text>
         <Text style={[styles.subtitle, { fontSize: fontSize * 0.6 }]}>
-          Please check your email {emailAdress} to see the verification code
+          Please check your email{" "}
+          <Text style={{ color: "#DB1471" }}>{emailAdress}</Text> to see the
+          verification code
         </Text>
         <Text style={[styles.subtitle, { fontSize: fontSize * 0.6 }]}>
           Input Pin Code (6-digit)

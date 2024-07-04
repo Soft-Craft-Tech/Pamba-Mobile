@@ -42,9 +42,12 @@ export function useApiMutation<TData, TVariables>(
       );
       return response.data;
     },
+    onSuccess: (data) => {
+      showNotification("Success", data?.message);
+    },
     onError: (error) => {
-      if (axios.isAxiosError(error) && error.response) {
-        showNotification("Error", error.response.data.message);
+      if (axios.isAxiosError(error) && error?.response) {
+        showNotification("Error", error?.response?.data?.message);
       }
     },
   });
