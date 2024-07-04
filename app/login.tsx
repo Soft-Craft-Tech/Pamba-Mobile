@@ -17,8 +17,7 @@ import { useForm, Controller } from "react-hook-form";
 import { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { showNotification } from "@/hooks/toastNotication";
-import { useIsFirstTime } from "@/constants/store-is-first-time";
+import { useSession } from "./ctx";
 
 const schema = z.object({
   username: z
@@ -44,20 +43,21 @@ export type FormType = z.infer<typeof schema>;
 
 export default function LoginScreen() {
   const [showPassword, setShowPassword] = useState(false);
-  const [_, setIsFirstTime] = useIsFirstTime();
+  const { signIn, isLoading } = useSession();
   const {
     handleSubmit,
     control,
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
-  const onSubmit = (data: any) => {
-    // showNotification("Error", "Login Success");
-    setIsFirstTime(false);
-    router.push("/");
+  const onSubmit = async (data: any) => {
+    try {
+      await signIn(data.username, data.password);
+      router.push("/");
+    } catch (err) {
+      console.log("Here");
+    }
   };
-  // const onError: SubmitErrorHandler<FormValues> = (errors, e) => {
-  //   return console.log(errors);
-  // };
+
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoContainer}>
@@ -138,7 +138,11 @@ export default function LoginScreen() {
             <Text style={styles.forgotText}>Forgot password?</Text>
           </Link>
         </View>
-        <CustomButton onPress={handleSubmit(onSubmit)} buttonText="Login" />
+        <CustomButton
+          loading={isLoading}
+          onPress={handleSubmit(onSubmit)}
+          buttonText="Login"
+        />
         <DividerContainer />
         <SocialIcons />
         <View style={styles.signupContainer}>

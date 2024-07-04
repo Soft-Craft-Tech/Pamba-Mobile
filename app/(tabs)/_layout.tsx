@@ -25,6 +25,7 @@ export default function TabLayout() {
   const colorScheme = useColorScheme();
   const router = useRouter();
   const { session, isLoading } = useSession();
+  console.log("Here", session);
 
   if (isLoading) {
     return null;

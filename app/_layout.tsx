@@ -1,6 +1,6 @@
 import { DefaultTheme, ThemeProvider } from "@react-navigation/native";
 import { useFonts } from "expo-font";
-import { Stack, router } from "expo-router";
+import { Redirect, Stack, router } from "expo-router";
 import * as SplashScreen from "expo-splash-screen";
 import { useEffect } from "react";
 import "react-native-reanimated";
@@ -49,10 +49,10 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const client = new QueryClient();
   return (
-    <ThemeProvider value={DefaultTheme}>
-      <GestureHandlerRootView>
-        <QueryClientProvider client={client}>
-          <SessionProvider>
+    <QueryClientProvider client={client}>
+      <SessionProvider>
+        <ThemeProvider value={DefaultTheme}>
+          <GestureHandlerRootView>
             <NotifierWrapper>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -96,9 +96,9 @@ function RootLayoutNav() {
                 <Stack.Screen name="+not-found" />
               </Stack>
             </NotifierWrapper>
-          </SessionProvider>
-        </QueryClientProvider>
-      </GestureHandlerRootView>
-    </ThemeProvider>
+          </GestureHandlerRootView>
+        </ThemeProvider>
+      </SessionProvider>
+    </QueryClientProvider>
   );
 }

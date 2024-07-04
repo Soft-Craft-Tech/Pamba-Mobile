@@ -1,17 +1,24 @@
 import React from "react";
-import { useStorageState } from "./(tabs)/useStorageState";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
-import axiosClient from "./axiosClient";
-import { AxiosError } from "axios";
+import axios, { AxiosError, AxiosResponse } from "axios";
+import { encode } from "base-64";
 
-interface User {
-  id: string;
-  name: string;
+import { useStorageState } from "@/core/useStorageState";
+import { showNotification } from "@/hooks/toastNotication";
+import { axiosClient } from "./axiosClient";
+
+interface ErrorResponse {
+  message: string;
+  // Add other properties if needed
 }
 
 interface SignInCredentials {
-  email: string;
+  username: string;
   password: string;
+}
+
+interface User {
+  [key: string]: any;
 }
 
 interface AuthContextType {
@@ -20,6 +27,29 @@ interface AuthContextType {
   session: User | null;
   isLoading: boolean;
 }
+
+const postWithAuthorization = async (
+  url: string,
+  credentials: SignInCredentials
+): Promise<AxiosResponse> => {
+  const credentialsBase64 = btoa(
+    `${credentials.username}:${credentials.password}`
+  );
+  const config = {
+    headers: {
+      "Content-Type": "application/json",
+      "X-API-KEY": "0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62",
+      Authorization: `Basic ${credentialsBase64}`,
+    },
+  };
+  return axios.post(url, {}, config);
+};
+
+export const postWithoutAuthorization = async (
+  url: string
+): Promise<AxiosResponse> => {
+  return axiosClient.post(url);
+};
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
 
@@ -38,31 +68,60 @@ interface SessionProviderProps {
 export function SessionProvider({
   children,
 }: SessionProviderProps): JSX.Element {
-  const [[isLoading, storedSession], setStoredSession] =
-    useStorageState("session");
-  const [session, setSession] = React.useState<User | null>(() =>
-    storedSession ? (JSON.parse(storedSession) as User) : null
-  );
+  const [storedSession, setStoredSession] = useStorageState("session");
+  const [session, setSession] = React.useState<User | null>(() => {
+    const [, value] = storedSession;
+    return value ? (JSON.parse(value) as User) : null;
+  });
   const queryClient = useQueryClient();
 
-  const signInMutation = useMutation<User, AxiosError, SignInCredentials>({
+  const isLoading = storedSession[0];
+
+  React.useEffect(() => {
+    console.log("Session updated:", session);
+  }, [session]);
+
+  React.useEffect(() => {
+    console.log("Stored session updated:", storedSession[1]);
+  }, [storedSession]);
+
+  const signInMutation = useMutation<
+    User,
+    AxiosError<ErrorResponse>,
+    SignInCredentials
+  >({
     mutationFn: async (credentials: SignInCredentials) => {
-      const response = await axiosClient.post<User>("/api/signin", credentials);
+      console.log("Attempting to sign in with:", credentials);
+      const response = await postWithAuthorization(
+        "https://pamba-web.onrender.com/API/clients/login",
+        credentials
+      );
+      console.log("API response:", response);
       return response.data;
     },
     onSuccess: (data: User) => {
-      setSession(data);
+      console.log("Sign in successful. Data:", data);
+      setSession((prevSession) => {
+        console.log("Updating session from:", prevSession, "to:", data);
+        return data;
+      });
       setStoredSession(JSON.stringify(data));
       queryClient.setQueryData(["user"], data);
     },
-    onError: (error: AxiosError) => {
+    onError: (error: AxiosError<ErrorResponse>) => {
       console.error("Sign in error:", error);
+      if (axios.isAxiosError(error) && error.response) {
+        console.log("Error response data:", error.response.data);
+        showNotification("Error", error.response.data.message);
+      } else {
+        console.log("Unexpected error:", error);
+      }
     },
   });
 
   const signOutMutation = useMutation<void, AxiosError, void>({
     mutationFn: async () => {
-      await axiosClient.post("/api/signout");
+      await postWithoutAuthorization("/signout");
     },
     onSuccess: () => {
       setSession(null);
@@ -75,8 +134,14 @@ export function SessionProvider({
   });
 
   const contextValue: AuthContextType = {
-    signIn: async (email: string, password: string) => {
-      await signInMutation.mutateAsync({ email, password });
+    signIn: async (username: string, password: string) => {
+      try {
+        await signInMutation.mutateAsync({ username, password });
+        console.log("Sign in completed");
+      } catch (error) {
+        console.error("Error during sign in:", error);
+        throw error;
+      }
     },
     signOut: async () => {
       await signOutMutation.mutateAsync();
