@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 import { Link, useRouter } from "expo-router";
-import React from "react";
+import React, { useRef } from "react";
 import { useState } from "react";
 import {
   SafeAreaView,
@@ -17,6 +17,7 @@ import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import CustomButton from "@/components/Button";
+import PhoneInput from "react-native-phone-number-input";
 
 const schema = z.object({
   fullName: z
@@ -64,6 +65,10 @@ export type FormType = z.infer<typeof schema>;
 
 export default function CreateAccountScreen() {
   const [showPassword, setShowPassword] = useState(false);
+  const phoneInput = useRef<PhoneInput>(null);
+  const [value, setValue] = useState("");
+  const [formattedValue, setFormattedValue] = useState("");
+
   const router = useRouter();
   const {
     handleSubmit,
@@ -112,33 +117,27 @@ export default function CreateAccountScreen() {
             name="fullName"
             rules={{ required: true }}
           />
-
-          <Controller
-            control={control}
-            render={({
-              field: { onChange, onBlur, value },
-              fieldState: { error },
-            }) => (
-              <>
-                <View style={styles.countryCode}>
-                  <View style={styles.dialCode}>
-                    <Text style={styles.textCode}>+254</Text>
-                  </View>
-                  <TextInput
-                    style={styles.inputCode}
-                    onBlur={onBlur}
-                    placeholder="Phone Number"
-                    onChangeText={(value) => onChange(value.toLowerCase())}
-                    value={value}
-                  />
-                </View>
-                {errors.email && (
-                  <Text style={styles.errorMessage}>{error?.message}</Text>
-                )}
-              </>
-            )}
-            name="phoneNumber"
-            rules={{ required: true }}
+          <PhoneInput
+            ref={phoneInput}
+            defaultValue={value}
+            defaultCode="KE"
+            layout="first"
+            onChangeText={(text) => {
+              setValue(text);
+            }}
+            containerStyle={{
+              width: "100%",
+              borderWidth: 1,
+              borderColor: "#ddd",
+              borderRadius: 5,
+              marginBottom: 10,
+              backgroundColor: "#fff",
+            }}
+            onChangeFormattedText={(text) => {
+              setFormattedValue(text);
+            }}
+            withShadow
+            autoFocus
           />
           <View style={styles.helperContainer}>
             <Text style={styles.helperText}>
@@ -347,15 +346,7 @@ const styles = StyleSheet.create({
     marginBottom: 10,
     backgroundColor: "#fff",
   },
-  inputCode: {
-    padding: 15,
-    borderWidth: 1,
-    borderColor: "#ddd",
-    width: "80%",
-    borderRadius: 5,
-    marginBottom: 10,
-    backgroundColor: "#fff",
-  },
+  inputCode: {},
   passwordContainer: {
     width: "100%",
     position: "relative",
