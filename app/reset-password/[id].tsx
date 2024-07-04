@@ -10,12 +10,46 @@ import {
   TextInput,
   TouchableOpacity,
 } from "react-native";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { useResetPassword } from "@/api/use-auth";
+import CustomButton from "@/components/Button";
+import { Controller, useForm } from "react-hook-form";
+
+const schema = z
+  .object({
+    password: z
+      .string()
+      .min(8, { message: "Password is too short" })
+      .max(20, { message: "Password is too long" }),
+    confirmPassword: z.string(),
+  })
+  .refine((data) => data.password === data.confirmPassword, {
+    message: "Passwords do not match",
+    path: ["confirmPassword"],
+  });
+
+export type FormType = z.infer<typeof schema>;
 
 export default function ResetPassword() {
-  const [username, setUsername] = useState("");
   const router = useRouter();
   const local = useLocalSearchParams<{ id: string }>();
-  console.log(local.id);
+  const [showPassword, setShowPassword] = useState(false);
+  const [showConfirmPassword, setShowonfirmPassword] = useState(false);
+  const { mutate: signup, isPending, isSuccess } = useResetPassword(local?.id);
+
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormType>({ resolver: zodResolver(schema) });
+  const onSubmit = (data: any) => {
+    console.log(data);
+    signup({ ...data });
+  };
+  if (isSuccess) {
+    router.push("/login");
+  }
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoContainer}>
@@ -24,34 +58,80 @@ export default function ResetPassword() {
       <Text style={styles.welcomeText}>Forgot Password?</Text>
       <Text style={styles.welcomeText}>Create a secure Password</Text>
       <View style={styles.formContainer}>
-        <View style={styles.passwordContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-          />
-          <TouchableOpacity style={styles.eyeIcon}>
-            <Ionicons size={24} name="eye-off" />
-          </TouchableOpacity>
-        </View>
-        <View style={styles.passwordContainer}>
-          <TextInput
-            style={styles.input}
-            placeholder="Password"
-            secureTextEntry
-          />
-          <TouchableOpacity style={styles.eyeIcon}>
-            <Ionicons size={24} name="eye-off" />
-          </TouchableOpacity>
-        </View>
-        <TouchableOpacity
-          onPress={() => {
-            router.push("/password-success");
-          }}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Reset Password</Text>
-        </TouchableOpacity>
+        <Controller
+          control={control}
+          render={({
+            field: { onChange, onBlur, value },
+            fieldState: { error },
+          }) => (
+            <>
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Password"
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  value={value}
+                  secureTextEntry={!showPassword}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowPassword(!showPassword)}
+                  style={styles.eyeIcon}
+                >
+                  <Ionicons
+                    size={24}
+                    name={!showPassword ? "eye" : "eye-off"}
+                  />
+                </TouchableOpacity>
+              </View>
+              {errors.password && (
+                <Text style={styles.errorMessage}>{error?.message}</Text>
+              )}
+            </>
+          )}
+          name="password"
+          rules={{ required: true }}
+        />
+        <Controller
+          control={control}
+          render={({
+            field: { onChange, onBlur, value },
+            fieldState: { error },
+          }) => (
+            <>
+              <View style={styles.passwordContainer}>
+                <TextInput
+                  style={styles.input}
+                  placeholder="Confirm Password"
+                  onBlur={onBlur}
+                  onChangeText={(value) => onChange(value)}
+                  value={value}
+                  secureTextEntry={!showConfirmPassword}
+                />
+                <TouchableOpacity
+                  onPress={() => setShowonfirmPassword(!showConfirmPassword)}
+                  style={styles.eyeIcon}
+                >
+                  <Ionicons
+                    size={24}
+                    name={!showConfirmPassword ? "eye" : "eye-off"}
+                  />
+                </TouchableOpacity>
+              </View>
+              {errors.confirmPassword && (
+                <Text style={styles.errorMessage}>{error?.message}</Text>
+              )}
+            </>
+          )}
+          name="confirmPassword"
+          rules={{ required: true }}
+        />
+
+        <CustomButton
+          buttonText="Reset Password"
+          onPress={handleSubmit(onSubmit)}
+          loading={isPending}
+        />
         <View style={styles.signupContainer}>
           <Text style={styles.signupText}>Remember your password?</Text>
           <Link href="/login">
@@ -121,5 +201,11 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     color: "#007B99",
+  },
+  errorMessage: {
+    color: "red",
+    fontSize: 14,
+    marginTop: -10,
+    marginBottom: 20,
   },
 });

@@ -37,3 +37,10 @@ export function useRequestMutation() {
     "post"
   );
 }
+
+export function useResetPassword(token: string | undefined) {
+  return useApiMutation<SignupResponse, PasswordRequestVariables>(
+    `/clients/reset-password/${token}`,
+    "post"
+  );
+}

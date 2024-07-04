@@ -1,7 +1,7 @@
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 import { Link, useRouter } from "expo-router";
-import React, { useRef } from "react";
+import React from "react";
 import { useState } from "react";
 import {
   SafeAreaView,
