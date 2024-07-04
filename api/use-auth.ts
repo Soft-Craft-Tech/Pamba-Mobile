@@ -1,4 +1,3 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
 import { useApiMutation } from "./use-api-request";
 
 type SignupVariables = {
@@ -6,6 +5,11 @@ type SignupVariables = {
   email: string;
   phone: string;
   password: string;
+};
+
+type VerifcationVariables = {
+  email: string;
+  otp: string;
 };
 
 type SignupResponse = {
@@ -16,6 +20,13 @@ type SignupResponse = {
 export function useSignupMutation() {
   return useApiMutation<SignupResponse, SignupVariables>(
     "/clients/signup",
+    "post"
+  );
+}
+
+export function useVerificationMutation() {
+  return useApiMutation<SignupResponse, VerifcationVariables>(
+    "/clients/verify-otp",
     "post"
   );
 }

@@ -11,15 +11,18 @@ import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
 import { getEmail } from "@/api/utils";
+import { useVerificationMutation } from "@/api/use-auth";
+import CustomButton from "@/components/Button";
 
 const { width } = Dimensions.get("window");
 
 export default function OTPVerification() {
-  const email = getEmail();
+  const emailAdress = getEmail();
   const [otp, setOtp] = useState("");
   const [fontSize, setFontSize] = useState(24);
   const [otpSize, setOtpSize] = useState(40);
   const router = useRouter();
+  const { mutate: verify, isPending } = useVerificationMutation();
 
   useEffect(() => {
     setFontSize(Math.min(24, width * 0.06));
@@ -27,13 +30,17 @@ export default function OTPVerification() {
   }, []);
 
   const handleOtpChange = (value: string) => {
-    if (otp.length < 5) {
+    if (otp.length < 6) {
       setOtp(otp + value);
     }
   };
 
   const clearLastInput = () => {
     setOtp(otp.slice(0, -1));
+  };
+
+  const handleSubmit = () => {
+    verify({ otp, email: emailAdress });
   };
 
   const renderOtpInputs = () => {
@@ -60,10 +67,10 @@ export default function OTPVerification() {
           OTP Verification
         </Text>
         <Text style={[styles.subtitle, { fontSize: fontSize * 0.6 }]}>
-          Please check your email {email} to see the verification code
+          Please check your email {emailAdress} to see the verification code
         </Text>
         <Text style={[styles.subtitle, { fontSize: fontSize * 0.6 }]}>
-          Input Pin Code (5-digit)
+          Input Pin Code (6-digit)
         </Text>
         <View style={styles.otpContainer}>{renderOtpInputs()}</View>
         <View style={styles.keypadContainer}>
@@ -103,16 +110,13 @@ export default function OTPVerification() {
             <MaterialIcons name="backspace" size={fontSize} color="white" />
           </TouchableOpacity>
         </View>
-        <TouchableOpacity
-          onPress={() => {
-            router.replace("/login");
-          }}
-          style={[styles.submitButton, { width: width * 0.8 }]}
-        >
-          <Text style={[styles.submitButtonText, { fontSize: fontSize * 0.7 }]}>
-            SUBMIT
-          </Text>
-        </TouchableOpacity>
+        <View style={[{ width: width * 0.8 }]}>
+          <CustomButton
+            loading={isPending}
+            onPress={handleSubmit}
+            buttonText="Submit"
+          />
+        </View>
         <TouchableOpacity
           onPress={() => console.log("Resend OTP")}
           style={styles.resendContainer}
