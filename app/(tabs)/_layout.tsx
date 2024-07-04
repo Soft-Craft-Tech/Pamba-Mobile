@@ -27,10 +27,6 @@ export default function TabLayout() {
   const { session, isLoading } = useSession();
   console.log("Here", session);
 
-  if (isLoading) {
-    return null;
-  }
-
   if (!session) {
     return <Redirect href="/onboarding" />;
   }

@@ -69,20 +69,19 @@ export function SessionProvider({
   children,
 }: SessionProviderProps): JSX.Element {
   const [storedSession, setStoredSession] = useStorageState("session");
-  const [session, setSession] = React.useState<User | null>(() => {
-    const [, value] = storedSession;
-    return value ? (JSON.parse(value) as User) : null;
-  });
+  const [session, setSession] = React.useState<User | null>(() =>
+    storedSession ? (JSON.parse(storedSession) as User) : null
+  );
   const queryClient = useQueryClient();
 
-  const isLoading = storedSession[0];
+  const isLoading = storedSession === null;
 
   React.useEffect(() => {
     console.log("Session updated:", session);
   }, [session]);
 
   React.useEffect(() => {
-    console.log("Stored session updated:", storedSession[1]);
+    console.log("Stored session updated:", storedSession);
   }, [storedSession]);
 
   const signInMutation = useMutation<
