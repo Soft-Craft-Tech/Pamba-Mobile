@@ -1,20 +1,13 @@
+import {
+  PasswordRequestVariables,
+  ResendOtpVariables,
+  SignupVariables,
+  VerifcationVariables,
+} from "./types";
 import { useApiMutation } from "./use-api-request";
 
-type SignupVariables = {
-  name: string;
-  email: string;
-  phone: string;
-  password: string;
-};
-
-type VerifcationVariables = {
-  email: string;
-  otp?: string;
-};
-
 type SignupResponse = {
-  userId: string;
-  token: string;
+  [key: string]: any;
 };
 
 export function useSignupMutation() {
@@ -32,8 +25,15 @@ export function useVerificationMutation() {
 }
 
 export function useResendOtp() {
-  return useApiMutation<SignupResponse, VerifcationVariables>(
+  return useApiMutation<SignupResponse, ResendOtpVariables>(
     "/clients/resend-otp",
+    "post"
+  );
+}
+
+export function useRequestMutation() {
+  return useApiMutation<SignupResponse, PasswordRequestVariables>(
+    "/clients/request-password-reset",
     "post"
   );
 }

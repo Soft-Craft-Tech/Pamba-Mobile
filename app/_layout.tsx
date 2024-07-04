@@ -78,7 +78,7 @@ function RootLayoutNav() {
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen
-                  name="reset-password"
+                  name="reset-password/[id]"
                   options={{ headerShown: false }}
                 />
                 <Stack.Screen

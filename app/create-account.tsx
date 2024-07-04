@@ -19,7 +19,6 @@ import { Controller, useForm } from "react-hook-form";
 import CustomButton from "@/components/Button";
 import PhoneInput from "react-native-phone-number-input";
 import { useSignupMutation } from "@/api/use-auth";
-import { showNotification } from "@/hooks/toastNotication";
 import { setItem } from "@/core/storage";
 
 const schema = z.object({

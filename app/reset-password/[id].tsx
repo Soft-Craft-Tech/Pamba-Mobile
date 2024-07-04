@@ -1,8 +1,5 @@
-// import { Ionicons } from "@expo/vector-icons";
-// import Checkbox from "expo-checkbox";
-// import { Link } from "expo-router";
 import { Ionicons } from "@expo/vector-icons";
-import { Link, useRouter } from "expo-router";
+import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { useState } from "react";
 import {
   SafeAreaView,
@@ -17,7 +14,8 @@ import {
 export default function ResetPassword() {
   const [username, setUsername] = useState("");
   const router = useRouter();
-
+  const local = useLocalSearchParams<{ id: string }>();
+  console.log(local.id);
   return (
     <SafeAreaView style={styles.container}>
       <View style={styles.logoContainer}>

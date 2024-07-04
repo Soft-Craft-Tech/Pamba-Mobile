@@ -9,7 +9,7 @@ export const CustomInput = ({
 }: {
   label: string;
   text: string;
-  onChange: () => void;
+  onChange: (text: string) => void;
   rightIcon?: React.ReactNode;
 }) => {
   return (
@@ -22,7 +22,7 @@ export const CustomInput = ({
         borderColor: "#D9D9D9",
       }}
       value={text}
-      onChangeText={onChange}
+      onChangeText={(newText) => onChange(newText)}
       right={rightIcon}
     />
   );

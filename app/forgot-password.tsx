@@ -1,18 +1,40 @@
+import { CustomInput } from "@/components/CustomInput";
 import { Link, useRouter } from "expo-router";
-import { useState } from "react";
-import {
-  SafeAreaView,
-  StyleSheet,
-  Image,
-  Text,
-  View,
-  TextInput,
-  TouchableOpacity,
-} from "react-native";
+import { SafeAreaView, StyleSheet, Image, Text, View } from "react-native";
+import * as z from "zod";
+import { zodResolver } from "@hookform/resolvers/zod";
+import { Controller, useForm } from "react-hook-form";
+import CustomButton from "@/components/Button";
+import { useRequestMutation } from "@/api/use-auth";
+
+const schema = z.object({
+  email: z
+    .string({
+      required_error: "Email is required",
+    })
+    .email("Invalid email format"),
+});
+
+export type FormType = z.infer<typeof schema>;
 
 export default function ForgotPassword() {
-  const [username, setUsername] = useState("");
+  const { mutate, isSuccess, isPending } = useRequestMutation();
   const router = useRouter();
+  const {
+    handleSubmit,
+    control,
+    formState: { errors },
+  } = useForm<FormType>({ resolver: zodResolver(schema) });
+
+  const onSubmit = (data: any) => {
+    console.log("onSubmit called with data:", data); // Debugging log
+    mutate({ ...data });
+  };
+
+  if (isSuccess) {
+    console.log("Request was successful"); // Debugging log
+    router.push("/reset-password");
+  }
 
   return (
     <SafeAreaView style={styles.container}>
@@ -24,20 +46,31 @@ export default function ForgotPassword() {
         We will send you reset instructions to your email
       </Text>
       <View style={styles.formContainer}>
-        <TextInput
-          style={styles.input}
-          placeholder="Username"
-          value={username}
-          onChangeText={setUsername}
+        <Controller
+          control={control}
+          render={({
+            field: { onChange, onBlur, value },
+            fieldState: { error },
+          }) => (
+            <>
+              <CustomInput
+                label="Email"
+                text={value}
+                onChange={(value) => onChange(value?.toLowerCase())}
+              />
+              {errors.email && (
+                <Text style={styles.errorMessage}>{error?.message}</Text>
+              )}
+            </>
+          )}
+          name="email"
+          rules={{ required: true }}
         />
-        <TouchableOpacity
-          onPress={() => {
-            router.push("/reset-password");
-          }}
-          style={styles.button}
-        >
-          <Text style={styles.buttonText}>Submit</Text>
-        </TouchableOpacity>
+        <CustomButton
+          loading={isPending}
+          buttonText="Submit"
+          onPress={handleSubmit(onSubmit)}
+        />
         <View style={styles.signupContainer}>
           <Text style={styles.signupText}>Remember your password?</Text>
           <Link href="/login">
@@ -65,7 +98,7 @@ const styles = StyleSheet.create({
     marginBottom: 20,
     color: "rgba(79, 82, 83, 1)",
   },
-  formContainer: { padding: 20, width: "100%" },
+  formContainer: { padding: 20, width: "100%", gap: 20 },
   input: {
     width: "100%",
     padding: 15,
@@ -115,5 +148,10 @@ const styles = StyleSheet.create({
   },
   signupLink: {
     color: "#007B99",
+  },
+  errorMessage: {
+    color: "red",
+    fontSize: 8,
+    marginTop: -10,
   },
 });
