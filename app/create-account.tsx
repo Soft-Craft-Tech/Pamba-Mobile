@@ -18,16 +18,19 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import CustomButton from "@/components/Button";
 import PhoneInput from "react-native-phone-number-input";
+import { useSignupMutation } from "@/api/use-auth";
+import { showNotification } from "@/hooks/toastNotication";
+import { setItem } from "@/core/storage";
 
 const schema = z.object({
-  fullName: z
+  name: z
     .string({
       required_error: "Name is required",
     })
     .refine((value) => /^[a-zA-Z\s]*$/.test(value), {
       message: "Only Alphabet letters allowed",
     }),
-  phoneNumber: z
+  phone: z
     .string({ required_error: "Phone Number is required" })
     .min(10, "Phone must be at least 10 characters long")
     .max(10, "Password must not exceed 10 characters")
@@ -55,19 +58,11 @@ const schema = z.object({
   }),
 });
 
-type FormValues = {
-  fullName: string;
-  phoneNumber: string;
-  gender: string;
-};
-
 export type FormType = z.infer<typeof schema>;
 
 export default function CreateAccountScreen() {
   const [showPassword, setShowPassword] = useState(false);
-  const phoneInput = useRef<PhoneInput>(null);
-  const [value, setValue] = useState("");
-  const [formattedValue, setFormattedValue] = useState("");
+  const { mutate: signup, isPending, isSuccess } = useSignupMutation();
 
   const router = useRouter();
   const {
@@ -76,16 +71,18 @@ export default function CreateAccountScreen() {
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
   const onSubmit = (data: any) => {
-    const transformedPhoneNumber = "+254" + data.phoneNumber.slice(1);
+    const transformedphone = "+254" + data.phone.slice(1);
+    setItem("email", data.email);
     const transformedData = {
       ...data,
-      phoneNumber: transformedPhoneNumber,
+      phone: transformedphone,
     };
-
-    router.push("/verification");
-
-    console.log(transformedData);
+    signup({ ...transformedData });
   };
+
+  if (isSuccess) {
+    router.push("/verification");
+  }
 
   return (
     <ScrollView>
@@ -109,36 +106,46 @@ export default function CreateAccountScreen() {
                   onChangeText={(value) => onChange(value)}
                   value={value}
                 />
-                {errors.fullName && (
+                {errors.name && (
                   <Text style={styles.errorMessage}>{error?.message}</Text>
                 )}
               </>
             )}
-            name="fullName"
+            name="name"
             rules={{ required: true }}
           />
-          <PhoneInput
-            ref={phoneInput}
-            defaultValue={value}
-            defaultCode="KE"
-            layout="first"
-            onChangeText={(text) => {
-              setValue(text);
-            }}
-            containerStyle={{
-              width: "100%",
-              borderWidth: 1,
-              borderColor: "#ddd",
-              borderRadius: 5,
-              marginBottom: 10,
-              backgroundColor: "#fff",
-            }}
-            onChangeFormattedText={(text) => {
-              setFormattedValue(text);
-            }}
-            withShadow
-            autoFocus
+          <Controller
+            control={control}
+            render={({
+              field: { onChange, onBlur, value },
+              fieldState: { error },
+            }) => (
+              <>
+                <PhoneInput
+                  value={value}
+                  defaultCode="KE"
+                  layout="first"
+                  onChangeText={(value) => onChange(value)}
+                  containerStyle={{
+                    width: "100%",
+                    borderWidth: 1,
+                    borderColor: "#ddd",
+                    borderRadius: 5,
+                    marginBottom: 10,
+                    backgroundColor: "#fff",
+                  }}
+                  withShadow
+                  autoFocus
+                />
+                {errors.phone && (
+                  <Text style={styles.errorMessage}>{error?.message}</Text>
+                )}
+              </>
+            )}
+            name="phone"
+            rules={{ required: true }}
           />
+
           <View style={styles.helperContainer}>
             <Text style={styles.helperText}>
               We collect your phone number for notification purposes
@@ -275,6 +282,7 @@ export default function CreateAccountScreen() {
           <CustomButton
             onPress={handleSubmit(onSubmit)}
             buttonText="REGISTER"
+            loading={isPending}
           />
           <View style={styles.dividerContainer}>
             <View style={styles.divider} />

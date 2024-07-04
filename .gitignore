@@ -4,6 +4,9 @@ __generated__
 web-build
 bare-apps
 
+# Env
+.env
+
 # macOS
 .DS_Store
 

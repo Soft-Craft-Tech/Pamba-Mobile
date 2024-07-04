@@ -10,10 +10,12 @@ import {
 import { StatusBar } from "expo-status-bar";
 import { MaterialIcons } from "@expo/vector-icons";
 import { useRouter } from "expo-router";
+import { getEmail } from "@/api/utils";
 
 const { width } = Dimensions.get("window");
 
 export default function OTPVerification() {
+  const email = getEmail();
   const [otp, setOtp] = useState("");
   const [fontSize, setFontSize] = useState(24);
   const [otpSize, setOtpSize] = useState(40);
@@ -35,7 +37,7 @@ export default function OTPVerification() {
   };
 
   const renderOtpInputs = () => {
-    return Array.from({ length: 5 }, (_, i) => (
+    return Array.from({ length: 6 }, (_, i) => (
       <View
         key={i}
         style={[
@@ -58,7 +60,7 @@ export default function OTPVerification() {
           OTP Verification
         </Text>
         <Text style={[styles.subtitle, { fontSize: fontSize * 0.6 }]}>
-          Please check your email abc@gmail.com to see the verification code
+          Please check your email {email} to see the verification code
         </Text>
         <Text style={[styles.subtitle, { fontSize: fontSize * 0.6 }]}>
           Input Pin Code (5-digit)

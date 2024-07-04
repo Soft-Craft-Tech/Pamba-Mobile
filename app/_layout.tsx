@@ -49,10 +49,10 @@ export default function RootLayout() {
 function RootLayoutNav() {
   const client = new QueryClient();
   return (
-    <QueryClientProvider client={client}>
-      <SessionProvider>
-        <ThemeProvider value={DefaultTheme}>
-          <GestureHandlerRootView>
+    <ThemeProvider value={DefaultTheme}>
+      <GestureHandlerRootView>
+        <QueryClientProvider client={client}>
+          <SessionProvider>
             <NotifierWrapper>
               <Stack>
                 <Stack.Screen name="(tabs)" options={{ headerShown: false }} />
@@ -96,9 +96,9 @@ function RootLayoutNav() {
                 <Stack.Screen name="+not-found" />
               </Stack>
             </NotifierWrapper>
-          </GestureHandlerRootView>
-        </ThemeProvider>
-      </SessionProvider>
-    </QueryClientProvider>
+          </SessionProvider>
+        </QueryClientProvider>
+      </GestureHandlerRootView>
+    </ThemeProvider>
   );
 }
