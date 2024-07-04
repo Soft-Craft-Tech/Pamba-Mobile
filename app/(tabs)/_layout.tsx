@@ -7,7 +7,7 @@ import { AntDesign, Feather, FontAwesome, Ionicons } from "@expo/vector-icons";
 import Avatar from "@/components/Avatar";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useSession } from "../ctx";
-import { Text } from "react-native";
+
 const commonHeaderOptions = {
   headerShown: true,
   tabBarActiveTintColor: "#DB1471",
