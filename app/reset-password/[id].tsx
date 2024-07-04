@@ -24,7 +24,7 @@ const schema = z
       .max(20, { message: "Password is too long" }),
     confirmPassword: z.string(),
   })
-  .refine((data) => data.password === data.confirmPassword, {
+  .refine((data) => data?.password === data?.confirmPassword, {
     message: "Passwords do not match",
     path: ["confirmPassword"],
   });
@@ -48,7 +48,7 @@ export default function ResetPassword() {
     signup({ ...data });
   };
   if (isSuccess) {
-    router.push("/login");
+    router.push("/password-success");
   }
   return (
     <SafeAreaView style={styles.container}>
