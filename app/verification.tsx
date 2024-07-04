@@ -22,7 +22,7 @@ export default function OTPVerification() {
   const [fontSize, setFontSize] = useState(24);
   const [otpSize, setOtpSize] = useState(40);
   const router = useRouter();
-  const { mutate: verify, isPending } = useVerificationMutation();
+  const { mutate: verify, isPending, isSuccess } = useVerificationMutation();
 
   useEffect(() => {
     setFontSize(Math.min(24, width * 0.06));
@@ -42,6 +42,10 @@ export default function OTPVerification() {
   const handleSubmit = () => {
     verify({ otp, email: emailAdress });
   };
+
+  if (isSuccess) {
+    router.push("/login");
+  }
 
   const renderOtpInputs = () => {
     return Array.from({ length: 6 }, (_, i) => (

@@ -135,7 +135,6 @@ export default function CreateAccountScreen() {
                     backgroundColor: "#fff",
                   }}
                   withShadow
-                  autoFocus
                 />
                 {errors.phone && (
                   <Text style={styles.errorMessage}>{error?.message}</Text>
@@ -209,7 +208,7 @@ export default function CreateAccountScreen() {
                   placeholder="Email"
                   onBlur={onBlur}
                   value={value}
-                  onChangeText={(value) => onChange(value)}
+                  onChangeText={(value) => onChange(value.toLowerCase())}
                 />
                 {errors.email && (
                   <Text style={styles.errorMessage}>{error?.message}</Text>
