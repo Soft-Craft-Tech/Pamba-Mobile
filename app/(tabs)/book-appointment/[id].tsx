@@ -1,5 +1,12 @@
 import React, { useEffect, useMemo, useRef } from "react";
-import { FlatList, SafeAreaView, StyleSheet, Text, View } from "react-native";
+import {
+  FlatList,
+  Linking,
+  SafeAreaView,
+  StyleSheet,
+  Text,
+  View,
+} from "react-native";
 import { Link, useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import { EvilIcons, Ionicons } from "@expo/vector-icons";
@@ -7,63 +14,35 @@ import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import StandardView from "@/components/StandardView";
 import CustomButton from "@/components/Button";
 import ServiceCard from "@/components/Appointments/servce-card";
-import { useSingleServiceQuery } from "@/api/use-appointments";
-
-interface ServiceData {
-  service_id: number;
-  imageUri: string;
-  title: string;
-  ratingTime: string;
-  price: string;
-}
-
-const SERVICES_DATA: ServiceData[] = [
-  {
-    service_id: 1,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 2,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1677098574666-8f97d913d9cd?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 3,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1677098574666-8f97d913d9cd?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 4,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-];
+import {
+  useServicesQuery,
+  useSingleServiceQuery,
+} from "@/api/use-appointments";
+import SingleViewSkeleton from "@/components/Appointments/single-view-skeleton";
 
 const SALON_IMAGE_URI =
   "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 const HeaderComponent: React.FC<{ id: string | undefined }> = ({ id }) => {
-  const local = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
-  const { data: serviceData } = useSingleServiceQuery(local?.id);
-  console.log(serviceData?.service);
+  const { data: serviceData, isPending } = useSingleServiceQuery(id);
+  console.log(serviceData);
+  if (isPending) {
+    return (
+      <StandardView>
+        <SingleViewSkeleton />
+      </StandardView>
+    );
+  }
   return (
     <StandardView>
       <Image
-        source={{ uri: serviceData?.service?.service_image }}
+        source={{
+          uri:
+            serviceData?.service?.service_image === ""
+              ? SALON_IMAGE_URI
+              : serviceData?.service?.service_image,
+        }}
         style={styles.salonImage}
         accessible={true}
         accessibilityLabel="Salon image"
@@ -74,27 +53,37 @@ const HeaderComponent: React.FC<{ id: string | undefined }> = ({ id }) => {
         </Text>
         <View style={styles.contactBox}>
           <Ionicons name="call-outline" size={12} color="black" />
-          <Text style={styles.contactText}>0700123456</Text>
+          <Text
+            style={styles.contactText}
+            onPress={() =>
+              Linking.openURL(`tel:${serviceData?.service?.phone}`)
+            }
+          >
+            {serviceData?.service?.phone}
+          </Text>
         </View>
         <View style={styles.contactBox}>
           <EvilIcons name="location" size={16} color="black" />
-          <Text style={styles.contactText}>Lavington area, Nairobi. Kenya</Text>
+          <Text style={styles.contactText}>
+            {serviceData?.service?.location}
+          </Text>
         </View>
         <View style={styles.contactBox}>
           <EvilIcons name="location" size={16} color="black" />
-          <Link href={"https/maps/lavington/shop"}>
-            <Text style={styles.locationLink}>https/maps/lavington/shop</Text>
+          <Link href={serviceData?.service?.directions}>
+            <Text style={styles.locationLink}>
+              {serviceData?.service?.directions.slice(0, 50) + "..."}
+            </Text>
           </Link>
         </View>
-        <Text style={styles.serviceTitle}>Stylish Haircut</Text>
+        <Text style={styles.serviceTitle}>{serviceData?.service?.service}</Text>
+        <Text style={styles.serviceTitle}></Text>
         <Text style={styles.durationText}>
-          1 hour 15 minutes - 1 hour 40 mins
+          Duration: {serviceData?.service?.estimated_time_string}
         </Text>
-        <Text style={styles.amountText}>Ksh 1000</Text>
+        <Text style={styles.amountText}>KES {serviceData?.service?.price}</Text>
         <Text style={styles.serviceDescription}>
-          Feel the thrill of a fresh start as our talented stylists bring your
-          vision to life with our signature stylish haircut. We're not just
-          cutting hair; we're sculpting confidence, one snip at a time.
+          Description: {serviceData?.service?.description}
         </Text>
         <CustomButton
           onPress={() => {
@@ -112,14 +101,14 @@ const BookAppointment: React.FC = () => {
   const local = useLocalSearchParams<{ id: string }>();
   const flatListRef = useRef<FlatList>(null);
 
-  const renderItem = useMemo(
+  const { data: servicesData } = useServicesQuery();
+
+  const renderServiceCard = useMemo(
     () =>
-      ({ item }: { item: ServiceData }) =>
-        <ServiceCard data={item as any} />,
+      ({ item }: { item: any }) =>
+        <ServiceCard data={item.serviceInfo} />,
     []
   );
-
-  const keyExtractor = (item: ServiceData) => item?.service_id?.toString();
 
   useEffect(() => {
     if (flatListRef.current) {
@@ -132,9 +121,9 @@ const BookAppointment: React.FC = () => {
       <FlatList
         ListHeaderComponent={<HeaderComponent id={local?.id} />}
         ref={flatListRef}
-        data={SERVICES_DATA}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
+        data={servicesData?.services}
+        renderItem={renderServiceCard}
+        keyExtractor={(item) => item?.serviceInfo.id?.toString()}
         numColumns={2}
         showsVerticalScrollIndicator={false}
       />

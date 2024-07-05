@@ -4,16 +4,10 @@ import React from "react";
 import { View, StyleSheet, Text } from "react-native";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import UpcomingSkeleton from "./upcoming-skeleton";
-
-interface UpcomingAppointmentsProps {
-  date: string;
-  title: string;
-  attendant: string;
-  id: number;
-}
+import { Appointment } from "@/api/query-types";
 
 interface AppointmentProp {
-  data: UpcomingAppointmentsProps[];
+  data: Appointment[];
   title?: boolean;
   isLoading?: boolean;
 }
@@ -31,7 +25,7 @@ const UpcomingAppointments: React.FC<AppointmentProp> = ({
   return (
     <View style={styles.container}>
       {title && <Text style={styles.greetingsText}>Upcoming Appointments</Text>}
-      {data?.map(({ date, title, attendant, id }) => (
+      {data?.map(({ date, name, id }) => (
         <TouchableOpacity
           key={id}
           onPress={() => {
@@ -49,8 +43,8 @@ const UpcomingAppointments: React.FC<AppointmentProp> = ({
                 </Text>
               </View>
               <View>
-                <Text style={styles.cardTitle}>{title}</Text>
-                <Text style={styles.attendantName}>{attendant}</Text>
+                <Text style={styles.cardTitle}>{name}</Text>
+                <Text style={styles.attendantName}>John Doe</Text>
                 <Text style={styles.dayText}>
                   {formatDate(date).getDayNameAndTime()}
                 </Text>

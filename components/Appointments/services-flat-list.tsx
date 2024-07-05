@@ -1,5 +1,5 @@
 import { Link } from "expo-router";
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { View, StyleSheet, Text, FlatList } from "react-native";
 import ServiceCard from "./servce-card";
 import StandardView from "../StandardView";
@@ -7,22 +7,7 @@ import StatusBanner from "../StatusBanner";
 import HeroSlider from "../HeroSlider";
 import FilterSlider from "../FilterSlider";
 import UpcomingAppointments from "./upcoming-appointment";
-import { useServicesQuery } from "@/api/use-appointments";
-
-const appointmentsData = [
-  {
-    date: "2024-05-01T08:30:00Z",
-    title: "Basic Pedicure",
-    attendant: "Jane",
-    id: 1,
-  },
-  {
-    date: "2024-07-12T18:30:00Z",
-    title: "Braiding",
-    attendant: "Jane",
-    id: 2,
-  },
-];
+import { useAllAppointments, useServicesQuery } from "@/api/use-appointments";
 
 interface ServiceListProps {
   title?: string;
@@ -36,6 +21,9 @@ const ServicesList: React.FC<ServiceListProps> = ({
   const [showBanner, setShowBanner] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
   const { data: servicesData } = useServicesQuery();
+
+  const { data: appointmentsData } = useAllAppointments();
+  console.log(appointmentsData);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -59,11 +47,7 @@ const ServicesList: React.FC<ServiceListProps> = ({
       <HeroSlider />
       <FilterSlider />
       <StandardView>
-        <UpcomingAppointments
-          data={appointmentsData}
-          title
-          isLoading={isLoading}
-        />
+        <UpcomingAppointments data={[]} title isLoading={isLoading} />
         <View style={styles.titleContainer}>
           <Text style={styles.leftTitle}>{title}</Text>
           <Link href="/search">
@@ -74,8 +58,11 @@ const ServicesList: React.FC<ServiceListProps> = ({
     </View>
   );
 
-  const renderServiceCard = ({ item }: { item: any }) => (
-    <ServiceCard data={item.serviceInfo} />
+  const renderServiceCard = useMemo(
+    () =>
+      ({ item }: { item: any }) =>
+        <ServiceCard data={item.serviceInfo} />,
+    []
   );
 
   return (

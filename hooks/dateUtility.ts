@@ -10,10 +10,6 @@ export function formatDate(dateString: string) {
   function getDayNameAndTime(): string {
     const options: Intl.DateTimeFormatOptions = {
       weekday: `long`,
-      hour: "numeric",
-      minute: "numeric",
-      hour12: true,
-      timeZone: "UTC",
     };
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }

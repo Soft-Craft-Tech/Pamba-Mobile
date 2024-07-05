@@ -56,3 +56,27 @@ export interface SingleServicesData {
   service: SingleServices;
   staff: any[];
 }
+
+interface Appointment {
+  cancelled: boolean;
+  comment: string;
+  completed: boolean;
+  create_at: string; // Consider renaming to createdAt for consistency with JavaScript conventions
+  date: string;
+  description: string;
+  id: number;
+  imgUrl: string;
+  mapUrl: string;
+  name: string;
+  phone: string;
+  service_id: number;
+  time: string;
+}
+
+export interface AppointmentResponse {
+  cancelled: any[]; // Assuming cancelled can be any type of array based on the provided data
+  last: null;
+  message: string;
+  previous: Appointment[]; // Assuming previous can be any type of array based on the provided data
+  upcoming: Appointment[];
+}
