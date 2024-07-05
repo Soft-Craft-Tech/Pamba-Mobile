@@ -57,7 +57,7 @@ export interface SingleServicesData {
   staff: any[];
 }
 
-interface Appointment {
+export interface Appointment {
   cancelled: boolean;
   comment: string;
   completed: boolean;

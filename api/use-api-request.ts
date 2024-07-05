@@ -1,4 +1,4 @@
-import { axiosClient } from "@/app/axiosClient";
+import { axiosStrategy, createAxiosClient } from "@/app/axiosClient";
 import { showNotification } from "@/hooks/toastNotication";
 import {
   useMutation,
@@ -24,6 +24,7 @@ export function useApiQuery<TData>(
   return useQuery<ApiResponse<TData>, Error>({
     queryKey: [endpoint],
     queryFn: async () => {
+      const axiosClient = await createAxiosClient();
       const response = await axiosClient.get<ApiResponse<TData>>(endpoint);
       return response.data;
     },
@@ -37,7 +38,7 @@ export function useApiMutation<TData, TVariables>(
 ): UseMutationResult<ApiResponse<TData>, Error, TVariables> {
   return useMutation<ApiResponse<TData>, Error, TVariables>({
     mutationFn: async (variables: TVariables) => {
-      const response = await axiosClient[method]<ApiResponse<TData>>(
+      const response = await axiosStrategy[method]<ApiResponse<TData>>(
         endpoint,
         variables
       );

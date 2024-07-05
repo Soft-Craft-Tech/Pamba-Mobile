@@ -10,7 +10,6 @@ const ServicesSkeleton = () => {
         type: "timing",
       }}
       style={[styles.padded]}
-      //   animate={{ backgroundColor: "#ffffff" }}
     >
       <Skeleton colorMode="light" width={157} height={180} />
       <Skeleton colorMode="light" width={157} height={180} />

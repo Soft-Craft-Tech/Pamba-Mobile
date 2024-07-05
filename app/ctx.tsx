@@ -4,8 +4,8 @@ import axios, { AxiosError, AxiosResponse } from "axios";
 
 import { useStorageState } from "@/core/useStorageState";
 import { showNotification } from "@/hooks/toastNotication";
-import { axiosClient } from "./axiosClient";
 import { setItem } from "@/core/storage";
+import { axiosStrategy } from "./axiosClient";
 
 interface ErrorResponse {
   message: string;
@@ -48,7 +48,7 @@ const postWithAuthorization = async (
 export const postWithoutAuthorization = async (
   url: string
 ): Promise<AxiosResponse> => {
-  return axiosClient.post(url);
+  return axiosStrategy.post(url);
 };
 
 const AuthContext = React.createContext<AuthContextType | undefined>(undefined);
@@ -73,7 +73,6 @@ export function SessionProvider({
     storedSession ? (JSON.parse(storedSession) as User) : null
   );
   const queryClient = useQueryClient();
-
   const isLoading = storedSession === null;
 
   React.useEffect(() => {
@@ -96,10 +95,11 @@ export function SessionProvider({
         credentials
       );
       console.log("API response:", response);
-      return response.data.authToken;
+      setItem("authenticationToken", response.data.authToken);
+      return response.data;
     },
     onSuccess: (data: User) => {
-      setItem("userData", data);
+      setItem("userData", data.authToken);
       setSession((prevSession) => {
         console.log("Updating session from:", prevSession, "to:", data);
         return data;

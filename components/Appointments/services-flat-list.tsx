@@ -8,6 +8,7 @@ import HeroSlider from "../HeroSlider";
 import FilterSlider from "../FilterSlider";
 import UpcomingAppointments from "./upcoming-appointment";
 import { useAllAppointments, useServicesQuery } from "@/api/use-appointments";
+import { getItem } from "expo-secure-store";
 
 interface ServiceListProps {
   title?: string;
@@ -23,7 +24,7 @@ const ServicesList: React.FC<ServiceListProps> = ({
   const { data: servicesData } = useServicesQuery();
 
   const { data: appointmentsData } = useAllAppointments();
-  console.log(appointmentsData);
+  console.log("Appointments Data", appointmentsData);
 
   useEffect(() => {
     const timer = setTimeout(() => {
