@@ -7,6 +7,7 @@ import StatusBanner from "../StatusBanner";
 import HeroSlider from "../HeroSlider";
 import FilterSlider from "../FilterSlider";
 import UpcomingAppointments from "./upcoming-appointment";
+import { useServicesQuery } from "@/api/use-appointments";
 
 const appointmentsData = [
   {
@@ -23,41 +24,6 @@ const appointmentsData = [
   },
 ];
 
-const servicesData = [
-  {
-    service_id: 1,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 2,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1677098574666-8f97d913d9cd?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 3,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1677098574666-8f97d913d9cd?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 4,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-];
-
 interface ServiceListProps {
   title?: string;
   linkText?: string;
@@ -69,6 +35,12 @@ const ServicesList: React.FC<ServiceListProps> = ({
 }) => {
   const [showBanner, setShowBanner] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
+  const {
+    data: servicesData,
+    error: servicesError,
+    isPending: loadingServices,
+  } = useServicesQuery();
+  console.log("Services Data", servicesData?.services);
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -107,17 +79,17 @@ const ServicesList: React.FC<ServiceListProps> = ({
     </View>
   );
 
-  const renderServiceCard = ({ item }: { item: (typeof servicesData)[0] }) => (
-    <ServiceCard data={item as any} />
+  const renderServiceCard = ({ item }: { item: any }) => (
+    <ServiceCard data={item.serviceInfo} />
   );
 
   return (
     <View style={styles.container}>
       <FlatList
         ListHeaderComponent={renderHeader}
-        data={servicesData}
+        data={servicesData?.services}
         renderItem={renderServiceCard}
-        keyExtractor={(item) => item.service_id.toString()}
+        keyExtractor={(item) => item?.serviceInfo.id?.toString()}
         numColumns={2}
         showsVerticalScrollIndicator={false}
       />

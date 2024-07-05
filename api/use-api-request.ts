@@ -11,7 +11,8 @@ import axios from "axios";
 type ApiResponse<T> = {
   success: boolean;
   message: string;
-  data: T;
+  data?: T;
+  [key: string]: any;
 };
 
 type MutationHttpMethod = "post" | "put" | "patch" | "delete";
