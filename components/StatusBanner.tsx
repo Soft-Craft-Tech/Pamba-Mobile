@@ -1,3 +1,4 @@
+import { useRouter } from "expo-router";
 import { MotiView } from "moti";
 import { Skeleton } from "moti/skeleton";
 import React, { useEffect } from "react";
@@ -10,6 +11,7 @@ interface StatusBannerProps {
 }
 
 const StatusBanner: React.FC<StatusBannerProps> = ({ onPress, isLoading }) => {
+  const router = useRouter();
   return (
     <>
       {isLoading ? (
@@ -23,7 +25,12 @@ const StatusBanner: React.FC<StatusBannerProps> = ({ onPress, isLoading }) => {
           <Skeleton colorMode="light" width={"100%"} height={100} />
         </MotiView>
       ) : (
-        <View style={styles.statusContainer}>
+        <TouchableOpacity
+          onPress={() => {
+            router.push("/profile-settings");
+          }}
+          style={styles.statusContainer}
+        >
           <View style={styles.bannerHeader}>
             <Text style={styles.profileText}>Incomplete Profile</Text>
             <TouchableOpacity onPress={onPress}>
@@ -34,7 +41,7 @@ const StatusBanner: React.FC<StatusBannerProps> = ({ onPress, isLoading }) => {
             Provide more personal details in your profile to qualify for our
             loyalty program
           </Text>
-        </View>
+        </TouchableOpacity>
       )}
     </>
   );
