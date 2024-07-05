@@ -28,8 +28,6 @@ export default function TabLayout() {
   const { session } = useSession();
   const [isFirstTime] = useIsFirstTime();
 
-  console.log(session);
-
   if (!session && isFirstTime) {
     return <Redirect href="/launchpad" />;
   }
