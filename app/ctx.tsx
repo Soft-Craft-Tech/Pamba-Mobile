@@ -96,7 +96,7 @@ export function SessionProvider({
         credentials
       );
       console.log("API response:", response);
-      return response.data;
+      return response.data.authToken;
     },
     onSuccess: (data: User) => {
       setItem("userData", data);
