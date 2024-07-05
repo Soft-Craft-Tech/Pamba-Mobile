@@ -28,7 +28,7 @@ interface BusinessInfo {
   weekend_opening: string;
 }
 
-interface ServiceInfo {
+export interface ServiceInfo {
   business_id: number;
   description: string;
   estimated_service_time: number;
@@ -37,4 +37,22 @@ interface ServiceInfo {
   service: string;
   service_category: number;
   service_image: string;
+}
+
+export interface SingleServices {
+  business_id: number;
+  business_name: string;
+  description: string;
+  estimated_time_string: string;
+  id: number;
+  price: number;
+  service: string;
+  service_category: number;
+  service_image: string;
+  slug: string;
+}
+
+export interface SingleServicesData {
+  service: SingleServices;
+  staff: any[];
 }

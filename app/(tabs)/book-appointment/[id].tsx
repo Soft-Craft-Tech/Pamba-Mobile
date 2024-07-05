@@ -7,6 +7,7 @@ import { EvilIcons, Ionicons } from "@expo/vector-icons";
 import StandardView from "@/components/StandardView";
 import CustomButton from "@/components/Button";
 import ServiceCard from "@/components/Appointments/servce-card";
+import { useSingleServiceQuery } from "@/api/use-appointments";
 
 interface ServiceData {
   service_id: number;
@@ -55,17 +56,22 @@ const SALON_IMAGE_URI =
   "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 
 const HeaderComponent: React.FC<{ id: string | undefined }> = ({ id }) => {
+  const local = useLocalSearchParams<{ id: string }>();
   const router = useRouter();
+  const { data: serviceData } = useSingleServiceQuery(local?.id);
+  console.log(serviceData?.service);
   return (
     <StandardView>
       <Image
-        source={{ uri: SALON_IMAGE_URI }}
+        source={{ uri: serviceData?.service?.service_image }}
         style={styles.salonImage}
         accessible={true}
         accessibilityLabel="Salon image"
       />
       <View style={styles.lowerContainer}>
-        <Text style={styles.appointmentTitle}>Beauty square salon {id}</Text>
+        <Text style={styles.appointmentTitle}>
+          {serviceData?.service?.business_name}
+        </Text>
         <View style={styles.contactBox}>
           <Ionicons name="call-outline" size={12} color="black" />
           <Text style={styles.contactText}>0700123456</Text>

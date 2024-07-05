@@ -35,12 +35,7 @@ const ServicesList: React.FC<ServiceListProps> = ({
 }) => {
   const [showBanner, setShowBanner] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const {
-    data: servicesData,
-    error: servicesError,
-    isPending: loadingServices,
-  } = useServicesQuery();
-  console.log("Services Data", servicesData?.services);
+  const { data: servicesData } = useServicesQuery();
 
   useEffect(() => {
     const timer = setTimeout(() => {
