@@ -1,4 +1,9 @@
-import { axiosStrategy, createAxiosClient } from "@/app/axiosClient";
+import {
+  API_BASE_URL,
+  axiosStrategy,
+  createAxiosClient,
+} from "@/app/axiosClient";
+import { getItem } from "@/core/storage";
 import { showNotification } from "@/hooks/toastNotication";
 import {
   useMutation,
@@ -54,3 +59,29 @@ export function useApiMutation<TData, TVariables>(
     },
   });
 }
+const accessToken = getItem("authenticationToken");
+
+const getHeaders = () => ({
+  "Content-Type": "application/json",
+  "X-API-KEY": "0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62",
+  "x-access-token": accessToken as string,
+});
+
+export const useApiQueryTwo = (
+  endpoint: string,
+  queryParams = {},
+  options = {}
+) => {
+  return useQuery({
+    queryKey: [endpoint, queryParams],
+    queryFn: async ({ queryKey }) => {
+      const [url, params] = queryKey;
+      const response = await axios.get(`${API_BASE_URL}${url}`, {
+        params,
+        headers: getHeaders(),
+      });
+      return response.data;
+    },
+    ...options,
+  });
+};

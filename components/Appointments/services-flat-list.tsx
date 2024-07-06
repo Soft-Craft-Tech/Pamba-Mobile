@@ -7,8 +7,10 @@ import StatusBanner from "../StatusBanner";
 import HeroSlider from "../HeroSlider";
 import FilterSlider from "../FilterSlider";
 import UpcomingAppointments from "./upcoming-appointment";
-import { useAllAppointments, useServicesQuery } from "@/api/use-appointments";
-import { getItem } from "expo-secure-store";
+import {
+  useGetAllAppointments,
+  useGetAllServices,
+} from "@/api/use-appointments";
 
 interface ServiceListProps {
   title?: string;
@@ -21,10 +23,9 @@ const ServicesList: React.FC<ServiceListProps> = ({
 }) => {
   const [showBanner, setShowBanner] = useState(true);
   const [isLoading, setIsLoading] = useState(true);
-  const { data: servicesData } = useServicesQuery();
+  const { data: servicesData } = useGetAllServices();
 
-  const { data: appointmentsData } = useAllAppointments();
-  console.log("Appointments Data", appointmentsData);
+  const { data: appointmentsData, isPending } = useGetAllAppointments();
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -48,7 +49,11 @@ const ServicesList: React.FC<ServiceListProps> = ({
       <HeroSlider />
       <FilterSlider />
       <StandardView>
-        <UpcomingAppointments data={[]} title isLoading={isLoading} />
+        <UpcomingAppointments
+          data={appointmentsData?.upcoming}
+          title
+          isLoading={isPending}
+        />
         <View style={styles.titleContainer}>
           <Text style={styles.leftTitle}>{title}</Text>
           <Link href="/search">

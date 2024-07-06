@@ -25,7 +25,7 @@ const UpcomingAppointments: React.FC<AppointmentProp> = ({
   return (
     <View style={styles.container}>
       {title && <Text style={styles.greetingsText}>Upcoming Appointments</Text>}
-      {data?.map(({ date, name, id }) => (
+      {data?.map(({ date, description, id, time }) => (
         <TouchableOpacity
           key={id}
           onPress={() => {
@@ -43,10 +43,10 @@ const UpcomingAppointments: React.FC<AppointmentProp> = ({
                 </Text>
               </View>
               <View>
-                <Text style={styles.cardTitle}>{name}</Text>
+                <Text style={styles.cardTitle}>{description}</Text>
                 <Text style={styles.attendantName}>John Doe</Text>
                 <Text style={styles.dayText}>
-                  {formatDate(date).getDayNameAndTime()}
+                  {`${formatDate(date).getDayNameAndTime()} ${time}`}
                 </Text>
               </View>
             </View>

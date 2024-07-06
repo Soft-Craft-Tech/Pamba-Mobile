@@ -23,3 +23,5 @@ export const createAxiosClient = async () => {
     },
   });
 };
+
+export const API_BASE_URL = "https://pamba-web.onrender.com/API";
