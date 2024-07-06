@@ -15,8 +15,8 @@ import StandardView from "@/components/StandardView";
 import CustomButton from "@/components/Button";
 import ServiceCard from "@/components/Appointments/servce-card";
 import {
-  useServicesQuery,
-  useSingleServiceQuery,
+  useGetASingleService,
+  useGetAllServices,
 } from "@/api/use-appointments";
 import SingleViewSkeleton from "@/components/Appointments/single-view-skeleton";
 
@@ -25,8 +25,8 @@ const SALON_IMAGE_URI =
 
 const HeaderComponent: React.FC<{ id: string | undefined }> = ({ id }) => {
   const router = useRouter();
-  const { data: serviceData, isPending } = useSingleServiceQuery(id);
-  console.log(serviceData);
+  const { data: serviceData, isPending } = useGetASingleService(id);
+
   if (isPending) {
     return (
       <StandardView>
@@ -101,7 +101,7 @@ const BookAppointment: React.FC = () => {
   const local = useLocalSearchParams<{ id: string }>();
   const flatListRef = useRef<FlatList>(null);
 
-  const { data: servicesData } = useServicesQuery();
+  const { data: servicesData } = useGetAllServices();
 
   const renderServiceCard = useMemo(
     () =>
