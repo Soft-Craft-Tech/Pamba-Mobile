@@ -22,18 +22,10 @@ const ServicesList: React.FC<ServiceListProps> = ({
   linkText = "See All",
 }) => {
   const [showBanner, setShowBanner] = useState(true);
-  const [isLoading, setIsLoading] = useState(true);
+
   const { data: servicesData } = useGetAllServices();
 
   const { data: appointmentsData, isPending } = useGetAllAppointments();
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      setIsLoading(false);
-    }, 4000);
-
-    return () => clearTimeout(timer);
-  }, []);
 
   const renderHeader = () => (
     <View style={styles.headerContainer}>
@@ -42,7 +34,7 @@ const ServicesList: React.FC<ServiceListProps> = ({
         {showBanner && (
           <StatusBanner
             onPress={() => setShowBanner(false)}
-            isLoading={isLoading}
+            isLoading={isPending}
           />
         )}
       </StandardView>
