@@ -8,7 +8,6 @@ import Avatar from "@/components/Avatar";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { useSession } from "../ctx";
 import { useIsFirstTime } from "@/constants/store-is-first-time";
-import { getItem } from "@/core/storage";
 
 const commonHeaderOptions = {
   headerShown: true,
@@ -28,9 +27,6 @@ export default function TabLayout() {
   const router = useRouter();
   const { session } = useSession();
   const [isFirstTime] = useIsFirstTime();
-
-  const accessToken = getItem("authenticationToken");
-  console.log("authenticationToken", accessToken);
 
   if (!session && isFirstTime) {
     return <Redirect href="/launchpad" />;

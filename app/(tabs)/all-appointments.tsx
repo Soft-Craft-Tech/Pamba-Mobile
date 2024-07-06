@@ -10,6 +10,7 @@ import {
   LayoutChangeEvent,
   ViewStyle,
   TextStyle,
+  Image,
 } from "react-native";
 import Animated, {
   interpolate,
@@ -23,6 +24,7 @@ import Animated, {
   AnimatedRef,
   interpolateColor,
 } from "react-native-reanimated";
+// import Image from "expo-image";
 
 const { width } = Dimensions.get("screen");
 
@@ -131,19 +133,27 @@ interface TabContentProps {
 
 function TabContent({ index }: TabContentProps) {
   const { data: appointmentsData, isPending } = useGetAllAppointments();
+
+  const renderAppointments = (
+    appointments: any[],
+    type: "upcoming" | "previous"
+  ) => {
+    if (appointments && appointments.length > 0) {
+      return <UpcomingAppointments data={appointments} isLoading={isPending} />;
+    }
+    return (
+      <View style={styles.emptyState}>
+        <Image source={require("@/assets/images/empty-page.png")} />
+        <Text style={styles.emptyText}>No {type} appointments</Text>
+      </View>
+    );
+  };
+
   return (
     <View style={styles.tabContent}>
-      {index === 0 ? (
-        <UpcomingAppointments
-          data={appointmentsData?.upcoming}
-          isLoading={isPending}
-        />
-      ) : (
-        <UpcomingAppointments
-          data={appointmentsData?.previous}
-          isLoading={isPending}
-        />
-      )}
+      {index === 0
+        ? renderAppointments(appointmentsData?.upcoming, "upcoming")
+        : renderAppointments(appointmentsData?.previous, "previous")}
     </View>
   );
 }
@@ -151,12 +161,14 @@ function TabContent({ index }: TabContentProps) {
 interface Styles {
   container: ViewStyle;
   tabContainer: ViewStyle;
+  emptyState: ViewStyle;
   tabWrapper: ViewStyle;
   headerItem: ViewStyle;
   bar: ViewStyle;
   tabContent: ViewStyle;
   tabText: TextStyle;
   txt: TextStyle;
+  emptyText: TextStyle;
 }
 
 const styles = StyleSheet.create<Styles>({
@@ -190,4 +202,6 @@ const styles = StyleSheet.create<Styles>({
     fontSize: 12,
     fontWeight: "600",
   },
+  emptyState: { flex: 1, justifyContent: "center", alignItems: "center" },
+  emptyText: { marginTop: 10, fontSize: 18 },
 });
