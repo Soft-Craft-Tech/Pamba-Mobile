@@ -1,3 +1,4 @@
+import { useGetAllAppointments } from "@/api/use-appointments";
 import UpcomingAppointments from "@/components/Appointments/upcoming-appointment";
 import React from "react";
 import {
@@ -23,24 +24,9 @@ import Animated, {
   interpolateColor,
 } from "react-native-reanimated";
 
-const appointmentsData = [
-  {
-    date: "2024-05-01T08:30:00Z",
-    title: "Basic Pedicure",
-    attendant: "Jane",
-    id: 1,
-  },
-  {
-    date: "2024-07-12T18:30:00Z",
-    title: "Braiding",
-    attendant: "Jane",
-    id: 2,
-  },
-];
-
 const { width } = Dimensions.get("screen");
 
-const headers: string[] = ["New appointments", "Upcoming appointments"];
+const headers: string[] = ["New appointments", "Previous appointments"];
 
 type HeaderWidths = {
   [key: number]: SharedValue<number>;
@@ -144,12 +130,19 @@ interface TabContentProps {
 }
 
 function TabContent({ index }: TabContentProps) {
+  const { data: appointmentsData, isPending } = useGetAllAppointments();
   return (
     <View style={styles.tabContent}>
       {index === 0 ? (
-        <UpcomingAppointments data={appointmentsData} />
+        <UpcomingAppointments
+          data={appointmentsData?.upcoming}
+          isLoading={isPending}
+        />
       ) : (
-        <UpcomingAppointments data={appointmentsData} />
+        <UpcomingAppointments
+          data={appointmentsData?.previous}
+          isLoading={isPending}
+        />
       )}
     </View>
   );
