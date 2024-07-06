@@ -5,10 +5,14 @@ import { Image } from "expo-image";
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { formatDate } from "@/hooks/dateUtility";
+import { useGetSingleAppointment } from "@/api/use-appointments";
+import { format } from "date-fns";
 
 const SingleAppointment = () => {
   const router = useRouter();
   const local = useLocalSearchParams<{ id: string }>();
+  const { data } = useGetSingleAppointment(local?.id);
+
   const date = "2024-05-01T08:30:00Z";
   return (
     <SafeAreaView style={styles.container}>
@@ -26,18 +30,14 @@ const SingleAppointment = () => {
           <View style={styles.appointmentCard}>
             <View style={styles.dateSection}>
               <View style={styles.calendarCard}>
-                <Text style={styles.calendarText}>
-                  {formatDate(date).getDayNumber()}
-                </Text>
-                <Text style={styles.calendarText}>
-                  {formatDate(date).getMonthName()}
-                </Text>
+                <Text style={styles.calendarText}>{format(date, "d")}</Text>
+                <Text style={styles.calendarText}>{format(date, "MMM")}</Text>
               </View>
               <View>
                 <Text style={styles.cardTitle}>Basic Pedicure</Text>
                 <Text style={styles.attendantName}>With Jane</Text>
                 <Text style={styles.dayText}>
-                  {formatDate(date).getDayNameAndTime()}
+                  {`${format(date, "eee")} ${data.appointment.time}`}
                 </Text>
               </View>
             </View>
@@ -46,7 +46,7 @@ const SingleAppointment = () => {
             <CustomButton buttonText="Cancel" width="46%" variant="outline" />
             <CustomButton
               onPress={() => {
-                router.push(`/pick-date/${12}`);
+                router.push(`/pick-date/${data?.appointment?.id}`);
               }}
               buttonText="Reschedule"
               width="46%"

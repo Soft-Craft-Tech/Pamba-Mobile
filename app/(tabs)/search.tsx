@@ -1,5 +1,12 @@
 import React, { useState, useEffect, useMemo, useCallback } from "react";
-import { FlatList, SafeAreaView, StyleSheet, View, Text } from "react-native";
+import {
+  FlatList,
+  SafeAreaView,
+  StyleSheet,
+  View,
+  Text,
+  Image,
+} from "react-native";
 import { Searchbar } from "react-native-paper";
 
 import ServiceCard from "@/components/Appointments/servce-card";
@@ -41,6 +48,7 @@ const SearchScreen: React.FC = () => {
       return (
         <View style={styles.emptyContent}>
           <Text style={styles.emptySearch}>No Results for "{searchQuery}"</Text>
+          <Image source={require("@/assets/images/empty-page.png")} />
           <Text>Try Searching for something else</Text>
         </View>
       );
@@ -81,7 +89,8 @@ const styles = StyleSheet.create({
   emptyContent: {
     justifyContent: "center",
     alignItems: "center",
-    height: 200,
+    height: 400,
+    gap: 30,
   },
   emptySearch: {
     fontSize: 18,

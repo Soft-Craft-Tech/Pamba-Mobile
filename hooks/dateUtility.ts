@@ -5,7 +5,7 @@ export function formatDate(dateString: string) {
     return new Intl.DateTimeFormat("en-US", options).format(date);
   }
   function getDayNumber(): number {
-    return date.getUTCDate();
+    return date.getDate();
   }
   function getDayNameAndTime(): string {
     const options: Intl.DateTimeFormatOptions = {

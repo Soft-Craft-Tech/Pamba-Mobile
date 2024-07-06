@@ -4,6 +4,7 @@ export const ENDPOINTS = {
   APPOINTMENTS: "/appointments/my-appointments",
   ALLSERVICES: "/services/all",
   RETRIEVESERVICES: "/services/retrieve/",
+  SINGLEAPPOINTMENT: "/appointments/",
 };
 
 export const useGetAllAppointments = (options = {}) => {
@@ -18,4 +19,14 @@ export const useGetASingleService = (
   options = {}
 ) => {
   return useApiQueryTwo(`${ENDPOINTS.RETRIEVESERVICES}${service_id}`, options);
+};
+
+export const useGetSingleAppointment = (
+  appointment_id: string | undefined,
+  options = {}
+) => {
+  return useApiQueryTwo(
+    `${ENDPOINTS.SINGLEAPPOINTMENT}${appointment_id}`,
+    options
+  );
 };

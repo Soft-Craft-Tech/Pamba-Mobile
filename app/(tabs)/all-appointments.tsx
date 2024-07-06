@@ -24,7 +24,6 @@ import Animated, {
   AnimatedRef,
   interpolateColor,
 } from "react-native-reanimated";
-// import Image from "expo-image";
 
 const { width } = Dimensions.get("screen");
 
