@@ -5,69 +5,39 @@ import { Searchbar } from "react-native-paper";
 import ServiceCard from "@/components/Appointments/servce-card";
 import ServicesSkeleton from "@/components/Appointments/services-skeleton";
 import StandardView from "@/components/StandardView";
-
-interface Service {
-  service_id: number;
-  imageUri: string;
-  title: string;
-  ratingTime: string;
-  price: string;
-}
-
-const servicesData: Service[] = [
-  {
-    service_id: 1,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 2,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-];
+import { useGetAllServices } from "@/api/use-appointments";
 
 const SearchScreen: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState("");
-  const [isLoading, setIsLoading] = useState(true);
 
-  useEffect(() => {
-    const timer = setTimeout(() => setIsLoading(false), 4000);
-    return () => clearTimeout(timer);
-  }, []);
+  const { data: servicesData, isPending } = useGetAllServices();
 
-  const filteredData = useMemo(
-    () =>
-      servicesData.filter((item) =>
-        item.title.toLowerCase().includes(searchQuery.toLowerCase())
-      ),
-    [searchQuery]
-  );
+  const filteredData = useMemo(() => {
+    if (!servicesData?.services || searchQuery.trim() === "") {
+      return servicesData?.services;
+    }
+    return servicesData?.services?.filter((service: any) =>
+      service?.serviceInfo?.service
+        ?.toLowerCase()
+        ?.includes(searchQuery?.toLowerCase())
+    );
+  }, [servicesData?.services, searchQuery]);
 
   const handleSearchSubmit = useCallback(() => {
     console.log("Search submitted:", searchQuery);
   }, [searchQuery]);
 
-  const renderItem = useCallback(
-    ({ item }: { item: Service }) => <ServiceCard data={item as any} />,
-    []
-  );
-
-  const keyExtractor = useCallback(
-    (item: Service) => item.service_id.toString(),
+  const renderServiceCard = useMemo(
+    () =>
+      ({ item }: { item: any }) =>
+        <ServiceCard data={item?.serviceInfo} />,
     []
   );
 
   const renderContent = () => {
-    if (isLoading) return <ServicesSkeleton />;
+    if (isPending) return <ServicesSkeleton />;
 
-    if (filteredData.length === 0) {
+    if (filteredData?.length === 0) {
       return (
         <View style={styles.emptyContent}>
           <Text style={styles.emptySearch}>No Results for "{searchQuery}"</Text>
@@ -79,8 +49,8 @@ const SearchScreen: React.FC = () => {
     return (
       <FlatList
         data={filteredData}
-        renderItem={renderItem}
-        keyExtractor={keyExtractor}
+        renderItem={renderServiceCard}
+        keyExtractor={(item) => item?.serviceInfo.id?.toString()}
         numColumns={2}
         showsVerticalScrollIndicator={false}
       />
