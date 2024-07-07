@@ -45,7 +45,7 @@ const ConfirmAppointment = () => {
       const slot = await getSelectedSlotFromStorage();
       if (slot) {
         console.log("Retrieved slot:", slot);
-        // Do something with the slot data
+        setSelectedSlot(slot);
       } else {
         console.log("No slot found in storage");
       }
@@ -53,6 +53,8 @@ const ConfirmAppointment = () => {
 
     fetchSlot();
   }, []);
+
+  console.log("loaded", selectedSlot);
 
   return (
     <View style={styles.container}>
