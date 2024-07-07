@@ -99,8 +99,19 @@ const PickDate: React.FC = () => {
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
       2,
       "0"
-    )} HRS`;
+    )}`;
   };
+
+  const disabledButton =
+    (date === "" && selectedTime === null) ||
+    date === "" ||
+    selectedTime === null;
+
+  const selectedSlot = {
+    date,
+    selectedTime: formatTime(selectedTime),
+  };
+  console.log(selectedSlot);
 
   return (
     <View style={styles.container}>
@@ -114,6 +125,7 @@ const PickDate: React.FC = () => {
               selectedDay === item.day && styles.selectedDay,
             ]}
             onPress={() => {
+              setDate("");
               setSelectedDay(item.day);
               setDate(item.fullDate.toDateString());
             }}
@@ -134,7 +146,7 @@ const PickDate: React.FC = () => {
         onPress={() => setVisible(true)}
         style={styles.timeInput}
       >
-        <Text>{formatTime(selectedTime)}</Text>
+        <Text>{formatTime(selectedTime)} HRS</Text>
       </TouchableOpacity>
 
       <Text style={styles.subHeader}>Select service provider</Text>
@@ -181,6 +193,7 @@ const PickDate: React.FC = () => {
       </View>
 
       <CustomButton
+        disabled={disabledButton}
         onPress={() => router.push(`/confirm-appointment/${23}`)}
         buttonText="Book Appointment"
       />

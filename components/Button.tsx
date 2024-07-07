@@ -15,6 +15,7 @@ interface CustomButtonProps {
   buttonText: string;
   variant?: "filled" | "outline";
   width?: DimensionValue;
+  disabled?: boolean;
 }
 
 const CustomButton: React.FC<CustomButtonProps> = ({
@@ -23,11 +24,13 @@ const CustomButton: React.FC<CustomButtonProps> = ({
   buttonText,
   variant = "filled",
   width,
+  disabled = false,
 }) => {
   const buttonStyle: ViewStyle = {
     ...styles.button,
     ...(variant === "outline" ? styles.outlineButton : styles.filledButton),
     ...(width ? { width } : {}),
+    ...(disabled ? styles.disabledButton : {}),
   };
 
   const textStyle: TextStyle = {
@@ -35,10 +38,15 @@ const CustomButton: React.FC<CustomButtonProps> = ({
     ...(variant === "outline"
       ? styles.outlineButtonText
       : styles.filledButtonText),
+    ...(disabled ? styles.disabledButtonText : {}),
   };
 
   return (
-    <TouchableOpacity style={buttonStyle} onPress={onPress}>
+    <TouchableOpacity
+      style={buttonStyle}
+      onPress={onPress}
+      disabled={disabled || loading}
+    >
       {loading ? (
         <ActivityIndicator color={variant === "outline" ? "#DB1471" : "#fff"} />
       ) : (
@@ -73,6 +81,12 @@ const styles = StyleSheet.create({
   },
   outlineButtonText: {
     color: "#DB1471",
+  },
+  disabledButton: {
+    opacity: 0.5,
+  },
+  disabledButtonText: {
+    opacity: 0.5,
   },
 });
 
