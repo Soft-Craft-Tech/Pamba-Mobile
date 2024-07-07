@@ -7,13 +7,22 @@ import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import { formatDate } from "@/hooks/dateUtility";
 import { useGetSingleAppointment } from "@/api/use-appointments";
 import { format } from "date-fns";
+import SingleViewSkeleton from "@/components/Appointments/single-view-skeleton";
 
 const SingleAppointment = () => {
   const router = useRouter();
   const local = useLocalSearchParams<{ id: string }>();
-  const { data } = useGetSingleAppointment(local?.id);
+  const { data, isPending } = useGetSingleAppointment(local?.id);
 
-  const date = "2024-05-01T08:30:00Z";
+  const date = new Date(data?.appointment?.date);
+
+  if (isPending) {
+    return (
+      <StandardView>
+        <SingleViewSkeleton />
+      </StandardView>
+    );
+  }
   return (
     <SafeAreaView style={styles.container}>
       <StandardView>
@@ -37,7 +46,7 @@ const SingleAppointment = () => {
                 <Text style={styles.cardTitle}>Basic Pedicure</Text>
                 <Text style={styles.attendantName}>With Jane</Text>
                 <Text style={styles.dayText}>
-                  {`${format(date, "eee")} ${data.appointment.time}`}
+                  {`${format(date, "eee")} ${data?.appointment?.time}`}
                 </Text>
               </View>
             </View>
