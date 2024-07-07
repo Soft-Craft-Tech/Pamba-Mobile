@@ -193,7 +193,7 @@ const BusinessSquareSalon: React.FC = () => {
     );
   }
 
-  console.log(businessData.business);
+  console.log(businessData);
 
   return (
     <SafeAreaView style={styles.container}>
@@ -239,7 +239,7 @@ const BusinessSquareSalon: React.FC = () => {
                   {businessData.business?.city}
                 </Text>
                 <Text style={styles.location}>
-                  <EvilIcons name="location" size={24} color="black" />
+                  <EvilIcons name="location" size={24} colsor="black" />
                   {businessData.business?.location}
                 </Text>
                 <Text style={styles.subTitle}>Services</Text>

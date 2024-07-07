@@ -14,6 +14,10 @@ import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import { useRouter } from "expo-router";
 import { en, registerTranslation } from "react-native-paper-dates";
 import { format } from "date-fns";
+import {
+  CalendarDate,
+  SingleChange,
+} from "react-native-paper-dates/lib/typescript/Date/Calendar";
 
 registerTranslation("en", en);
 
@@ -25,8 +29,8 @@ type TimeObj = {
 type DayInfo = {
   day: string;
   date: string;
-  slots: number;
-  fullDate: Date; // Add fullDate property to the DayInfo type
+
+  fullDate: Date;
 };
 
 type ProviderData = {
@@ -52,8 +56,7 @@ const days: DayInfo[] = Array.from({ length: 7 }, (_, index) => {
     day: "2-digit",
     month: "short",
   });
-  const slots = Math.floor(Math.random() * 10);
-  return { day, date, slots, fullDate: currentDate };
+  return { day, date, fullDate: currentDate };
 });
 
 const PickDate: React.FC = () => {
@@ -62,7 +65,7 @@ const PickDate: React.FC = () => {
 
   const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
   const [isFocus, setIsFocus] = useState<boolean>(false);
-  const [date, setDate] = useState<any | undefined>();
+  const [date, setDate] = useState<string | undefined>("");
   const [open, setOpen] = useState<boolean>(false);
   const [selectedTime, setSelectedTime] = useState<TimeObj | null>(null);
   const [visible, setVisible] = useState<boolean>(false);
@@ -74,7 +77,7 @@ const PickDate: React.FC = () => {
   }, []);
 
   const onDismissDate = useCallback(() => setOpen(false), []);
-  const onConfirmDate = useCallback(({ date }: { date: any }) => {
+  const onConfirmDate = useCallback(({ date }: { date: string }) => {
     setOpen(false);
     setDate(date);
   }, []);
@@ -106,7 +109,7 @@ const PickDate: React.FC = () => {
           >
             <Text style={styles.dayText}>{item.day}</Text>
             <Text style={styles.dateText}>{item.date}</Text>
-            <Text style={styles.slotsText}>{item.slots} available slots</Text>
+            <Text style={styles.slotsText}>Slots Available</Text>
           </TouchableOpacity>
         ))}
       </ScrollView>
@@ -155,7 +158,10 @@ const PickDate: React.FC = () => {
       <View style={styles.calendarSelect}>
         <Text style={styles.different}>Need a different day?</Text>
         <TouchableOpacity
-          onPress={() => setOpen(true)}
+          onPress={() => {
+            setDate("");
+            setOpen(true);
+          }}
           style={styles.leftSection}
         >
           <FontAwesome5 name="calendar-check" size={24} color="#007B99" />
@@ -182,8 +188,8 @@ const PickDate: React.FC = () => {
         mode="single"
         visible={open}
         onDismiss={onDismissDate}
-        date={date}
-        onConfirm={onConfirmDate}
+        date={date as CalendarDate}
+        onConfirm={onConfirmDate as unknown as SingleChange}
       />
     </View>
   );
