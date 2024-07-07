@@ -93,7 +93,14 @@ function RootLayoutNav() {
                     headerBackTitleVisible: false,
                   }}
                 />
-                <Stack.Screen name="+not-found" />
+                <Stack.Screen
+                  name="+not-found"
+                  options={{
+                    title: "Opps!",
+                    headerTitleAlign: "center",
+                    headerBackTitleVisible: false,
+                  }}
+                />
               </Stack>
             </NotifierWrapper>
           </GestureHandlerRootView>
