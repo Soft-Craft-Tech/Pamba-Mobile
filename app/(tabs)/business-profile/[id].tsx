@@ -193,16 +193,18 @@ const BusinessSquareSalon: React.FC = () => {
     );
   }
 
+  console.log(businessData.business);
+
   return (
     <SafeAreaView style={styles.container}>
       <StandardView>
         <Image
           source={{
-            uri: "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            uri: businessData.business?.imageUrl,
           }}
           style={styles.salonImage}
         />
-        <Text style={styles.title}>Beauty Square Salon</Text>
+        <Text style={styles.title}>{businessData.business?.name}</Text>
         {currentTab === 0 && (
           <Searchbar
             placeholder="Search"
@@ -230,13 +232,15 @@ const BusinessSquareSalon: React.FC = () => {
                 <View style={styles.ratingContainer}>
                   <View style={styles.rating}>
                     <AntDesign name="star" size={12} color="#DB1471" />
-                    <Text>4.9</Text>
+                    <Text> {businessData.business?.rating}</Text>
                   </View>
                 </View>
-                <Text style={styles.salonName}>Beauty Square Salon</Text>
+                <Text style={styles.salonName}>
+                  {businessData.business?.city}
+                </Text>
                 <Text style={styles.location}>
                   <EvilIcons name="location" size={24} color="black" />
-                  Lavington area, Nairobi, Kenya
+                  {businessData.business?.location}
                 </Text>
                 <Text style={styles.subTitle}>Services</Text>
                 {memoizedServiceList}
