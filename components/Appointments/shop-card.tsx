@@ -5,31 +5,44 @@ import { Link } from "expo-router";
 import { Image } from "expo-image";
 
 export interface ShopCardProps {
-  service_id: string;
-  imageUri: string;
+  slug: string;
+  profile_img: string;
   title: string;
+  location: string;
+  city: string;
+  rating: number;
+  reviews: number;
 }
 
-const ShopCard: React.FC<ShopCardProps> = ({ service_id, imageUri, title }) => {
+const ShopCard: React.FC<ShopCardProps> = ({
+  slug,
+  profile_img,
+  title,
+  location,
+  city,
+  rating,
+  reviews,
+}) => {
   return (
-    <Link href={`/business-profile/${service_id}`} asChild>
+    <Link href={`/business-profile/${slug}`} asChild>
       <Pressable style={styles.container}>
         <View style={styles.card}>
           <Image
             source={{
-              uri: imageUri,
+              uri: profile_img,
             }}
             style={styles.image}
           />
           <View style={styles.lowerSection}>
             <Text style={styles.title}>{title?.slice(0, 19)}</Text>
-            <Text style={styles.location}>124, street Lavington Nairobi</Text>
+            <Text style={styles.location}>City: {city}</Text>
+            <Text style={styles.location}>{location}</Text>
             <View style={styles.ratingContainer}>
               <View style={styles.rating}>
                 <AntDesign name="star" size={12} color="#DB1471" />
-                <Text>4.9</Text>
+                <Text>{rating}</Text>
               </View>
-              <Text style={styles.ratingText}>104 reviews</Text>
+              <Text style={styles.ratingText}>{reviews} reviews</Text>
             </View>
           </View>
         </View>

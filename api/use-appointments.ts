@@ -7,6 +7,7 @@ export const ENDPOINTS = {
   SINGLEAPPOINTMENT: "/appointments/",
   SERVICECATEGORIES: "/services/categories",
   NOTIFICATIONS: "/notifications/client/all",
+  ALLBUSINESSES: "/businesses/all-businesses",
 };
 
 export const useGetAllAppointments = (options = {}) => {
@@ -40,4 +41,8 @@ export const useGetAllServiceCategories = (options = {}) => {
 
 export const useAllNotifications = (options = {}) => {
   return useApiQueryTwo(ENDPOINTS.NOTIFICATIONS, options);
+};
+
+export const useAllBusinesses = (options = {}) => {
+  return useApiQueryTwo(ENDPOINTS.ALLBUSINESSES, options);
 };
