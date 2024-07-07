@@ -1,9 +1,12 @@
+import { useGetSingleBusiness } from "@/api/use-appointments";
+import BusinessListSkeleton from "@/components/Appointments/Business-Skeleton";
 import ServiceCard from "@/components/Appointments/servce-card";
 import GalleryLayout from "@/components/Gallery";
 import StandardView from "@/components/StandardView";
 import Reviews from "@/components/review";
 import { AntDesign, EvilIcons } from "@expo/vector-icons";
-import React, { useState, useRef } from "react";
+import { useLocalSearchParams } from "expo-router";
+import React, { useState, useRef, useMemo } from "react";
 import {
   View,
   Text,
@@ -23,42 +26,10 @@ const { width } = Dimensions.get("window");
 
 const tabs: string[] = ["About", "Review", "Gallery"];
 
-const servicesData = [
-  {
-    service_id: 1,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 2,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1677098574666-8f97d913d9cd?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 3,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1677098574666-8f97d913d9cd?q=80&w=3387&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-  {
-    service_id: 4,
-    imageUri:
-      "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
-    title: "Product One",
-    ratingTime: "45 mins",
-    price: "$100",
-  },
-];
-
 const BusinessSquareSalon: React.FC = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data: businessData, isPending } = useGetSingleBusiness(id);
+  console.log("businessData", businessData?.services[0]);
   const [currentTab, setCurrentTab] = useState<number>(0);
   const [searchQuery, setSearchQuery] = React.useState("");
   const scrollViewRef = useRef<ScrollView>(null);
@@ -73,8 +44,19 @@ const BusinessSquareSalon: React.FC = () => {
     scrollViewRef.current?.scrollTo({ x: width * index, animated: true });
   };
 
-  const renderServiceCard = ({ item }: { item: (typeof servicesData)[0] }) => (
-    <ServiceCard data={item as any} />
+  if (isPending) {
+    return (
+      <SafeAreaView>
+        <BusinessListSkeleton />
+      </SafeAreaView>
+    );
+  }
+
+  const renderServiceCard = useMemo(
+    () =>
+      ({ item }: { item: any }) =>
+        <ServiceCard data={item} />,
+    []
   );
 
   return (
@@ -132,7 +114,7 @@ const BusinessSquareSalon: React.FC = () => {
         scrollEventThrottle={16}
         ref={scrollViewRef}
       >
-        {tabs.map((tab, index) => (
+        {tabs.map((_, index) => (
           <View key={index} style={[styles.scene, { width }]}>
             {index === 0 && (
               <View>
@@ -152,9 +134,9 @@ const BusinessSquareSalon: React.FC = () => {
                   <Text style={styles.subTitle}>Services</Text>
                 </StandardView>
                 <FlatList
-                  data={servicesData}
+                  data={businessData?.services}
                   renderItem={renderServiceCard}
-                  keyExtractor={(item) => item.service_id.toString()}
+                  keyExtractor={(item) => item?.id?.toString()}
                   numColumns={2}
                   showsVerticalScrollIndicator={false}
                 />
