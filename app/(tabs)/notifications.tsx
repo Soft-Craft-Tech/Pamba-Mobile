@@ -1,3 +1,4 @@
+import { useAllNotifications } from "@/api/use-appointments";
 import { Link } from "expo-router";
 import React from "react";
 import {
@@ -57,6 +58,8 @@ const NotificationItem = ({ item }: any) => (
 );
 
 const NotificationsScreen = () => {
+  const { data } = useAllNotifications();
+  console.log(data);
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Notifications</Text>
