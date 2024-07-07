@@ -7,6 +7,7 @@ import {
   FlatList,
   TouchableOpacity,
   StyleSheet,
+  Image,
 } from "react-native";
 import { Avatar } from "react-native-paper";
 
@@ -59,6 +60,17 @@ const NotificationItem = ({ item }: any) => (
 
 const NotificationsScreen = () => {
   const { data } = useAllNotifications();
+  if (data?.notifications?.length === 0) {
+    return (
+      <View style={styles.emptyState}>
+        <Image source={require("@/assets/images/no-notifications.png")} />
+        <Text style={styles.emptyText}>
+          You haven't recieved any notifications yet
+        </Text>
+      </View>
+    );
+  }
+
   console.log(data);
   return (
     <View style={styles.container}>
@@ -116,6 +128,8 @@ const styles = StyleSheet.create({
     color: "#888",
     marginTop: 4,
   },
+  emptyState: { flex: 1, justifyContent: "center", alignItems: "center" },
+  emptyText: { marginTop: 10, fontSize: 18 },
 });
 
 export default NotificationsScreen;
