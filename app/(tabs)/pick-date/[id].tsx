@@ -7,7 +7,7 @@ import {
   StyleSheet,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
-import { Avatar } from "react-native-paper";
+import { Avatar, PaperProvider } from "react-native-paper";
 import CustomButton from "@/components/Button";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
@@ -47,6 +47,17 @@ const providerData: ProviderData[] = [
   },
   { label: "John Doe", value: "2", avatar: "https://i.pravatar.cc/150?img=28" },
 ];
+
+const customTheme = {
+  roundness: 2,
+  colors: {
+    primary: "#DB1471",
+    background: "#fff",
+    accent: "#fff",
+    text: "#fff",
+    surface: "#fff",
+  },
+};
 
 const days: DayInfo[] = Array.from({ length: 7 }, (_, index) => {
   const currentDate = new Date();
@@ -174,23 +185,25 @@ const PickDate: React.FC = () => {
         buttonText="Book Appointment"
       />
 
-      <TimePickerModal
-        visible={visible}
-        onDismiss={onDismissTime}
-        onConfirm={onConfirmTime}
-        hours={selectedTime?.hours || 12}
-        minutes={selectedTime?.minutes || 0}
-        animationType="fade"
-      />
-
-      <DatePickerModal
-        locale="en"
-        mode="single"
-        visible={open}
-        onDismiss={onDismissDate}
-        date={date as CalendarDate}
-        onConfirm={onConfirmDate as unknown as SingleChange}
-      />
+      <PaperProvider theme={customTheme}>
+        <TimePickerModal
+          visible={visible}
+          onDismiss={onDismissTime}
+          onConfirm={onConfirmTime}
+          hours={selectedTime?.hours || 12}
+          minutes={selectedTime?.minutes || 0}
+          animationType="fade"
+        />
+        <DatePickerModal
+          locale="en"
+          mode="single"
+          visible={open}
+          onDismiss={onDismissDate}
+          date={date as CalendarDate}
+          onConfirm={onConfirmDate as unknown as SingleChange}
+          presentationStyle="pageSheet"
+        />
+      </PaperProvider>
     </View>
   );
 };
