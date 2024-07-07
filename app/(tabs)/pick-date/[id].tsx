@@ -1,23 +1,25 @@
-import React, { useState, useCallback } from "react";
+import React, { useState, useCallback, useMemo } from "react";
 import {
   View,
   Text,
   TouchableOpacity,
-  ScrollView,
+  FlatList,
   StyleSheet,
+  ListRenderItem,
 } from "react-native";
 import { Dropdown } from "react-native-element-dropdown";
 import { Avatar, PaperProvider } from "react-native-paper";
 import CustomButton from "@/components/Button";
 import { FontAwesome5 } from "@expo/vector-icons";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
 import { en, registerTranslation } from "react-native-paper-dates";
 import { format } from "date-fns";
 import {
   CalendarDate,
   SingleChange,
 } from "react-native-paper-dates/lib/typescript/Date/Calendar";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 registerTranslation("en", en);
 
@@ -29,7 +31,6 @@ type TimeObj = {
 type DayInfo = {
   day: string;
   date: string;
-
   fullDate: Date;
 };
 
@@ -37,6 +38,16 @@ type ProviderData = {
   label: string;
   value: string;
   avatar: string;
+};
+
+type PickDateState = {
+  selectedDay: string;
+  selectedProvider: string;
+  isFocus: boolean;
+  date: string;
+  open: boolean;
+  selectedTime: TimeObj | null;
+  visible: boolean;
 };
 
 const providerData: ProviderData[] = [
@@ -59,99 +70,137 @@ const customTheme = {
   },
 };
 
-const days: DayInfo[] = Array.from({ length: 7 }, (_, index) => {
-  const currentDate = new Date();
-  currentDate.setDate(currentDate.getDate() + index);
-  const day = currentDate.toLocaleString("en-US", { weekday: "short" });
-  const date = currentDate.toLocaleString("en-US", {
-    day: "2-digit",
-    month: "short",
-  });
-  return { day, date, fullDate: currentDate };
-});
-
 const PickDate: React.FC = () => {
   const router = useRouter();
-  const [selectedDay, setSelectedDay] = useState<string>(days[0]?.day);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const [state, setState] = useState<PickDateState>({
+    selectedDay: "",
+    selectedProvider: "",
+    isFocus: false,
+    date: "",
+    open: false,
+    selectedTime: null,
+    visible: false,
+  });
 
-  const [selectedProvider, setSelectedProvider] = useState<string | null>(null);
-  const [isFocus, setIsFocus] = useState<boolean>(false);
-  const [date, setDate] = useState<string | undefined>("");
-  const [open, setOpen] = useState<boolean>(false);
-  const [selectedTime, setSelectedTime] = useState<TimeObj | null>(null);
-  const [visible, setVisible] = useState<boolean>(false);
+  const days: DayInfo[] = useMemo(() => {
+    return Array.from({ length: 7 }, (_, index) => {
+      const currentDate = new Date();
+      currentDate.setDate(currentDate.getDate() + index);
+      const day = currentDate.toLocaleString("en-US", { weekday: "short" });
+      const date = currentDate.toLocaleString("en-US", {
+        day: "2-digit",
+        month: "short",
+      });
+      return { day, date, fullDate: currentDate };
+    });
+  }, []);
 
-  const onDismissTime = useCallback(() => setVisible(false), []);
+  const onDismissTime = useCallback(
+    () => setState((prev) => ({ ...prev, visible: false })),
+    []
+  );
+
   const onConfirmTime = useCallback(({ hours, minutes }: TimeObj) => {
-    setVisible(false);
-    setSelectedTime({ hours, minutes });
+    setState((prev) => ({
+      ...prev,
+      visible: false,
+      selectedTime: { hours, minutes },
+    }));
   }, []);
 
-  const onDismissDate = useCallback(() => setOpen(false), []);
-  const onConfirmDate = useCallback(({ date }: { date: string }) => {
-    setOpen(false);
-    setDate(date);
+  const onDismissDate = useCallback(
+    () => setState((prev) => ({ ...prev, open: false })),
+    []
+  );
+
+  const onConfirmDate = useCallback(({ date }: { date: CalendarDate }) => {
+    setState((prev) => ({
+      ...prev,
+      open: false,
+      date: date?.toDateString() || "",
+    }));
   }, []);
 
-  const formatTime = (time: TimeObj | null): string => {
+  const formatTime = useCallback((time: TimeObj | null): string => {
     if (!time) return "Select Time";
     const { hours, minutes } = time;
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
       2,
       "0"
     )}`;
-  };
+  }, []);
 
-  const disabledButton =
-    (date === "" && selectedTime === null) ||
-    date === "" ||
-    selectedTime === null;
+  const disabledButton = !state.date || !state.selectedTime;
 
-  const selectedSlot = {
-    date,
-    selectedTime: formatTime(selectedTime),
-  };
-  console.log(selectedSlot);
+  const selectedSlot = useMemo(
+    () => ({
+      date: state.date,
+      time: formatTime(state.selectedTime),
+      provider: state.selectedProvider,
+      business: id,
+    }),
+    [state.date, state.selectedTime, state.selectedProvider, id, formatTime]
+  );
+  const handleBookAppointment = useCallback(async () => {
+    try {
+      await AsyncStorage?.setItem("selectedSlot", JSON.stringify(selectedSlot));
+      router.push("/confirm-appointment/23");
+    } catch (error) {
+      console.error("Error saving selected slot:", error);
+    }
+  }, [selectedSlot]);
+
+  const renderDayButton: ListRenderItem<DayInfo> = useCallback(
+    ({ item }) => (
+      <TouchableOpacity
+        style={[
+          styles.dayButton,
+          state.selectedDay === item.day && styles.selectedDay,
+        ]}
+        onPress={() => {
+          setState((prev) => ({
+            ...prev,
+            // date: "",
+            selectedDay: item.day,
+            date: item.fullDate.toDateString(),
+          }));
+        }}
+      >
+        <Text style={styles.dayText}>{item.day}</Text>
+        <Text style={styles.dateText}>{item.date}</Text>
+        <Text style={styles.slotsText}>Slots Available</Text>
+      </TouchableOpacity>
+    ),
+    [state.selectedDay]
+  );
 
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Select a day</Text>
-      <ScrollView horizontal showsHorizontalScrollIndicator={false}>
-        {days.map((item: DayInfo) => (
-          <TouchableOpacity
-            key={item.day}
-            style={[
-              styles.dayButton,
-              selectedDay === item.day && styles.selectedDay,
-            ]}
-            onPress={() => {
-              setDate("");
-              setSelectedDay(item.day);
-              setDate(item.fullDate.toDateString());
-            }}
-          >
-            <Text style={styles.dayText}>{item.day}</Text>
-            <Text style={styles.dateText}>{item.date}</Text>
-            <Text style={styles.slotsText}>Slots Available</Text>
-          </TouchableOpacity>
-        ))}
-      </ScrollView>
-      {date && (
+      <FlatList
+        data={days}
+        renderItem={renderDayButton}
+        keyExtractor={(item) => item.day}
+        horizontal
+        showsHorizontalScrollIndicator={false}
+      />
+      {state.date && (
         <Text style={styles.dateSelected}>
-          Selected Date: {format(date, "do MMMM")}
+          Selected Date: {format(new Date(state.date), "do MMMM")}
         </Text>
       )}
       <Text style={styles.subHeader}>Choose a slot for your haircut</Text>
       <TouchableOpacity
-        onPress={() => setVisible(true)}
+        onPress={() => setState((prev) => ({ ...prev, visible: true }))}
         style={styles.timeInput}
       >
-        <Text>{formatTime(selectedTime)} HRS</Text>
+        <Text>{formatTime(state.selectedTime)} HRS</Text>
       </TouchableOpacity>
 
       <Text style={styles.subHeader}>Select service provider</Text>
       <Dropdown<ProviderData>
-        style={[styles.dropdown, isFocus && { borderColor: "#DB1471" }]}
+        style={[styles.dropdown, state.isFocus && { borderColor: "#DB1471" }]}
         placeholderStyle={styles.placeholderStyle}
         selectedTextStyle={styles.selectedTextStyle}
         inputSearchStyle={styles.inputSearchStyle}
@@ -161,16 +210,19 @@ const PickDate: React.FC = () => {
         maxHeight={300}
         labelField="label"
         valueField="value"
-        placeholder={!isFocus ? "Select Provider (Optional)" : "..."}
+        placeholder={!state.isFocus ? "Select Provider (Optional)" : "..."}
         searchPlaceholder="Search..."
-        value={selectedProvider}
-        onFocus={() => setIsFocus(true)}
-        onBlur={() => setIsFocus(false)}
+        value={state.selectedProvider}
+        onFocus={() => setState((prev) => ({ ...prev, isFocus: true }))}
+        onBlur={() => setState((prev) => ({ ...prev, isFocus: false }))}
         onChange={(item) => {
-          setSelectedProvider(item.value);
-          setIsFocus(false);
+          setState((prev) => ({
+            ...prev,
+            selectedProvider: item.value,
+            isFocus: false,
+          }));
         }}
-        renderLeftIcon={(item) => (
+        renderLeftIcon={() => (
           <Avatar.Image
             size={30}
             source={{ uri: "https://i.pravatar.cc/150" }}
@@ -182,8 +234,7 @@ const PickDate: React.FC = () => {
         <Text style={styles.different}>Need a different day?</Text>
         <TouchableOpacity
           onPress={() => {
-            setDate("");
-            setOpen(true);
+            setState((prev) => ({ ...prev, date: "", open: true }));
           }}
           style={styles.leftSection}
         >
@@ -194,25 +245,25 @@ const PickDate: React.FC = () => {
 
       <CustomButton
         disabled={disabledButton}
-        onPress={() => router.push(`/confirm-appointment/${23}`)}
+        onPress={handleBookAppointment}
         buttonText="Book Appointment"
       />
 
       <PaperProvider theme={customTheme}>
         <TimePickerModal
-          visible={visible}
+          visible={state.visible}
           onDismiss={onDismissTime}
           onConfirm={onConfirmTime}
-          hours={selectedTime?.hours || 12}
-          minutes={selectedTime?.minutes || 0}
+          hours={state.selectedTime?.hours || 12}
+          minutes={state.selectedTime?.minutes || 0}
           animationType="fade"
         />
         <DatePickerModal
           locale="en"
           mode="single"
-          visible={open}
+          visible={state.open}
           onDismiss={onDismissDate}
-          date={date as CalendarDate}
+          date={state.date ? new Date(state.date) : undefined}
           onConfirm={onConfirmDate as unknown as SingleChange}
           presentationStyle="pageSheet"
         />
@@ -282,4 +333,4 @@ const styles = StyleSheet.create({
   dateSelected: { marginTop: 20 },
 });
 
-export default PickDate;
+export default React.memo(PickDate);

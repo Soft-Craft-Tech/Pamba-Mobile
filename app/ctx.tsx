@@ -70,7 +70,7 @@ export function SessionProvider({
 }: SessionProviderProps): JSX.Element {
   const [storedSession, setStoredSession] = useStorageState("session");
   const [session, setSession] = React.useState<User | null>(() =>
-    storedSession ? (JSON.parse(storedSession) as User) : null
+    storedSession ? (JSON.parse(JSON.stringify(storedSession)) as User) : null
   );
   const queryClient = useQueryClient();
   const isLoading = storedSession === null;

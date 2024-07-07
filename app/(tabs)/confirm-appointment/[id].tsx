@@ -11,7 +11,9 @@ import {
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import CustomButton from "@/components/Button";
-import { useRouter } from "expo-router";
+import { useLocalSearchParams, useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 
 const schema = z.object({
   gender: z.string({
@@ -25,6 +27,33 @@ const ConfirmAppointment = () => {
     control,
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
+  const [selectedSlot, setSelectedSlot] = useState<{} | null>(null);
+  const { id } = useLocalSearchParams<{ id: string }>();
+
+  const getSelectedSlotFromStorage = async () => {
+    try {
+      const jsonValue = await AsyncStorage.getItem("selectedSlot");
+      return jsonValue != null ? JSON.parse(jsonValue) : null;
+    } catch (error) {
+      console.error("Error reading value from AsyncStorage:", error);
+      return null;
+    }
+  };
+
+  useEffect(() => {
+    const fetchSlot = async () => {
+      const slot = await getSelectedSlotFromStorage();
+      if (slot) {
+        console.log("Retrieved slot:", slot);
+        // Do something with the slot data
+      } else {
+        console.log("No slot found in storage");
+      }
+    };
+
+    fetchSlot();
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.header}>Additional Information</Text>
