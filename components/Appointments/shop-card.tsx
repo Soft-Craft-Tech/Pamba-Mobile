@@ -7,7 +7,7 @@ import { Image } from "expo-image";
 export interface ShopCardProps {
   slug: string;
   profile_img: string;
-  title: string;
+  business_name: string;
   location: string;
   city: string;
   rating: number;
@@ -17,7 +17,7 @@ export interface ShopCardProps {
 const ShopCard: React.FC<ShopCardProps> = ({
   slug,
   profile_img,
-  title,
+  business_name,
   location,
   city,
   rating,
@@ -34,7 +34,7 @@ const ShopCard: React.FC<ShopCardProps> = ({
             style={styles.image}
           />
           <View style={styles.lowerSection}>
-            <Text style={styles.title}>{title?.slice(0, 19)}</Text>
+            <Text style={styles.title}>{business_name?.slice(0, 19)}</Text>
             <Text style={styles.location}>City: {city}</Text>
             <Text style={styles.location}>{location}</Text>
             <View style={styles.ratingContainer}>
