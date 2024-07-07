@@ -10,6 +10,7 @@ import {
   Image,
 } from "react-native";
 import { Avatar } from "react-native-paper";
+import { SafeAreaProvider } from "react-native-safe-area-context";
 
 const notifications = [
   {
@@ -62,25 +63,29 @@ const NotificationsScreen = () => {
   const { data } = useAllNotifications();
   if (data?.notifications?.length === 0) {
     return (
-      <View style={styles.emptyState}>
-        <Image source={require("@/assets/images/no-notifications.png")} />
-        <Text style={styles.emptyText}>
-          You haven't recieved any notifications yet
-        </Text>
-      </View>
+      <SafeAreaProvider>
+        <View style={styles.emptyState}>
+          <Image source={require("@/assets/images/no-notifications.png")} />
+          <Text style={styles.emptyText}>
+            You haven't recieved any notifications yet
+          </Text>
+        </View>
+      </SafeAreaProvider>
     );
   }
 
   console.log(data);
   return (
-    <View style={styles.container}>
-      <Text style={styles.header}>Notifications</Text>
-      <FlatList
-        data={notifications}
-        renderItem={NotificationItem}
-        keyExtractor={(item) => item.id}
-      />
-    </View>
+    <SafeAreaProvider>
+      <View style={styles.container}>
+        <Text style={styles.header}>Notifications</Text>
+        <FlatList
+          data={notifications}
+          renderItem={NotificationItem}
+          keyExtractor={(item) => item.id}
+        />
+      </View>
+    </SafeAreaProvider>
   );
 };
 
@@ -128,7 +133,12 @@ const styles = StyleSheet.create({
     color: "#888",
     marginTop: 4,
   },
-  emptyState: { flex: 1, justifyContent: "center", alignItems: "center" },
+  emptyState: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "#F6F6F9",
+  },
   emptyText: { marginTop: 10, fontSize: 18 },
 });
 
