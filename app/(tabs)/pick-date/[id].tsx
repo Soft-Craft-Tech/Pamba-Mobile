@@ -20,12 +20,12 @@ import {
   CalendarDate,
   SingleChange,
 } from "react-native-paper-dates/lib/typescript/Date/Calendar";
-import AsyncStorage from "@react-native-async-storage/async-storage";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { FormType } from "@/app/create-account";
 import { ScrollView } from "react-native-gesture-handler";
+import { useBookAppointment } from "@/api/use-appointments";
 
 const schema = z.object({
   gender: z.string({
@@ -159,7 +159,7 @@ const PickDate: React.FC = () => {
     [state.date, state.selectedTime, state.selectedProvider, id, formatTime]
   );
 
-  console.log("Pickerd", selectedSlot);
+  const { mutate: signup, isPending, isSuccess } = useBookAppointment();
 
   const renderDayButton: ListRenderItem<DayInfo> = useCallback(
     ({ item }) => (
