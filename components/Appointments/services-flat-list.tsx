@@ -72,6 +72,7 @@ const ServicesList: React.FC<ServiceListProps> = ({
         keyExtractor={(item) => item?.serviceInfo.id?.toString()}
         numColumns={2}
         showsVerticalScrollIndicator={false}
+        initialNumToRender={6}
       />
     </View>
   );
