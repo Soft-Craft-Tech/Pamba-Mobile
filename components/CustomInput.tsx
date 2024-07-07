@@ -1,11 +1,12 @@
 import React from "react";
+import { View } from "react-native";
 import { TextInput as PaperInput } from "react-native-paper";
 
 export const CustomInput = ({
   label,
   text,
   onChange,
-  rightIcon,
+  rightIcon = <View />,
 }: {
   label: string;
   text: string;
