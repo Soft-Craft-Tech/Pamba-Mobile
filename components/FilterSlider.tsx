@@ -1,3 +1,4 @@
+import { useGetAllServiceCategories } from "@/api/use-appointments";
 import { useRouter } from "expo-router";
 import React from "react";
 import {
@@ -18,6 +19,8 @@ const caregoryName = [
 
 const FilterSlider = () => {
   const router = useRouter();
+  const { data } = useGetAllServiceCategories();
+
   return (
     <View style={styles.container}>
       <ScrollView
@@ -25,15 +28,17 @@ const FilterSlider = () => {
         showsHorizontalScrollIndicator={false}
         style={styles.scrollView}
       >
-        {caregoryName.map(({ itemName, id }) => (
-          <TouchableOpacity
-            onPress={() => router.push(`/all-shops/${itemName}`)}
-            key={id}
-            style={styles.button}
-          >
-            <Text style={styles.buttonText}>{itemName}</Text>
-          </TouchableOpacity>
-        ))}
+        {data?.categories?.map(
+          ({ category, id }: { category: string; id: number }) => (
+            <TouchableOpacity
+              onPress={() => router.push(`/all-shops/${category}`)}
+              key={id}
+              style={styles.button}
+            >
+              <Text style={styles.buttonText}>{category}</Text>
+            </TouchableOpacity>
+          )
+        )}
       </ScrollView>
     </View>
   );

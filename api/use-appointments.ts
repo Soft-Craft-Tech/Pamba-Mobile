@@ -5,6 +5,7 @@ export const ENDPOINTS = {
   ALLSERVICES: "/services/all",
   RETRIEVESERVICES: "/services/retrieve/",
   SINGLEAPPOINTMENT: "/appointments/",
+  SERVICECATEGORIES: "/services/categories",
 };
 
 export const useGetAllAppointments = (options = {}) => {
@@ -14,6 +15,7 @@ export const useGetAllAppointments = (options = {}) => {
 export const useGetAllServices = (options = {}) => {
   return useApiQueryTwo(ENDPOINTS.ALLSERVICES, options);
 };
+
 export const useGetASingleService = (
   service_id: string | undefined,
   options = {}
@@ -29,4 +31,8 @@ export const useGetSingleAppointment = (
     `${ENDPOINTS.SINGLEAPPOINTMENT}${appointment_id}`,
     options
   );
+};
+
+export const useGetAllServiceCategories = (options = {}) => {
+  return useApiQueryTwo(ENDPOINTS.SERVICECATEGORIES, options);
 };
