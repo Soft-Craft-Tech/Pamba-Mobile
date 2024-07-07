@@ -1,4 +1,5 @@
 import { useAllNotifications } from "@/api/use-appointments";
+import BusinessListSkeleton from "@/components/Appointments/Business-Skeleton";
 import { Link } from "expo-router";
 import React from "react";
 import {
@@ -8,6 +9,7 @@ import {
   TouchableOpacity,
   StyleSheet,
   Image,
+  SafeAreaView,
 } from "react-native";
 import { Avatar } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -60,7 +62,7 @@ const NotificationItem = ({ item }: any) => (
 );
 
 const NotificationsScreen = () => {
-  const { data } = useAllNotifications();
+  const { data, isPending } = useAllNotifications();
   if (data?.notifications?.length === 0) {
     return (
       <SafeAreaProvider>
@@ -71,6 +73,14 @@ const NotificationsScreen = () => {
           </Text>
         </View>
       </SafeAreaProvider>
+    );
+  }
+
+  if (isPending) {
+    return (
+      <SafeAreaView>
+        <BusinessListSkeleton />
+      </SafeAreaView>
     );
   }
 
