@@ -58,7 +58,7 @@ type PickDateState = {
   isFocus: boolean;
   date: string;
   open: boolean;
-  selectedTime: TimeObj | null;
+  selectedTime: any | null;
   visible: boolean;
 };
 
@@ -158,14 +158,6 @@ const PickDate: React.FC = () => {
     }),
     [state.date, state.selectedTime, state.selectedProvider, id, formatTime]
   );
-  const handleBookAppointment = useCallback(async () => {
-    try {
-      await AsyncStorage?.setItem("selectedSlot", JSON.stringify(selectedSlot));
-      router.push("/confirm-appointment/23");
-    } catch (error) {
-      console.error("Error saving selected slot:", error);
-    }
-  }, [selectedSlot]);
 
   console.log("Pickerd", selectedSlot);
 
@@ -179,7 +171,6 @@ const PickDate: React.FC = () => {
         onPress={() => {
           setState((prev) => ({
             ...prev,
-            // date: "",
             selectedDay: item.day,
             date: item.fullDate.toDateString(),
           }));
@@ -203,11 +194,6 @@ const PickDate: React.FC = () => {
         horizontal
         showsHorizontalScrollIndicator={false}
       />
-      {state.date && (
-        <Text style={styles.dateSelected}>
-          Selected Date: {format(new Date(state.date), "do MMMM")}
-        </Text>
-      )}
       <Text style={styles.subHeader}>Choose a slot for your haircut</Text>
       <TouchableOpacity
         onPress={() => setState((prev) => ({ ...prev, visible: true }))}
@@ -215,7 +201,6 @@ const PickDate: React.FC = () => {
       >
         <Text>{formatTime(state.selectedTime)} HRS</Text>
       </TouchableOpacity>
-
       <Text style={styles.subHeader}>Select service provider</Text>
       <Dropdown<ProviderData>
         style={[styles.dropdown, state.isFocus && { borderColor: "#DB1471" }]}
@@ -247,7 +232,6 @@ const PickDate: React.FC = () => {
           />
         )}
       />
-
       <View style={styles.calendarSelect}>
         <Text style={styles.different}>Need a different day?</Text>
         <TouchableOpacity
@@ -279,68 +263,70 @@ const PickDate: React.FC = () => {
           presentationStyle="pageSheet"
         />
       </PaperProvider>
+      {!disabledButton && (
+        <View>
+          <Text style={styles.header}>Additional Information</Text>
+          <Text style={styles.different}>Haircut appointment</Text>
+          <View style={styles.calendarSelect}>
+            <View style={styles.leftSection}>
+              <Feather name="calendar" size={24} color="black" />
+              <Text> {format(new Date(state.date), "iii, MMMM d")}</Text>
+            </View>
+            <View style={styles.leftSection}>
+              <AntDesign name="clockcircleo" size={24} color="black" />
+              <Text>{formatTime(state.selectedTime)} HRS</Text>
+            </View>
+          </View>
+          <TextInput style={styles.input} placeholder="Notes" multiline />
+          <View style={styles.genderContainer}>
+            <Text>How do you want to be notified?</Text>
+            <View style={styles.genderBox}>
+              <Controller
+                name="gender"
+                control={control}
+                rules={{ required: true }}
+                render={({
+                  field: { onChange, value },
+                  fieldState: { error },
+                }) => (
+                  <>
+                    <View style={styles.radioContainer}>
+                      <TouchableOpacity onPress={() => onChange("male")}>
+                        <View
+                          style={
+                            value === "male"
+                              ? styles.activeRadio
+                              : styles.radioButton
+                          }
+                        />
+                      </TouchableOpacity>
+                      <Text>Sms</Text>
+                    </View>
+                    <View style={styles.radioContainer}>
+                      <TouchableOpacity onPress={() => onChange("female")}>
+                        <View
+                          style={
+                            value === "female"
+                              ? styles.activeRadio
+                              : styles.radioButton
+                          }
+                        />
+                      </TouchableOpacity>
+                      <Text>Whatsapp</Text>
+                    </View>
+                  </>
+                )}
+              />
+            </View>
+          </View>
+        </View>
+      )}
 
-      <View>
-        <Text style={styles.header}>Additional Information</Text>
-        <Text style={styles.different}>Haircut appointment</Text>
-        <View style={styles.calendarSelect}>
-          <View style={styles.leftSection}>
-            <Feather name="calendar" size={24} color="black" />
-            <Text>Fir, Mar 3</Text>
-          </View>
-          <View style={styles.leftSection}>
-            <AntDesign name="clockcircleo" size={24} color="black" />
-            <Text>2:00PM EAT</Text>
-          </View>
-        </View>
-        <TextInput style={styles.input} placeholder="Notes" multiline />
-        <View style={styles.genderContainer}>
-          <Text>How do you want to be notified?</Text>
-          <View style={styles.genderBox}>
-            <Controller
-              name="gender"
-              control={control}
-              rules={{ required: true }}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
-                <>
-                  <View style={styles.radioContainer}>
-                    <TouchableOpacity onPress={() => onChange("male")}>
-                      <View
-                        style={
-                          value === "male"
-                            ? styles.activeRadio
-                            : styles.radioButton
-                        }
-                      />
-                    </TouchableOpacity>
-                    <Text>Sms</Text>
-                  </View>
-                  <View style={styles.radioContainer}>
-                    <TouchableOpacity onPress={() => onChange("female")}>
-                      <View
-                        style={
-                          value === "female"
-                            ? styles.activeRadio
-                            : styles.radioButton
-                        }
-                      />
-                    </TouchableOpacity>
-                    <Text>Whatsapp</Text>
-                  </View>
-                </>
-              )}
-            />
-          </View>
-        </View>
-        <CustomButton
-          disabled={disabledButton}
-          onPress={handleBookAppointment}
-          buttonText="Book Appointment"
-        />
-      </View>
+      <CustomButton
+        disabled={disabledButton}
+        // onPress={handleBookAppointment}
+        buttonText="Book Appointment"
+      />
     </ScrollView>
   );
 };
