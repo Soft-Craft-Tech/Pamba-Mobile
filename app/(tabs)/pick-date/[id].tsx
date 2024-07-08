@@ -93,17 +93,10 @@ const PickDate: React.FC = () => {
     formState: { errors },
     reset,
   } = useForm<FormType>({ resolver: zodResolver(schema) });
-  const {
-    mutate: bookAppointment,
-    isPending,
-    isSuccess,
-  } = useBookAppointment();
+  const { mutate: bookAppointment, isPending } = useBookAppointment();
   const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
 
-  console.log("service id", id);
-
-  console.log("Type of this", typeof parseFloat(id as string));
   const [state, setState] = useState<PickDateState>({
     selectedDay: "",
     selectedProvider: "",
@@ -168,23 +161,8 @@ const PickDate: React.FC = () => {
       ...data,
       ...selectedSlot,
     };
-    console.log("transformedData", transformedData);
     bookAppointment({ ...transformedData });
-    // setState({
-    //   selectedDay: "",
-    //   selectedProvider: "",
-    //   isFocus: false,
-    //   date: "",
-    //   open: false,
-    //   selectedTime: null,
-    //   visible: false,
-    // });
-    // reset();
   };
-
-  if (isSuccess) {
-    router.replace("/congratulations/123");
-  }
 
   const renderDayButton: ListRenderItem<DayInfo> = ({ item }) => (
     <TouchableOpacity

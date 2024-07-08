@@ -56,7 +56,7 @@ const UpcomingAppointments: React.FC<AppointmentProp> = ({
                 </Text>
               </View>
               <View>
-                <Text style={styles.cardTitle}>{description}</Text>
+                <Text style={styles.cardTitle}>{description.slice(0, 20)}</Text>
                 <Text style={styles.attendantName}>John Doe</Text>
                 <Text style={styles.dayText}>
                   {`${formatDate(date).getDayNameAndTime()} ${time}`}
