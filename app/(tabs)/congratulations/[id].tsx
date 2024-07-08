@@ -21,7 +21,7 @@ export default function CongratulationsScreen() {
       <View style={styles.formContainer}>
         <TouchableOpacity
           onPress={() => {
-            router.push(`/appointments/${2}`);
+            router.push(`/`);
           }}
           style={styles.button}
         >

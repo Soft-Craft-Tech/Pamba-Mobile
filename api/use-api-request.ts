@@ -11,6 +11,7 @@ import {
   UseMutationResult,
   UseQueryResult,
   UseMutationOptions,
+  useQueryClient,
 } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -86,10 +87,12 @@ export const useApiQueryTwo = (
     ...options,
   });
 };
+
 export const useApiMutationTwo = <TData = unknown, TVariables = unknown>(
   endpoint: string,
   options: UseMutationOptions<TData, Error, TVariables> = {}
 ) => {
+  const queryClient = useQueryClient();
   return useMutation<TData, Error, TVariables>({
     mutationFn: async (variables) => {
       const response = await axios.post(
@@ -103,6 +106,9 @@ export const useApiMutationTwo = <TData = unknown, TVariables = unknown>(
     },
     onSuccess: (data: any) => {
       showNotification("Success", data?.message as any);
+      queryClient.invalidateQueries({
+        queryKey: ["/appointments/my-appointments"],
+      });
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error?.response) {

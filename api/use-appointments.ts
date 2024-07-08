@@ -1,8 +1,4 @@
-import {
-  useApiMutation,
-  useApiMutationTwo,
-  useApiQueryTwo,
-} from "./use-api-request";
+import { useApiMutationTwo, useApiQueryTwo } from "./use-api-request";
 
 export const ENDPOINTS = {
   APPOINTMENTS: "/appointments/my-appointments",
@@ -14,10 +10,6 @@ export const ENDPOINTS = {
   ALLBUSINESSES: "/businesses/all-businesses",
   SINGLEBUSINESS: "/businesses/",
   BOOKAPPOINTMENT: "/appointments/book",
-};
-
-export const useGetAllAppointments = (options = {}) => {
-  return useApiQueryTwo(ENDPOINTS.APPOINTMENTS, options);
 };
 
 export const useGetAllServices = (options = {}) => {
@@ -58,6 +50,10 @@ export const useGetSingleBusiness = (
   options = {}
 ) => {
   return useApiQueryTwo(`${ENDPOINTS.SINGLEBUSINESS}${slug}`, options);
+};
+
+export const useGetAllAppointments = (options = {}) => {
+  return useApiQueryTwo(ENDPOINTS.APPOINTMENTS, options);
 };
 
 export function useBookAppointment() {

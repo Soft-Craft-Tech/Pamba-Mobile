@@ -1,4 +1,4 @@
-import React, { useState, useCallback, useMemo } from "react";
+import React, { useState } from "react";
 import {
   View,
   Text,
@@ -27,8 +27,8 @@ import { ScrollView } from "react-native-gesture-handler";
 import { useBookAppointment } from "@/api/use-appointments";
 
 const schema = z.object({
-  gender: z.string({
-    required_error: "Gender is required",
+  notification: z.string({
+    required_error: "Notification is Required is required",
   }),
   comment: z.string({
     required_error: "Comment is required",
@@ -91,6 +91,7 @@ const PickDate: React.FC = () => {
     handleSubmit,
     control,
     formState: { errors },
+    reset,
   } = useForm<FormType>({ resolver: zodResolver(schema) });
   const {
     mutate: bookAppointment,
@@ -113,66 +114,54 @@ const PickDate: React.FC = () => {
     visible: false,
   });
 
-  const days: DayInfo[] = useMemo(() => {
-    return Array.from({ length: 7 }, (_, index) => {
-      const currentDate = new Date();
-      currentDate.setDate(currentDate.getDate() + index);
-      const day = currentDate.toLocaleString("en-US", { weekday: "short" });
-      const date = currentDate.toLocaleString("en-US", {
-        day: "2-digit",
-        month: "short",
-      });
-      return { day, date, fullDate: currentDate };
+  const days: DayInfo[] = Array.from({ length: 7 }, (_, index) => {
+    const currentDate = new Date();
+    currentDate.setDate(currentDate.getDate() + index);
+    const day = currentDate.toLocaleString("en-US", { weekday: "short" });
+    const date = currentDate.toLocaleString("en-US", {
+      day: "2-digit",
+      month: "short",
     });
-  }, []);
+    return { day, date, fullDate: currentDate };
+  });
 
-  const onDismissTime = useCallback(
-    () => setState((prev) => ({ ...prev, visible: false })),
-    []
-  );
+  const onDismissTime = () => setState((prev) => ({ ...prev, visible: false }));
 
-  const onConfirmTime = useCallback(({ hours, minutes }: TimeObj) => {
+  const onConfirmTime = ({ hours, minutes }: TimeObj) => {
     setState((prev) => ({
       ...prev,
       visible: false,
       selectedTime: { hours, minutes },
     }));
-  }, []);
+  };
 
-  const onDismissDate = useCallback(
-    () => setState((prev) => ({ ...prev, open: false })),
-    []
-  );
+  const onDismissDate = () => setState((prev) => ({ ...prev, open: false }));
 
-  const onConfirmDate = useCallback(({ date }: { date: CalendarDate }) => {
+  const onConfirmDate = ({ date }: { date: CalendarDate }) => {
     setState((prev) => ({
       ...prev,
       open: false,
       date: date?.toDateString() || "",
     }));
-  }, []);
+  };
 
-  const formatTime = useCallback((time: TimeObj | null): string => {
+  const formatTime = (time: TimeObj | null): string => {
     if (!time) return "Select Time";
     const { hours, minutes } = time;
     return `${String(hours).padStart(2, "0")}:${String(minutes).padStart(
       2,
       "0"
     )}`;
-  }, []);
+  };
 
   const disabledButton = !state.date || !state.selectedTime;
 
-  const selectedSlot = useMemo(
-    () => ({
-      // date: format(new Date(selectedDate), "dd-MM-yyyy"),
-      date: "07-09-2024",
-      time: formatTime(state?.selectedTime),
-      provider: state?.selectedProvider,
-      service: parseFloat(id as string),
-    }),
-    [state.date, state?.selectedTime, state.selectedProvider, id, formatTime]
-  );
+  const selectedSlot = {
+    date: format(new Date(state?.date || Date.now()), "dd-MM-yyyy"),
+    time: formatTime(state?.selectedTime),
+    provider: state?.selectedProvider,
+    service: parseFloat(id as string),
+  };
 
   const onSubmit = (data: any) => {
     const transformedData = {
@@ -181,29 +170,40 @@ const PickDate: React.FC = () => {
     };
     console.log("transformedData", transformedData);
     bookAppointment({ ...transformedData });
+    // setState({
+    //   selectedDay: "",
+    //   selectedProvider: "",
+    //   isFocus: false,
+    //   date: "",
+    //   open: false,
+    //   selectedTime: null,
+    //   visible: false,
+    // });
+    // reset();
   };
 
-  const renderDayButton: ListRenderItem<DayInfo> = useCallback(
-    ({ item }) => (
-      <TouchableOpacity
-        style={[
-          styles.dayButton,
-          state.selectedDay === item.day && styles.selectedDay,
-        ]}
-        onPress={() => {
-          setState((prev) => ({
-            ...prev,
-            selectedDay: item.day,
-            date: item.fullDate.toDateString(),
-          }));
-        }}
-      >
-        <Text style={styles.dayText}>{item.day}</Text>
-        <Text style={styles.dateText}>{item.date}</Text>
-        <Text style={styles.slotsText}>Slots Available</Text>
-      </TouchableOpacity>
-    ),
-    [state.selectedDay]
+  if (isSuccess) {
+    router.replace("/congratulations/123");
+  }
+
+  const renderDayButton: ListRenderItem<DayInfo> = ({ item }) => (
+    <TouchableOpacity
+      style={[
+        styles.dayButton,
+        state.selectedDay === item.day && styles.selectedDay,
+      ]}
+      onPress={() => {
+        setState((prev) => ({
+          ...prev,
+          selectedDay: item.day,
+          date: item.fullDate.toDateString(),
+        }));
+      }}
+    >
+      <Text style={styles.dayText}>{item.day}</Text>
+      <Text style={styles.dateText}>{item.date}</Text>
+      <Text style={styles.slotsText}>Slots Available</Text>
+    </TouchableOpacity>
   );
 
   return (
@@ -293,7 +293,7 @@ const PickDate: React.FC = () => {
           <View style={styles.calendarSelect}>
             <View style={styles.leftSection}>
               <Feather name="calendar" size={24} color="black" />
-              {/* <Text> {format(new Date(state.date), "iii, MMMM d")}</Text> */}
+              <Text> {format(new Date(state.date), "iii, MMMM d")}</Text>
             </View>
             <View style={styles.leftSection}>
               <AntDesign name="clockcircleo" size={24} color="black" />
@@ -322,21 +322,21 @@ const PickDate: React.FC = () => {
 
           <View style={styles.genderContainer}>
             <Text>How do you want to be notified?</Text>
-            <View style={styles.genderBox}>
-              <Controller
-                name="gender"
-                control={control}
-                rules={{ required: true }}
-                render={({
-                  field: { onChange, value },
-                  fieldState: { error },
-                }) => (
-                  <>
+            <Controller
+              name="notification"
+              control={control}
+              rules={{ required: true }}
+              render={({
+                field: { onChange, value },
+                fieldState: { error },
+              }) => (
+                <View>
+                  <View style={styles.genderBox}>
                     <View style={styles.radioContainer}>
-                      <TouchableOpacity onPress={() => onChange("male")}>
+                      <TouchableOpacity onPress={() => onChange("sms")}>
                         <View
                           style={
-                            value === "male"
+                            value === "sms"
                               ? styles.activeRadio
                               : styles.radioButton
                           }
@@ -345,10 +345,10 @@ const PickDate: React.FC = () => {
                       <Text>Sms</Text>
                     </View>
                     <View style={styles.radioContainer}>
-                      <TouchableOpacity onPress={() => onChange("female")}>
+                      <TouchableOpacity onPress={() => onChange("whatsapp")}>
                         <View
                           style={
-                            value === "female"
+                            value === "whatsapp"
                               ? styles.activeRadio
                               : styles.radioButton
                           }
@@ -356,10 +356,13 @@ const PickDate: React.FC = () => {
                       </TouchableOpacity>
                       <Text>Whatsapp</Text>
                     </View>
-                  </>
-                )}
-              />
-            </View>
+                  </View>
+                  {errors.comment && (
+                    <Text style={styles.errorMessage}>{error?.message}</Text>
+                  )}
+                </View>
+              )}
+            />
           </View>
         </View>
       )}
@@ -471,8 +474,7 @@ const styles = StyleSheet.create({
   errorMessage: {
     color: "red",
     fontSize: 8,
-    marginTop: -10,
+    marginTop: 10,
   },
 });
-
-export default React.memo(PickDate);
+export default PickDate;
