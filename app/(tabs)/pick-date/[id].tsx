@@ -92,9 +92,15 @@ const PickDate: React.FC = () => {
     control,
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
-  const { mutate: bookAppointment, isPending } = useBookAppointment();
-  // const router = useRouter();
+  const {
+    mutate: bookAppointment,
+    isPending,
+    isSuccess,
+  } = useBookAppointment();
+  const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
+
+  console.log("service id", id);
 
   console.log("Type of this", typeof parseFloat(id as string));
   const [state, setState] = useState<PickDateState>({
@@ -106,8 +112,6 @@ const PickDate: React.FC = () => {
     selectedTime: null,
     visible: false,
   });
-
-  const [selectedDate, setSelectedDate] = useState<any>("");
 
   const days: DayInfo[] = useMemo(() => {
     return Array.from({ length: 7 }, (_, index) => {
@@ -162,7 +166,7 @@ const PickDate: React.FC = () => {
   const selectedSlot = useMemo(
     () => ({
       // date: format(new Date(selectedDate), "dd-MM-yyyy"),
-      date: "07-07-2024",
+      date: "07-09-2024",
       time: formatTime(state?.selectedTime),
       provider: state?.selectedProvider,
       service: parseFloat(id as string),
@@ -192,7 +196,6 @@ const PickDate: React.FC = () => {
             selectedDay: item.day,
             date: item.fullDate.toDateString(),
           }));
-          setSelectedDate(item.fullDate);
         }}
       >
         <Text style={styles.dayText}>{item.day}</Text>
@@ -271,6 +274,7 @@ const PickDate: React.FC = () => {
           hours={state.selectedTime?.hours || 12}
           minutes={state.selectedTime?.minutes || 0}
           animationType="fade"
+          use24HourClock={true}
         />
         <DatePickerModal
           locale="en"
