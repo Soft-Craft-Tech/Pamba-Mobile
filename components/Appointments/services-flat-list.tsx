@@ -42,7 +42,7 @@ const ServicesList: React.FC<ServiceListProps> = ({
       <FilterSlider />
       <StandardView>
         <UpcomingAppointments
-          data={appointmentsData?.upcoming.slice(0, 2)}
+          data={appointmentsData?.upcoming.slice(-2)}
           title
           isLoading={isPending}
         />

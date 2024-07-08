@@ -253,6 +253,7 @@ const PickDate: React.FC = () => {
           minutes={state.selectedTime?.minutes || 0}
           animationType="fade"
           use24HourClock={true}
+          defaultInputType="keyboard"
         />
         <DatePickerModal
           locale="en"
@@ -262,6 +263,8 @@ const PickDate: React.FC = () => {
           date={state.date ? new Date(state.date) : undefined}
           onConfirm={onConfirmDate as unknown as SingleChange}
           presentationStyle="pageSheet"
+          // minimumDate={new Date(2020, 0, 1)}
+          // maximumDate={new Date(2022, 10, 20)}
         />
       </PaperProvider>
       {!disabledButton && (
