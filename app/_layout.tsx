@@ -101,6 +101,14 @@ function RootLayoutNav() {
                     headerBackTitleVisible: false,
                   }}
                 />
+                <Stack.Screen
+                  name="reset-confirmation"
+                  options={{
+                    title: "",
+                    headerTitleAlign: "center",
+                    headerBackTitleVisible: false,
+                  }}
+                />
               </Stack>
             </NotifierWrapper>
           </GestureHandlerRootView>
