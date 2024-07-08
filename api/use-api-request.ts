@@ -10,6 +10,7 @@ import {
   useQuery,
   UseMutationResult,
   UseQueryResult,
+  UseMutationOptions,
 } from "@tanstack/react-query";
 import axios from "axios";
 
@@ -81,6 +82,34 @@ export const useApiQueryTwo = (
         headers: getHeaders(),
       });
       return response.data;
+    },
+    ...options,
+  });
+};
+export const useApiMutationTwo = <TData = unknown, TVariables = unknown>(
+  endpoint: string,
+  options: UseMutationOptions<TData, Error, TVariables> = {}
+) => {
+  return useMutation<TData, Error, TVariables>({
+    mutationFn: async (variables) => {
+      const response = await axios.post(
+        `${API_BASE_URL}${endpoint}`,
+        variables,
+        {
+          headers: getHeaders(),
+        }
+      );
+      return response.data;
+    },
+    onSuccess: (data: any) => {
+      showNotification("Success", data?.message as any);
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error?.response) {
+        showNotification("Error", error?.response?.data?.message as string);
+      } else {
+        showNotification("Error", "An unexpected error occurred");
+      }
     },
     ...options,
   });

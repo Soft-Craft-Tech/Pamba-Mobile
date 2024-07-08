@@ -22,6 +22,19 @@ const UpcomingAppointments: React.FC<AppointmentProp> = ({
   if (isLoading) {
     return <UpcomingSkeleton />;
   }
+
+  if (data?.length === 0) {
+    return (
+      <View>
+        {title && (
+          <Text style={styles.greetingsText}>Upcoming Appointments</Text>
+        )}
+        <Text style={{ textAlign: "center", marginTop: 10, marginBottom: 10 }}>
+          No upcoming appointments
+        </Text>
+      </View>
+    );
+  }
   return (
     <View style={styles.container}>
       {title && <Text style={styles.greetingsText}>Upcoming Appointments</Text>}

@@ -23,13 +23,15 @@ import {
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
-import { FormType } from "@/app/create-account";
 import { ScrollView } from "react-native-gesture-handler";
 import { useBookAppointment } from "@/api/use-appointments";
 
 const schema = z.object({
   gender: z.string({
     required_error: "Gender is required",
+  }),
+  comment: z.string({
+    required_error: "Comment is required",
   }),
 });
 
@@ -82,13 +84,19 @@ const customTheme = {
   },
 };
 
+export type FormType = z.infer<typeof schema>;
+
 const PickDate: React.FC = () => {
   const {
+    handleSubmit,
     control,
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
-  const router = useRouter();
+  const { mutate: bookAppointment, isPending } = useBookAppointment();
+  // const router = useRouter();
   const { id } = useLocalSearchParams<{ id: string }>();
+
+  console.log("Type of this", typeof parseFloat(id as string));
   const [state, setState] = useState<PickDateState>({
     selectedDay: "",
     selectedProvider: "",
@@ -98,6 +106,8 @@ const PickDate: React.FC = () => {
     selectedTime: null,
     visible: false,
   });
+
+  const [selectedDate, setSelectedDate] = useState<any>("");
 
   const days: DayInfo[] = useMemo(() => {
     return Array.from({ length: 7 }, (_, index) => {
@@ -151,15 +161,23 @@ const PickDate: React.FC = () => {
 
   const selectedSlot = useMemo(
     () => ({
-      date: state.date,
-      time: formatTime(state.selectedTime),
-      provider: state.selectedProvider,
-      business: id,
+      // date: format(new Date(selectedDate), "dd-MM-yyyy"),
+      date: "07-07-2024",
+      time: formatTime(state?.selectedTime),
+      provider: state?.selectedProvider,
+      service: parseFloat(id as string),
     }),
-    [state.date, state.selectedTime, state.selectedProvider, id, formatTime]
+    [state.date, state?.selectedTime, state.selectedProvider, id, formatTime]
   );
 
-  const { mutate: signup, isPending, isSuccess } = useBookAppointment();
+  const onSubmit = (data: any) => {
+    const transformedData = {
+      ...data,
+      ...selectedSlot,
+    };
+    console.log("transformedData", transformedData);
+    bookAppointment({ ...transformedData });
+  };
 
   const renderDayButton: ListRenderItem<DayInfo> = useCallback(
     ({ item }) => (
@@ -174,6 +192,7 @@ const PickDate: React.FC = () => {
             selectedDay: item.day,
             date: item.fullDate.toDateString(),
           }));
+          setSelectedDate(item.fullDate);
         }}
       >
         <Text style={styles.dayText}>{item.day}</Text>
@@ -270,14 +289,33 @@ const PickDate: React.FC = () => {
           <View style={styles.calendarSelect}>
             <View style={styles.leftSection}>
               <Feather name="calendar" size={24} color="black" />
-              <Text> {format(new Date(state.date), "iii, MMMM d")}</Text>
+              {/* <Text> {format(new Date(state.date), "iii, MMMM d")}</Text> */}
             </View>
             <View style={styles.leftSection}>
               <AntDesign name="clockcircleo" size={24} color="black" />
               <Text>{formatTime(state.selectedTime)} HRS</Text>
             </View>
           </View>
-          <TextInput style={styles.input} placeholder="Notes" multiline />
+          <Controller
+            name="comment"
+            control={control}
+            rules={{ required: true }}
+            render={({ field: { onChange, value }, fieldState: { error } }) => (
+              <>
+                <TextInput
+                  style={styles.input}
+                  value={value}
+                  onChangeText={(value) => onChange(value)}
+                  placeholder="Notes"
+                  multiline
+                />
+                {errors.comment && (
+                  <Text style={styles.errorMessage}>{error?.message}</Text>
+                )}
+              </>
+            )}
+          />
+
           <View style={styles.genderContainer}>
             <Text>How do you want to be notified?</Text>
             <View style={styles.genderBox}>
@@ -324,8 +362,9 @@ const PickDate: React.FC = () => {
 
       <CustomButton
         disabled={disabledButton}
-        // onPress={handleBookAppointment}
+        onPress={handleSubmit(onSubmit)}
         buttonText="Book Appointment"
+        loading={isPending}
       />
     </ScrollView>
   );
@@ -424,6 +463,11 @@ const styles = StyleSheet.create({
   genderBox: {
     flexDirection: "row",
     gap: 5,
+  },
+  errorMessage: {
+    color: "red",
+    fontSize: 8,
+    marginTop: -10,
   },
 });
 

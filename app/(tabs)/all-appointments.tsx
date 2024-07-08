@@ -132,6 +132,7 @@ interface TabContentProps {
 
 function TabContent({ index }: TabContentProps) {
   const { data: appointmentsData, isPending } = useGetAllAppointments();
+  console.log(appointmentsData);
 
   const renderAppointments = (
     appointments: any[],

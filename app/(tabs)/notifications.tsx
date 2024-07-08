@@ -63,18 +63,18 @@ const NotificationItem = ({ item }: any) => (
 
 const NotificationsScreen = () => {
   const { data, isPending } = useAllNotifications();
-  if (data?.notifications?.length === 0) {
-    return (
-      <SafeAreaProvider>
-        <View style={styles.emptyState}>
-          <Image source={require("@/assets/images/no-notifications.png")} />
-          <Text style={styles.emptyText}>
-            You haven't recieved any notifications yet
-          </Text>
-        </View>
-      </SafeAreaProvider>
-    );
-  }
+  // if (data?.notifications?.length === 0) {
+  //   return (
+  //     <SafeAreaProvider>
+  //       <View style={styles.emptyState}>
+  //         <Image source={require("@/assets/images/no-notifications.png")} />
+  //         <Text style={styles.emptyText}>
+  //           You haven't recieved any notifications yet
+  //         </Text>
+  //       </View>
+  //     </SafeAreaProvider>
+  //   );
+  // }
 
   if (isPending) {
     return (

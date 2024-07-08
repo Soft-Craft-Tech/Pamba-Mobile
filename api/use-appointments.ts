@@ -1,4 +1,8 @@
-import { useApiMutation, useApiQueryTwo } from "./use-api-request";
+import {
+  useApiMutation,
+  useApiMutationTwo,
+  useApiQueryTwo,
+} from "./use-api-request";
 
 export const ENDPOINTS = {
   APPOINTMENTS: "/appointments/my-appointments",
@@ -57,5 +61,5 @@ export const useGetSingleBusiness = (
 };
 
 export function useBookAppointment() {
-  return useApiMutation<any, any>("/appointments/book", "post");
+  return useApiMutationTwo<any, any>("/appointments/book");
 }

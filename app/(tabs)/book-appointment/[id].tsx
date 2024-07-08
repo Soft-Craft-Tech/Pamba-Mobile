@@ -27,6 +27,8 @@ const HeaderComponent: React.FC<{ id: string | undefined }> = ({ id }) => {
   const router = useRouter();
   const { data: serviceData, isPending } = useGetASingleService(id);
 
+  console.log(serviceData);
+
   if (isPending) {
     return (
       <StandardView>

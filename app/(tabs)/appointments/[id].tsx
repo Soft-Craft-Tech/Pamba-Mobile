@@ -4,7 +4,6 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { formatDate } from "@/hooks/dateUtility";
 import { useGetSingleAppointment } from "@/api/use-appointments";
 import { format } from "date-fns";
 import SingleViewSkeleton from "@/components/Appointments/single-view-skeleton";
