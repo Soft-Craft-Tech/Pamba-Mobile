@@ -33,7 +33,7 @@ export default function ForgotPassword() {
 
   if (isSuccess) {
     console.log("Request was successful"); // Debugging log
-    router.push("/reset-password");
+    router.push("/reset-confirmation");
   }
 
   return (
