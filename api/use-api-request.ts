@@ -11,9 +11,8 @@ import {
   UseMutationResult,
   UseQueryResult,
   UseMutationOptions,
-  useQueryClient,
 } from "@tanstack/react-query";
-import axios from "axios";
+import axios, { AxiosInstance, InternalAxiosRequestConfig } from "axios";
 
 type ApiResponse<T> = {
   success: boolean;
@@ -63,6 +62,28 @@ export function useApiMutation<TData, TVariables>(
 }
 const accessToken = getItem("authenticationToken");
 
+const axiosInstance: AxiosInstance = axios.create({
+  baseURL: API_BASE_URL,
+});
+
+// Add request interceptor
+axiosInstance.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    // Set headers using the proper method
+    config.headers.set("Content-Type", "application/json");
+    config.headers.set(
+      "X-API-KEY",
+      "0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62"
+    );
+    config.headers.set("x-access-token", accessToken as string);
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
+
 const getHeaders = () => ({
   "Content-Type": "application/json",
   "X-API-KEY": "0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62",
@@ -78,10 +99,7 @@ export const useApiQueryTwo = (
     queryKey: [endpoint, queryParams],
     queryFn: async ({ queryKey }) => {
       const [url, params] = queryKey;
-      const response = await axios.get(`${API_BASE_URL}${url}`, {
-        params,
-        headers: getHeaders(),
-      });
+      const response = await axiosInstance.get(url as string, { params });
       return response.data;
     },
     ...options,
@@ -94,13 +112,7 @@ export const useApiMutationTwo = <TData = unknown, TVariables = unknown>(
 ) => {
   return useMutation<TData, Error, TVariables>({
     mutationFn: async (variables) => {
-      const response = await axios.post(
-        `${API_BASE_URL}${endpoint}`,
-        variables,
-        {
-          headers: getHeaders(),
-        }
-      );
+      const response = await axiosInstance.post(endpoint, variables);
       return response.data;
     },
     ...options,
