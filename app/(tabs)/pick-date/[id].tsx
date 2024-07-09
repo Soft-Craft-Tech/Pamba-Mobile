@@ -97,7 +97,6 @@ const PickDate: React.FC = () => {
     handleSubmit,
     control,
     formState: { errors },
-    reset,
   } = useForm<FormType>({ resolver: zodResolver(schema) });
   const { mutate: bookAppointment, isPending } = useBookAppointment({
     onSuccess: (data) => {
