@@ -27,7 +27,7 @@ const HeaderComponent: React.FC<{ id: string | undefined }> = ({ id }) => {
   const router = useRouter();
   const { data: serviceData, isPending } = useGetASingleService(id);
 
-  console.log(serviceData);
+  console.log("Services Data here", serviceData?.service);
 
   if (isPending) {
     return (
@@ -89,7 +89,7 @@ const HeaderComponent: React.FC<{ id: string | undefined }> = ({ id }) => {
         </Text>
         <CustomButton
           onPress={() => {
-            router.push(`/pick-date/${id}`);
+            router.push(`/pick-date/${id}?query=${serviceData?.service?.slug}`);
           }}
           buttonText="Book Appointment"
         />

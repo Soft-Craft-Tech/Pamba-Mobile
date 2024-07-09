@@ -90,6 +90,7 @@ const customTheme = {
 export type FormType = z.infer<typeof schema>;
 
 const PickDate: React.FC = () => {
+  const { id, query } = useLocalSearchParams<{ id: string; query?: string }>();
   const queryClient = useQueryClient();
   const router = useRouter();
   const {
@@ -115,7 +116,7 @@ const PickDate: React.FC = () => {
     },
   });
 
-  const { id } = useLocalSearchParams<{ id: string }>();
+  console.log("Query Here", query);
 
   const [state, setState] = useState<PickDateState>({
     selectedDay: "",
