@@ -4,7 +4,10 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { Image } from "expo-image";
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
-import { useGetSingleAppointment } from "@/api/use-appointments";
+import {
+  useGetASingleService,
+  useGetSingleAppointment,
+} from "@/api/use-appointments";
 import { format } from "date-fns";
 import SingleViewSkeleton from "@/components/Appointments/single-view-skeleton";
 
@@ -13,7 +16,14 @@ const SingleAppointment = () => {
   const local = useLocalSearchParams<{ id: string }>();
   const { data, isPending } = useGetSingleAppointment(local?.id);
 
+  const { data: serviceData, isPending: servicesPending } =
+    useGetASingleService(data?.appointment?.service_id);
+
+  console.log(serviceData);
+
   const date = new Date(data?.appointment?.date);
+
+  console.log("Data is Here", data);
 
   if (isPending) {
     return (
@@ -27,14 +37,26 @@ const SingleAppointment = () => {
       <StandardView>
         <Image
           source={{
-            uri: "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D",
+            uri:
+              serviceData?.service?.service_image === " "
+                ? "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
+                : serviceData?.service?.service_image,
           }}
           style={styles.salonImage}
         />
         <View style={styles.lowerContainer}>
-          <Text style={styles.appointmentTitle}>Beauty square salon</Text>
-          <Text style={styles.contactText}>View Shop</Text>
-          <Text style={styles.serviceTitle}>Appointment</Text>
+          <Text style={styles.appointmentTitle}>
+            {serviceData?.service?.business_name}
+          </Text>
+          <Text style={styles.contactText}>
+            View Shop:
+            <Text style={{ color: "#007B99" }}>
+              {serviceData?.service?.directions.slice(0, 30)}
+            </Text>
+          </Text>
+          <Text style={styles.serviceTitle}>
+            {serviceData?.service?.service}
+          </Text>
           <View style={styles.appointmentCard}>
             <View style={styles.dateSection}>
               <View style={styles.calendarCard}>
