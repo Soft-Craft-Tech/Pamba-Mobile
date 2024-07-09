@@ -1,4 +1,7 @@
+import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
 import { useApiMutationTwo, useApiQueryTwo } from "./use-api-request";
+import { showNotification } from "@/hooks/toastNotication";
+import axios from "axios";
 
 export const ENDPOINTS = {
   APPOINTMENTS: "/appointments/my-appointments",
@@ -56,6 +59,8 @@ export const useGetAllAppointments = (options = {}) => {
   return useApiQueryTwo(ENDPOINTS.APPOINTMENTS, options);
 };
 
-export function useBookAppointment() {
-  return useApiMutationTwo<any, any>("/appointments/book");
+export function useBookAppointment(
+  options?: UseMutationOptions<any, Error, any>
+) {
+  return useApiMutationTwo<any, any>("/appointments/book", options);
 }

@@ -25,6 +25,9 @@ import { zodResolver } from "@hookform/resolvers/zod";
 import { Controller, useForm } from "react-hook-form";
 import { ScrollView } from "react-native-gesture-handler";
 import { useBookAppointment } from "@/api/use-appointments";
+import { showNotification } from "@/hooks/toastNotication";
+import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 const schema = z.object({
   notification: z.string({
@@ -87,14 +90,31 @@ const customTheme = {
 export type FormType = z.infer<typeof schema>;
 
 const PickDate: React.FC = () => {
+  const queryClient = useQueryClient();
+  const router = useRouter();
   const {
     handleSubmit,
     control,
     formState: { errors },
     reset,
   } = useForm<FormType>({ resolver: zodResolver(schema) });
-  const { mutate: bookAppointment, isPending } = useBookAppointment();
-  const router = useRouter();
+  const { mutate: bookAppointment, isPending } = useBookAppointment({
+    onSuccess: (data) => {
+      showNotification("Success", data?.message);
+      queryClient.invalidateQueries({
+        queryKey: ["/appointments/my-appointments"],
+      });
+      router.push("/congratulations/123");
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error?.response) {
+        showNotification("Error", error?.response?.data?.message);
+      } else {
+        showNotification("Error", "An unexpected error occurred");
+      }
+    },
+  });
+
   const { id } = useLocalSearchParams<{ id: string }>();
 
   const [state, setState] = useState<PickDateState>({
