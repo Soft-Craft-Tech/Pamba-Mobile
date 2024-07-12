@@ -66,30 +66,6 @@ const axiosInstance: AxiosInstance = axios.create({
   baseURL: API_BASE_URL,
 });
 
-// Add request interceptor
-axiosInstance.interceptors.request.use(
-  (config: InternalAxiosRequestConfig) => {
-    // Set headers using the proper method
-    config.headers.set("Content-Type", "application/json");
-    config.headers.set(
-      "X-API-KEY",
-      "0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62"
-    );
-    config.headers.set("x-access-token", accessToken as string);
-
-    return config;
-  },
-  (error) => {
-    return Promise.reject(error);
-  }
-);
-
-const getHeaders = () => ({
-  "Content-Type": "application/json",
-  "X-API-KEY": "0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62",
-  "x-access-token": accessToken as string,
-});
-
 export const useApiQueryTwo = (
   endpoint: string,
   queryParams = {},
@@ -118,3 +94,21 @@ export const useApiMutationTwo = <TData = unknown, TVariables = unknown>(
     ...options,
   });
 };
+
+// Add request interceptor
+axiosInstance.interceptors.request.use(
+  (config: InternalAxiosRequestConfig) => {
+    // Set headers using the proper method
+    config.headers.set("Content-Type", "application/json");
+    config.headers.set(
+      "X-API-KEY",
+      "0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62"
+    );
+    config.headers.set("x-access-token", accessToken as string);
+
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);

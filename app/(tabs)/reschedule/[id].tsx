@@ -6,12 +6,10 @@ import {
   FlatList,
   StyleSheet,
   ListRenderItem,
-  TextInput,
 } from "react-native";
-import { Dropdown } from "react-native-element-dropdown";
-import { Avatar, PaperProvider } from "react-native-paper";
+import { PaperProvider } from "react-native-paper";
 import CustomButton from "@/components/Button";
-import { AntDesign, Feather, FontAwesome5 } from "@expo/vector-icons";
+import { FontAwesome5 } from "@expo/vector-icons";
 import { DatePickerModal, TimePickerModal } from "react-native-paper-dates";
 import { useLocalSearchParams, useRouter } from "expo-router";
 import { en, registerTranslation } from "react-native-paper-dates";
@@ -20,23 +18,12 @@ import {
   CalendarDate,
   SingleChange,
 } from "react-native-paper-dates/lib/typescript/Date/Calendar";
-import * as z from "zod";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { Controller, useForm } from "react-hook-form";
+import { useForm } from "react-hook-form";
 import { ScrollView } from "react-native-gesture-handler";
-import { useBookAppointment } from "@/api/use-appointments";
+import { useRescheduleAppointment } from "@/api/use-appointments";
 import { showNotification } from "@/hooks/toastNotication";
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
-
-const schema = z.object({
-  notification: z.string({
-    required_error: "Notification is Required is required",
-  }),
-  comment: z.string({
-    required_error: "Comment is required",
-  }),
-});
 
 registerTranslation("en", en);
 
@@ -51,13 +38,7 @@ type DayInfo = {
   fullDate: Date;
 };
 
-type ProviderData = {
-  label: string;
-  value: string;
-  avatar: string;
-};
-
-type PickDateState = {
+type RescheduleState = {
   selectedDay: string;
   selectedProvider: string;
   isFocus: boolean;
@@ -66,15 +47,6 @@ type PickDateState = {
   selectedTime: any | null;
   visible: boolean;
 };
-
-const providerData: ProviderData[] = [
-  {
-    label: "Olivia Rhae",
-    value: "1",
-    avatar: "https://i.pravatar.cc/150?img=27",
-  },
-  { label: "John Doe", value: "2", avatar: "https://i.pravatar.cc/150?img=28" },
-];
 
 const customTheme = {
   roundness: 2,
@@ -87,19 +59,13 @@ const customTheme = {
   },
 };
 
-export type FormType = z.infer<typeof schema>;
-
-const PickDate: React.FC = () => {
-  const { id, query } = useLocalSearchParams<{ id: string; query?: string }>();
+const Reschedule: React.FC = () => {
+  const { id } = useLocalSearchParams<{ id: string }>();
   const queryClient = useQueryClient();
   const router = useRouter();
-  const {
-    handleSubmit,
-    control,
-    formState: { errors },
-  } = useForm<FormType>({ resolver: zodResolver(schema) });
+  const { handleSubmit } = useForm();
 
-  const { mutate: bookAppointment, isPending } = useBookAppointment({
+  const { mutate: bookAppointment, isPending } = useRescheduleAppointment(id, {
     onSuccess: (data) => {
       showNotification("Success", data?.message);
       queryClient.invalidateQueries({
@@ -116,9 +82,7 @@ const PickDate: React.FC = () => {
     },
   });
 
-  console.log("Query Here", query);
-
-  const [state, setState] = useState<PickDateState>({
+  const [state, setState] = useState<RescheduleState>({
     selectedDay: "",
     selectedProvider: "",
     isFocus: false,
@@ -173,13 +137,11 @@ const PickDate: React.FC = () => {
   const selectedSlot = {
     date: format(new Date(state?.date || Date.now()), "dd-MM-yyyy"),
     time: formatTime(state?.selectedTime),
-    provider: state?.selectedProvider,
-    service: parseFloat(id as string),
+    appointment_id: parseFloat(id as string),
   };
 
-  const onSubmit = (data: any) => {
+  const onSubmit = () => {
     const transformedData = {
-      ...data,
       ...selectedSlot,
     };
     bookAppointment({ ...transformedData });
@@ -222,37 +184,6 @@ const PickDate: React.FC = () => {
       >
         <Text>{formatTime(state.selectedTime)} HRS</Text>
       </TouchableOpacity>
-      <Text style={styles.subHeader}>Select service provider</Text>
-      <Dropdown<ProviderData>
-        style={[styles.dropdown, state.isFocus && { borderColor: "#DB1471" }]}
-        placeholderStyle={styles.placeholderStyle}
-        selectedTextStyle={styles.selectedTextStyle}
-        inputSearchStyle={styles.inputSearchStyle}
-        iconStyle={styles.iconStyle}
-        data={providerData}
-        search
-        maxHeight={300}
-        labelField="label"
-        valueField="value"
-        placeholder={!state.isFocus ? "Select Provider (Optional)" : "..."}
-        searchPlaceholder="Search..."
-        value={state.selectedProvider}
-        onFocus={() => setState((prev) => ({ ...prev, isFocus: true }))}
-        onBlur={() => setState((prev) => ({ ...prev, isFocus: false }))}
-        onChange={(item) => {
-          setState((prev) => ({
-            ...prev,
-            selectedProvider: item.value,
-            isFocus: false,
-          }));
-        }}
-        renderLeftIcon={() => (
-          <Avatar.Image
-            size={30}
-            source={{ uri: "https://i.pravatar.cc/150" }}
-          />
-        )}
-      />
       <View style={styles.calendarSelect}>
         <Text style={styles.different}>Need a different day?</Text>
         <TouchableOpacity
@@ -288,91 +219,11 @@ const PickDate: React.FC = () => {
           // maximumDate={new Date(2022, 10, 20)}
         />
       </PaperProvider>
-      {!disabledButton && (
-        <View>
-          <Text style={styles.header}>Additional Information</Text>
-          <Text style={styles.different}>Haircut appointment</Text>
-          <View style={styles.calendarSelect}>
-            <View style={styles.leftSection}>
-              <Feather name="calendar" size={24} color="black" />
-              <Text> {format(new Date(state.date), "iii, MMMM d")}</Text>
-            </View>
-            <View style={styles.leftSection}>
-              <AntDesign name="clockcircleo" size={24} color="black" />
-              <Text>{formatTime(state.selectedTime)} HRS</Text>
-            </View>
-          </View>
-          <Controller
-            name="comment"
-            control={control}
-            rules={{ required: true }}
-            render={({ field: { onChange, value }, fieldState: { error } }) => (
-              <>
-                <TextInput
-                  style={styles.input}
-                  value={value}
-                  onChangeText={(value) => onChange(value)}
-                  placeholder="Notes"
-                  multiline
-                />
-                {errors.comment && (
-                  <Text style={styles.errorMessage}>{error?.message}</Text>
-                )}
-              </>
-            )}
-          />
-
-          <View style={styles.genderContainer}>
-            <Text>How do you want to be notified?</Text>
-            <Controller
-              name="notification"
-              control={control}
-              rules={{ required: true }}
-              render={({
-                field: { onChange, value },
-                fieldState: { error },
-              }) => (
-                <View>
-                  <View style={styles.genderBox}>
-                    <View style={styles.radioContainer}>
-                      <TouchableOpacity onPress={() => onChange("sms")}>
-                        <View
-                          style={
-                            value === "sms"
-                              ? styles.activeRadio
-                              : styles.radioButton
-                          }
-                        />
-                      </TouchableOpacity>
-                      <Text>Sms</Text>
-                    </View>
-                    <View style={styles.radioContainer}>
-                      <TouchableOpacity onPress={() => onChange("whatsapp")}>
-                        <View
-                          style={
-                            value === "whatsapp"
-                              ? styles.activeRadio
-                              : styles.radioButton
-                          }
-                        />
-                      </TouchableOpacity>
-                      <Text>Whatsapp</Text>
-                    </View>
-                  </View>
-                  {errors.comment && (
-                    <Text style={styles.errorMessage}>{error?.message}</Text>
-                  )}
-                </View>
-              )}
-            />
-          </View>
-        </View>
-      )}
 
       <CustomButton
         disabled={disabledButton}
         onPress={handleSubmit(onSubmit)}
-        buttonText="Book Appointment"
+        buttonText="Reschedule Appointment"
         loading={isPending}
       />
     </ScrollView>
@@ -479,4 +330,4 @@ const styles = StyleSheet.create({
     marginTop: 10,
   },
 });
-export default PickDate;
+export default Reschedule;

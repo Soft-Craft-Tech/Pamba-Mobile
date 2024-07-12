@@ -1,7 +1,5 @@
-import { UseMutationOptions, useQueryClient } from "@tanstack/react-query";
+import { UseMutationOptions } from "@tanstack/react-query";
 import { useApiMutationTwo, useApiQueryTwo } from "./use-api-request";
-import { showNotification } from "@/hooks/toastNotication";
-import axios from "axios";
 
 export const ENDPOINTS = {
   APPOINTMENTS: "/appointments/my-appointments",
@@ -63,4 +61,17 @@ export function useBookAppointment(
   options?: UseMutationOptions<any, Error, any>
 ) {
   return useApiMutationTwo<any, any>("/appointments/book", options);
+}
+export function useRescheduleAppointment(
+  appointment_id: string | undefined,
+  options?: UseMutationOptions<any, Error, any>
+) {
+  return useApiMutationTwo<any, any>("/appointments/reschedule", options);
+}
+
+export function useCancelAppointment(
+  slug: string | undefined,
+  options?: UseMutationOptions<any, Error, any>
+) {
+  return useApiMutationTwo<any, any>(`/appointments/cancel${slug}`, options);
 }

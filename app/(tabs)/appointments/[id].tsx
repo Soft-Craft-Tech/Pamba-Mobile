@@ -5,25 +5,50 @@ import { Image } from "expo-image";
 import React from "react";
 import { SafeAreaView, StyleSheet, Text, View } from "react-native";
 import {
+  useCancelAppointment,
   useGetASingleService,
   useGetSingleAppointment,
 } from "@/api/use-appointments";
 import { format } from "date-fns";
 import SingleViewSkeleton from "@/components/Appointments/single-view-skeleton";
+import { showNotification } from "@/hooks/toastNotication";
+import { useQueryClient } from "@tanstack/react-query";
+import axios from "axios";
 
 const SingleAppointment = () => {
   const router = useRouter();
   const local = useLocalSearchParams<{ id: string }>();
   const { data, isPending } = useGetSingleAppointment(local?.id);
+  const queryClient = useQueryClient();
 
-  const { data: serviceData, isPending: servicesPending } =
-    useGetASingleService(data?.appointment?.service_id);
-
-  console.log(serviceData);
+  const { data: serviceData } = useGetASingleService(
+    data?.appointment?.service_id
+  );
 
   const date = new Date(data?.appointment?.date);
 
-  console.log("Data is Here", data);
+  const status = data?.appointment?.cancelled;
+
+  const { mutate: cancelAppointment, isPending: isPendingsState } =
+    useCancelAppointment(
+      { ...data },
+      {
+        onSuccess: (data) => {
+          showNotification("Success", data?.message);
+          queryClient.invalidateQueries({
+            queryKey: ["/appointments/my-appointments"],
+          });
+          router.push("/");
+        },
+        onError: (error) => {
+          if (axios.isAxiosError(error) && error?.response) {
+            showNotification("Error", error?.response?.data?.message);
+          } else {
+            showNotification("Error", "An unexpected error occurred");
+          }
+        },
+      }
+    );
 
   if (isPending) {
     return (
@@ -32,6 +57,19 @@ const SingleAppointment = () => {
       </StandardView>
     );
   }
+  const selectedSlot = {
+    appointment_id: data.appointment.id,
+  };
+
+  const handleCancelAppointment = () => {
+    console.log(selectedSlot);
+    if (data?.appointment?.id) {
+      cancelAppointment({ ...selectedSlot });
+    } else {
+      showNotification("Error", "Appointment ID not found");
+    }
+  };
+
   return (
     <SafeAreaView style={styles.container}>
       <StandardView>
@@ -64,7 +102,9 @@ const SingleAppointment = () => {
                 <Text style={styles.calendarText}>{format(date, "MMM")}</Text>
               </View>
               <View>
-                <Text style={styles.cardTitle}>Basic Pedicure</Text>
+                <Text style={styles.cardTitle}>
+                  {data?.appointment?.comment}
+                </Text>
                 <Text style={styles.attendantName}>With Jane</Text>
                 <Text style={styles.dayText}>
                   {`${format(date, "eee")} ${data?.appointment?.time}`}
@@ -72,16 +112,24 @@ const SingleAppointment = () => {
               </View>
             </View>
           </View>
-          <View style={styles.buttons}>
-            <CustomButton buttonText="Cancel" width="46%" variant="outline" />
-            <CustomButton
-              onPress={() => {
-                router.push(`/pick-date/${data?.appointment?.id}`);
-              }}
-              buttonText="Reschedule"
-              width="46%"
-            />
-          </View>
+          {!status && (
+            <View style={styles.buttons}>
+              <CustomButton
+                onPress={handleCancelAppointment}
+                buttonText="Cancel"
+                width="46%"
+                variant="outline"
+                loading={isPendingsState}
+              />
+              <CustomButton
+                onPress={() => {
+                  router.push(`/reschedule/${data?.appointment?.id}`);
+                }}
+                buttonText="Reschedule"
+                width="46%"
+              />
+            </View>
+          )}
         </View>
       </StandardView>
     </SafeAreaView>
