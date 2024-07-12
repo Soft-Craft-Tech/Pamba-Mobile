@@ -12,6 +12,7 @@ export const ENDPOINTS = {
   SINGLEBUSINESS: "/businesses/",
   BOOKAPPOINTMENT: "/appointments/book",
   CLIENTPROFILE: "/clients/retrieve",
+  UPDATEPROFILE: "/clients/update-profile",
 };
 
 export const useGetAllServices = (options = {}) => {
@@ -67,11 +68,15 @@ export function useBookAppointment(
 ) {
   return useApiMutationTwo<any, any>("/appointments/book", options);
 }
+
 export function useRescheduleAppointment(
   appointment_id: string | undefined,
   options?: UseMutationOptions<any, Error, any>
 ) {
-  return useApiMutationTwo<any, any>("/appointments/reschedule", options);
+  return useApiMutationTwo<any, any>(
+    `/appointments/reschedule${appointment_id}`,
+    options
+  );
 }
 
 export function useCancelAppointment(
@@ -79,4 +84,10 @@ export function useCancelAppointment(
   options?: UseMutationOptions<any, Error, any>
 ) {
   return useApiMutationTwo<any, any>(`/appointments/cancel${slug}`, options);
+}
+
+export function useUpdateClientProfile(
+  options?: UseMutationOptions<any, Error, any>
+) {
+  return useApiMutationTwo<any, any>(ENDPOINTS.UPDATEPROFILE, options);
 }

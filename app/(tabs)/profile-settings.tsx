@@ -1,14 +1,19 @@
-import { useGetClientProfile } from "@/api/use-appointments";
+import {
+  useGetClientProfile,
+  useUpdateClientProfile,
+} from "@/api/use-appointments";
 import CustomButton from "@/components/Button";
 import { CustomInput } from "@/components/CustomInput";
 import React, { useEffect, useState } from "react";
 import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
-import { Avatar, TextInput as PaperInput } from "react-native-paper";
+import { Avatar } from "react-native-paper";
 import { DatePickerInput } from "react-native-paper-dates";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
+import { showNotification } from "@/hooks/toastNotication";
+import axios from "axios";
 
 interface FormData {
   name: string;
@@ -20,7 +25,18 @@ interface FormData {
 const ProfileSettings = () => {
   const { data } = useGetClientProfile();
   const [avatarUri, setAvatarUri] = useState<string | null>(null);
-  const [status, requestPermission] = ImagePicker.useMediaLibraryPermissions();
+  const { mutate: updateProfile, isPending } = useUpdateClientProfile({
+    onSuccess: (data) => {
+      showNotification("Success", data?.message);
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error?.response) {
+        showNotification("Error", error?.response?.data?.message);
+      } else {
+        showNotification("Error", "An unexpected error occurred");
+      }
+    },
+  });
 
   const { control, handleSubmit, setValue } = useForm<FormData>({
     defaultValues: {
@@ -40,6 +56,7 @@ const ProfileSettings = () => {
       setAvatarUri(data.client.profile_image || null);
     }
   }, [data, setValue]);
+
   const requestPermissions = async () => {
     if (Constants.platform?.ios) {
       const cameraRollStatus =
@@ -78,12 +95,30 @@ const ProfileSettings = () => {
   };
 
   const onSubmit = (formData: FormData) => {
-    const dataToSubmit = {
-      ...formData,
-      profile_image: avatarUri,
+    const formattedDate = formData.birthdate
+      ? formData.birthdate
+          .toLocaleDateString("en-GB", {
+            day: "2-digit",
+            month: "2-digit",
+            year: "numeric",
+          })
+          .split("/")
+          .join("-")
+      : null;
+
+    const payload = {
+      email: formData.email,
+      phone: formData.phoneNumber,
+      dob: formattedDate,
+      name: formData.name,
     };
-    console.log(dataToSubmit);
-    // Handle form submission here, including the new avatar image
+
+    const dataToSubmit = {
+      image: avatarUri,
+      payload: payload,
+    };
+    console.log("formadata", dataToSubmit);
+    updateProfile({ ...dataToSubmit });
   };
 
   return (
@@ -169,6 +204,7 @@ const ProfileSettings = () => {
           />
           <CustomButton
             buttonText="Save Changes"
+            loading={isPending}
             onPress={handleSubmit(onSubmit)}
           />
         </View>
