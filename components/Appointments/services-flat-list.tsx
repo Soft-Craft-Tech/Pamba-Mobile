@@ -10,6 +10,7 @@ import UpcomingAppointments from "./upcoming-appointment";
 import {
   useGetAllAppointments,
   useGetAllServices,
+  useGetClientProfile,
 } from "@/api/use-appointments";
 
 interface ServiceListProps {
@@ -27,14 +28,18 @@ const ServicesList: React.FC<ServiceListProps> = ({
 
   const { data: appointmentsData, isPending } = useGetAllAppointments();
 
+  const { data: clientData, isPending: loadClient } = useGetClientProfile();
+
   const renderHeader = () => (
     <View style={styles.headerContainer}>
       <StandardView>
-        <Text style={styles.greetingText}>Welcome Back David</Text>
-        {showBanner && (
+        <Text style={styles.greetingText}>
+          Welcome Back {clientData?.client?.name}
+        </Text>
+        {showBanner && clientData?.client?.dob === null && (
           <StatusBanner
             onPress={() => setShowBanner(false)}
-            isLoading={isPending}
+            isLoading={loadClient}
           />
         )}
       </StandardView>

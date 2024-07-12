@@ -33,7 +33,13 @@
     },
     "plugins": [
       "expo-router",
-      "expo-secure-store"
+      "expo-secure-store",
+      [
+        "expo-image-picker",
+        {
+          "photosPermission": "Pamba accesses your photos for your profile"
+        }
+      ]
     ],
     "experiments": {
       "typedRoutes": true

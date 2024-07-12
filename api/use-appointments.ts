@@ -11,10 +11,15 @@ export const ENDPOINTS = {
   ALLBUSINESSES: "/businesses/all-businesses",
   SINGLEBUSINESS: "/businesses/",
   BOOKAPPOINTMENT: "/appointments/book",
+  CLIENTPROFILE: "/clients/retrieve",
 };
 
 export const useGetAllServices = (options = {}) => {
   return useApiQueryTwo(ENDPOINTS.ALLSERVICES, options);
+};
+
+export const useGetClientProfile = (options = {}) => {
+  return useApiQueryTwo(ENDPOINTS.CLIENTPROFILE, options);
 };
 
 export const useGetASingleService = (
