@@ -13,6 +13,7 @@ import { useForm, Controller } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { showNotification } from "@/hooks/toastNotication";
+import * as FileSystem from "expo-file-system";
 import axios from "axios";
 
 interface FormData {
@@ -85,7 +86,7 @@ const ProfileSettings = () => {
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
-      aspect: [1, 1],
+      aspect: [4, 3],
       quality: 1,
     });
 
@@ -94,31 +95,62 @@ const ProfileSettings = () => {
     }
   };
 
-  const onSubmit = (formData: FormData) => {
-    const formattedDate = formData.birthdate
-      ? formData.birthdate
-          .toLocaleDateString("en-GB", {
-            day: "2-digit",
-            month: "2-digit",
-            year: "numeric",
-          })
-          .split("/")
-          .join("-")
-      : null;
+  const onSubmit = async (formData: FormData) => {
+    try {
+      const formattedDate = formData.birthdate
+        ? formData.birthdate
+            .toLocaleDateString("en-GB", {
+              day: "2-digit",
+              month: "2-digit",
+              year: "numeric",
+            })
+            .split("/")
+            .reverse()
+            .join("-")
+        : null;
 
-    const payload = {
-      email: formData.email,
-      phone: formData.phoneNumber,
-      dob: formattedDate,
-      name: formData.name,
-    };
+      const apiFormData = new FormData();
 
-    const dataToSubmit = {
-      image: avatarUri,
-      payload: payload,
-    };
-    console.log("formadata", dataToSubmit);
-    updateProfile({ ...dataToSubmit });
+      // Append form fields
+      apiFormData.append("email", formData.email);
+      apiFormData.append("phone", formData.phoneNumber);
+      if (formattedDate) {
+        apiFormData.append("dob", formattedDate);
+      }
+      apiFormData.append("name", formData.name);
+
+      // Append image if avatarUri exists
+      if (avatarUri) {
+        const fileInfo = await FileSystem.getInfoAsync(avatarUri);
+        if (fileInfo.exists) {
+          const fileName = avatarUri.split("/").pop() || "profile_image.jpg";
+          const mimeType = fileName.toLowerCase().endsWith(".png")
+            ? "image/png"
+            : "image/jpeg";
+
+          apiFormData.append("image", {
+            uri: avatarUri,
+            type: mimeType,
+            name: fileName,
+          } as any);
+        } else {
+          console.warn("Image file does not exist at the specified URI.");
+        }
+      }
+
+      // Log the form data in a way that doesn't cause errors
+      for (let [key, value] of apiFormData.entries()) {
+        console.log(key, value);
+      }
+
+      await updateProfile(apiFormData);
+
+      console.log("Profile updated successfully");
+      // You might want to show a success message to the user here
+    } catch (error) {
+      console.error("Error updating profile:", error);
+      // Handle the error appropriately, e.g., show an error message to the user
+    }
   };
 
   return (
