@@ -8,6 +8,7 @@ import { DatePickerInput } from "react-native-paper-dates";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useForm, Controller } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
+import Constants from "expo-constants";
 
 interface FormData {
   name: string;
@@ -39,25 +40,31 @@ const ProfileSettings = () => {
       setAvatarUri(data.client.profile_image || null);
     }
   }, [data, setValue]);
-  const pickImage = async () => {
-    if (status === null) {
-      const { status: newStatus } = await requestPermission();
-      if (newStatus !== "granted") {
+  const requestPermissions = async () => {
+    if (Constants.platform?.ios) {
+      const cameraRollStatus =
+        await ImagePicker.requestMediaLibraryPermissionsAsync();
+      const cameraStatus = await ImagePicker.requestCameraPermissionsAsync();
+      if (
+        cameraRollStatus.status !== "granted" ||
+        cameraStatus.status !== "granted"
+      ) {
         Alert.alert(
-          "Permission required",
-          "Sorry, we need camera roll permissions to make this work!",
+          "Permissions required",
+          "Sorry, we need camera roll and camera permissions to make this work!",
           [{ text: "OK" }]
         );
-        return;
+        return false;
       }
-    } else if (status.status !== "granted") {
-      Alert.alert(
-        "Permission required",
-        "Sorry, we need camera roll permissions to make this work!",
-        [{ text: "OK" }]
-      );
-      return;
+      return true;
     }
+    return true;
+  };
+
+  const pickImage = async () => {
+    const permissionGranted = await requestPermissions();
+    if (!permissionGranted) return;
+
     let result = await ImagePicker.launchImageLibraryAsync({
       mediaTypes: ImagePicker.MediaTypeOptions.Images,
       allowsEditing: true,
@@ -89,7 +96,9 @@ const ProfileSettings = () => {
             source={
               avatarUri
                 ? { uri: avatarUri }
-                : { uri: "https://i.pravatar.cc/150?img=63" }
+                : {
+                    uri: "https://www.shutterstock.com/image-vector/vector-design-avatar-dummy-sign-600nw-1290556063.jpg",
+                  }
             }
           />
           <Text style={styles.changePhotoText}>Change Photo</Text>

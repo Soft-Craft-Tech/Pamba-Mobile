@@ -1,28 +1,36 @@
-import { StyleSheet, View, Text } from "react-native";
-import { Image } from "expo-image";
+import { useGetClientProfile } from "@/api/use-appointments";
+import { useRouter } from "expo-router";
+import { useEffect, useState } from "react";
+import { TouchableOpacity } from "react-native";
+import { Avatar } from "react-native-paper";
 
-const Avatar: React.FC = ({}) => {
+const AvatarComponent: React.FC = ({}) => {
+  const { data } = useGetClientProfile();
+  const [avatarUri, setAvatarUri] = useState<string | null>(null);
+  const router = useRouter();
+  useEffect(() => {
+    if (data?.client) {
+      setAvatarUri(data?.client?.profile_image || null);
+    }
+  }, [data]);
   return (
-    <View style={styles.avatarContainer}>
-      {/* <Image source="https://bit.ly/dan-abramov" contentFit="cover" />
-       */}
-      <Text style={styles.profileText}>DC</Text>
-    </View>
+    <TouchableOpacity
+      onPress={() => {
+        router.push("/profile-settings");
+      }}
+    >
+      <Avatar.Image
+        size={36}
+        source={
+          avatarUri
+            ? { uri: avatarUri }
+            : {
+                uri: "https://www.shutterstock.com/image-vector/vector-design-avatar-dummy-sign-600nw-1290556063.jpg",
+              }
+        }
+      />
+    </TouchableOpacity>
   );
 };
 
-const styles = StyleSheet.create({
-  avatarContainer: {
-    width: 36,
-    height: 36,
-    borderRadius: 50,
-    justifyContent: "center",
-    alignItems: "center",
-    backgroundColor: "#DB1471",
-  },
-  profileText: {
-    color: "#fff",
-  },
-});
-
-export default Avatar;
+export default AvatarComponent;
