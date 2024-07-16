@@ -1,5 +1,9 @@
 import { UseMutationOptions } from "@tanstack/react-query";
-import { useApiMutationTwo, useApiQueryTwo } from "./use-api-request";
+import {
+  useApiMutationTwo,
+  useApiQueryTwo,
+  usePutMutation,
+} from "./use-api-request";
 
 export const ENDPOINTS = {
   APPOINTMENTS: "/appointments/my-appointments",
@@ -73,7 +77,7 @@ export function useRescheduleAppointment(
   appointment_id: string | undefined,
   options?: UseMutationOptions<any, Error, any>
 ) {
-  return useApiMutationTwo<any, any>(
+  return usePutMutation<any, any>(
     `/appointments/reschedule${appointment_id}`,
     options
   );
@@ -83,7 +87,7 @@ export function useCancelAppointment(
   slug: string | undefined,
   options?: UseMutationOptions<any, Error, any>
 ) {
-  return useApiMutationTwo<any, any>(`/appointments/cancel${slug}`, options);
+  return usePutMutation<any, any>(`/appointments/cancel${slug}`, options);
 }
 
 export function useUpdateClientProfile(

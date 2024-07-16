@@ -136,3 +136,13 @@ docs/pages/versions/*/react-native/*.diff
 
 expo-env.d.ts
 # @end expo-cli
+
+/credentials
+
+credentials.json
+
+certificate_for_google.pem
+
+@martinki__pamba_OLD_1.jks
+
+@martinki__pamba.jks

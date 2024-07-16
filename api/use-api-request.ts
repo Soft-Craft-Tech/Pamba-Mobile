@@ -95,6 +95,19 @@ export const useApiMutationTwo = <TData = unknown, TVariables = unknown>(
   });
 };
 
+export const usePutMutation = <TData = unknown, TVariables = unknown>(
+  endpoint: string,
+  options: UseMutationOptions<TData, Error, TVariables> = {}
+) => {
+  return useMutation<TData, Error, TVariables>({
+    mutationFn: async (variables) => {
+      const response = await axiosInstance.put(endpoint, variables);
+      return response.data;
+    },
+    ...options,
+  });
+};
+
 // Add request interceptor
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {

@@ -59,10 +59,10 @@ const SingleAppointment = () => {
   }
   const selectedSlot = {
     appointment_id: data.appointment.id,
+    comment: "Comment",
   };
 
   const handleCancelAppointment = () => {
-    console.log(selectedSlot);
     if (data?.appointment?.id) {
       cancelAppointment({ ...selectedSlot });
     } else {
