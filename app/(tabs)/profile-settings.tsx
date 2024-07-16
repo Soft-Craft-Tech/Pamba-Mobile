@@ -5,7 +5,14 @@ import {
 import CustomButton from "@/components/Button";
 import { CustomInput } from "@/components/CustomInput";
 import React, { useEffect, useState } from "react";
-import { StyleSheet, Text, View, TouchableOpacity, Alert } from "react-native";
+import {
+  StyleSheet,
+  Text,
+  View,
+  TouchableOpacity,
+  Alert,
+  Platform,
+} from "react-native";
 import { Avatar } from "react-native-paper";
 import { DatePickerInput } from "react-native-paper-dates";
 import { SafeAreaProvider } from "react-native-safe-area-context";
@@ -13,7 +20,6 @@ import { useForm, Controller } from "react-hook-form";
 import * as ImagePicker from "expo-image-picker";
 import Constants from "expo-constants";
 import { showNotification } from "@/hooks/toastNotication";
-import * as FileSystem from "expo-file-system";
 import axios from "axios";
 
 interface FormData {
@@ -109,49 +115,118 @@ const ProfileSettings = () => {
             .join("-")
         : null;
 
-      const apiFormData = new FormData();
+      // Create a plain object instead of FormData
+      const apiData: any = {
+        email: formData.email,
+        phone: formData.phoneNumber,
+        name: formData.name,
+      };
 
-      // Append form fields
-      apiFormData.append("email", formData.email);
-      apiFormData.append("phone", formData.phoneNumber);
       if (formattedDate) {
-        apiFormData.append("dob", formattedDate);
+        apiData.dob = formattedDate;
       }
-      apiFormData.append("name", formData.name);
-
-      // Append image if avatarUri exists
+      // Handle image
       if (avatarUri) {
-        const fileInfo = await FileSystem.getInfoAsync(avatarUri);
-        if (fileInfo.exists) {
-          const fileName = avatarUri.split("/").pop() || "profile_image.jpg";
-          const mimeType = fileName.toLowerCase().endsWith(".png")
-            ? "image/png"
-            : "image/jpeg";
+        const uriArray = avatarUri.split(".");
+        const fileType = uriArray[uriArray.length - 1];
 
-          apiFormData.append("image", {
-            uri: avatarUri,
-            type: mimeType,
-            name: fileName,
-          } as any);
-        } else {
-          console.warn("Image file does not exist at the specified URI.");
+        if (Platform.OS !== "web") {
+          const response = await fetch(avatarUri);
+          const blob = await response.blob();
+          const imageSizeInMB = blob.size / (1024 * 1024);
+
+          if (imageSizeInMB > 10) {
+            Alert.alert("Error", "Image size exceeds 10 MB");
+            throw new Error("Image exceeds 10 MB");
+          }
         }
+
+        apiData.image = {
+          uri: avatarUri,
+          name: `photo.${fileType}`,
+          type: `image/${fileType}`,
+        };
       }
-
-      // Log the form data in a way that doesn't cause errors
-      for (let [key, value] of apiFormData.entries()) {
-        console.log(key, value);
-      }
-
-      await updateProfile(apiFormData);
-
-      console.log("Profile updated successfully");
-      // You might want to show a success message to the user here
+      await updateProfile(apiData);
+      showNotification("Success", "Profile updated successfully");
     } catch (error) {
       console.error("Error updating profile:", error);
-      // Handle the error appropriately, e.g., show an error message to the user
+      if (axios.isAxiosError(error) && error?.response) {
+        showNotification(
+          "Error",
+          error?.response?.data?.message ||
+            "An error occurred while updating the profile"
+        );
+      } else {
+        showNotification("Error", "An unexpected error occurred");
+      }
     }
   };
+
+  // const onSubmit = async (formData: FormData) => {
+  //   try {
+  //     const formattedDate = formData.birthdate
+  //       ? formData.birthdate
+  //           .toLocaleDateString("en-GB", {
+  //             day: "2-digit",
+  //             month: "2-digit",
+  //             year: "numeric",
+  //           })
+  //           .split("/")
+  //           .reverse()
+  //           .join("-")
+  //       : null;
+
+  //     const apiFormData = new FormData();
+
+  //     // Append form fields
+  //     apiFormData.append("email", formData.email);
+  //     apiFormData.append("phone", formData.phoneNumber);
+  //     if (formattedDate) {
+  //       apiFormData.append("dob", formattedDate);
+  //     }
+  //     apiFormData.append("name", formData.name);
+
+  //     // Handle image
+  //     if (avatarUri) {
+  //       const uriArray = avatarUri.split(".");
+  //       const fileType = uriArray[uriArray.length - 1];
+
+  //       const response = await fetch(avatarUri);
+  //       const blob = await response.blob();
+  //       const imageSizeInMB = blob.size / (1024 * 1024);
+
+  //       if (imageSizeInMB > 10) {
+  //         Alert.alert("Error", "Image size exceeds 10 MB");
+  //         throw new Error("Image exceeds 10 MB");
+  //       }
+
+  //       apiFormData.append("image", {
+  //         uri: avatarUri,
+  //         name: `photo.${fileType}`,
+  //         type: `image/${fileType}`,
+  //       } as any);
+  //     }
+
+  //     // Log the form data
+  //     for (let [key, value] of apiFormData.entries()) {
+  //       console.log(key, value);
+  //     }
+
+  //     await updateProfile(apiFormData);
+
+  //     console.log("Profile updated successfully");
+  //     // You might want to show a success message to the user here
+  //   } catch (error) {
+  //     console.error("Error updating profile:", error);
+  //     // Handle the error appropriately, e.g., show an error message to the user
+  //     if (error instanceof Error) {
+  //       Alert.alert("Error", error.message);
+  //     } else {
+  //       Alert.alert("Error", "An unexpected error occurred");
+  //     }
+  //   }
+  // };
 
   return (
     <SafeAreaProvider>

@@ -116,8 +116,6 @@ const PickDate: React.FC = () => {
     },
   });
 
-  console.log("Query Here", query);
-
   const [state, setState] = useState<PickDateState>({
     selectedDay: "",
     selectedProvider: "",
