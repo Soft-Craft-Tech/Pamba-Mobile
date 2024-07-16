@@ -31,7 +31,7 @@ const schema = z.object({
     }),
   phone: z
     .string({ required_error: "Phone Number is required" })
-    .min(10, "Phone must be at least 10 characters long")
+    .min(9, "Phone must be at least 10 characters long")
     .max(10, "Password must not exceed 10 characters")
     .refine(
       (value) => /^(?:[0-9-()/.]\s?){6,15}[0-9]{1}$/.test(value),
@@ -78,7 +78,6 @@ export default function CreateAccountScreen() {
     };
     signup({ ...transformedData });
   };
-
   if (isSuccess) {
     router.push("/verification");
   }
