@@ -18,7 +18,6 @@ import { useState } from "react";
 import * as z from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useSession } from "./ctx";
-import { useIsFirstTime } from "@/constants/store-is-first-time";
 
 const schema = z.object({
   username: z
@@ -37,7 +36,7 @@ const schema = z.object({
 type FormValues = {
   username: string;
   password: string;
-  rememberMe: any;
+  rememberMe: boolean;
 };
 
 export type FormType = z.infer<typeof schema>;
@@ -52,15 +51,14 @@ export default function LoginScreen() {
     control,
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
-  const onSubmit = async (data: any) => {
+  const onSubmit = async (data: FormValues) => {
     setIsPending(true);
     try {
-      await signIn(data.username, data.password);
+      await signIn(data?.username, data?.password);
       setIsPending(false);
       router.push("/");
     } catch (err) {
       setIsPending(false);
-      console.log("Here");
     }
   };
 

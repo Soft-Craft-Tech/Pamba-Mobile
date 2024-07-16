@@ -30,6 +30,8 @@ const ServicesList: React.FC<ServiceListProps> = ({
 
   const { data: clientData, isPending: loadClient } = useGetClientProfile();
 
+  console.log(clientData);
+
   const renderHeader = () => (
     <View style={styles.headerContainer}>
       <StandardView>

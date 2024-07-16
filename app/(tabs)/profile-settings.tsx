@@ -100,7 +100,6 @@ const ProfileSettings = () => {
       setAvatarUri(result.assets[0].uri);
     }
   };
-
   const onSubmit = async (formData: FormData) => {
     try {
       const formattedDate = formData.birthdate
@@ -111,20 +110,19 @@ const ProfileSettings = () => {
               year: "numeric",
             })
             .split("/")
-            .reverse()
             .join("-")
         : null;
 
-      // Create a plain object instead of FormData
-      const apiData: any = {
+      const payload: any = {
         email: formData.email,
         phone: formData.phoneNumber,
-        name: formData.name,
       };
-
       if (formattedDate) {
-        apiData.dob = formattedDate;
+        payload.dob = formattedDate;
       }
+      let apiData: any = {
+        payload,
+      };
       // Handle image
       if (avatarUri) {
         const uriArray = avatarUri.split(".");
@@ -148,7 +146,7 @@ const ProfileSettings = () => {
         };
       }
       await updateProfile(apiData);
-      showNotification("Success", "Profile updated successfully");
+      console.log("Here is the payload", apiData);
     } catch (error) {
       console.error("Error updating profile:", error);
       if (axios.isAxiosError(error) && error?.response) {
@@ -162,71 +160,6 @@ const ProfileSettings = () => {
       }
     }
   };
-
-  // const onSubmit = async (formData: FormData) => {
-  //   try {
-  //     const formattedDate = formData.birthdate
-  //       ? formData.birthdate
-  //           .toLocaleDateString("en-GB", {
-  //             day: "2-digit",
-  //             month: "2-digit",
-  //             year: "numeric",
-  //           })
-  //           .split("/")
-  //           .reverse()
-  //           .join("-")
-  //       : null;
-
-  //     const apiFormData = new FormData();
-
-  //     // Append form fields
-  //     apiFormData.append("email", formData.email);
-  //     apiFormData.append("phone", formData.phoneNumber);
-  //     if (formattedDate) {
-  //       apiFormData.append("dob", formattedDate);
-  //     }
-  //     apiFormData.append("name", formData.name);
-
-  //     // Handle image
-  //     if (avatarUri) {
-  //       const uriArray = avatarUri.split(".");
-  //       const fileType = uriArray[uriArray.length - 1];
-
-  //       const response = await fetch(avatarUri);
-  //       const blob = await response.blob();
-  //       const imageSizeInMB = blob.size / (1024 * 1024);
-
-  //       if (imageSizeInMB > 10) {
-  //         Alert.alert("Error", "Image size exceeds 10 MB");
-  //         throw new Error("Image exceeds 10 MB");
-  //       }
-
-  //       apiFormData.append("image", {
-  //         uri: avatarUri,
-  //         name: `photo.${fileType}`,
-  //         type: `image/${fileType}`,
-  //       } as any);
-  //     }
-
-  //     // Log the form data
-  //     for (let [key, value] of apiFormData.entries()) {
-  //       console.log(key, value);
-  //     }
-
-  //     await updateProfile(apiFormData);
-
-  //     console.log("Profile updated successfully");
-  //     // You might want to show a success message to the user here
-  //   } catch (error) {
-  //     console.error("Error updating profile:", error);
-  //     // Handle the error appropriately, e.g., show an error message to the user
-  //     if (error instanceof Error) {
-  //       Alert.alert("Error", error.message);
-  //     } else {
-  //       Alert.alert("Error", "An unexpected error occurred");
-  //     }
-  //   }
-  // };
 
   return (
     <SafeAreaProvider>
