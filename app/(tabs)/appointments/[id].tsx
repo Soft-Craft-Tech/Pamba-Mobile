@@ -23,8 +23,8 @@ interface FormData {
 
 const SingleAppointment = () => {
   const router = useRouter();
-  const local = useLocalSearchParams<{ id: string }>();
-  const { data, isPending } = useGetSingleAppointment(local?.id);
+  const { id } = useLocalSearchParams<{ id: string }>();
+  const { data, isPending } = useGetSingleAppointment(id);
   const queryClient = useQueryClient();
 
   const [isComment, setIsComment] = React.useState(false);
@@ -44,29 +44,24 @@ const SingleAppointment = () => {
   const status = data?.appointment?.cancelled;
 
   const { mutate: cancelAppointment, isPending: isPendingsState } =
-    useCancelAppointment(
-      { ...data },
-      {
-        onSuccess: (data) => {
-          showNotification("Success", data?.message);
-          queryClient.invalidateQueries({
-            queryKey: ["/appointments/my-appointments"],
-          });
+    useCancelAppointment(data.appointment.id, {
+      onSuccess: (data) => {
+        showNotification("Success", data?.message);
+        queryClient.invalidateQueries({
+          queryKey: ["/appointments/my-appointments"],
+        });
+        setIsComment(false);
+        router.push("/");
+      },
+      onError: (error) => {
+        if (axios.isAxiosError(error) && error?.response) {
           setIsComment(false);
-          router.push("/");
-        },
-        onError: (error) => {
-          if (axios.isAxiosError(error) && error?.response) {
-            console.log("Error status code:", error.response.status);
-            console.log("Error response data:", error.response.data);
-            showNotification("Error", error?.response?.data?.message);
-            setIsComment(false);
-          } else {
-            showNotification("Error", "An unexpected error occurred");
-          }
-        },
-      }
-    );
+          showNotification("Error", error?.response?.data?.message);
+        } else {
+          showNotification("Error", "An unexpected error occurred");
+        }
+      },
+    });
 
   if (isPending) {
     return (

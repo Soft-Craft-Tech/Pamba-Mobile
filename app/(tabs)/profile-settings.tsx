@@ -38,6 +38,11 @@ const ProfileSettings = () => {
     },
     onError: (error) => {
       if (axios.isAxiosError(error) && error?.response) {
+        // console.log(error.config);
+        // console.log(error.response);
+        // console.log("Request", error.request);
+        // console.log("Error status code:", error.response.status);
+        // console.log("Error response data:", error.response.data.message);
         showNotification("Error", error?.response?.data?.message);
       } else {
         showNotification("Error", "An unexpected error occurred");
@@ -146,15 +151,18 @@ const ProfileSettings = () => {
         };
       }
       await updateProfile(apiData);
-      console.log("Here is the payload", apiData);
     } catch (error) {
       console.error("Error updating profile:", error);
       if (axios.isAxiosError(error) && error?.response) {
-        showNotification(
-          "Error",
-          error?.response?.data?.message ||
-            "An error occurred while updating the profile"
-        );
+        console.log(error.config);
+        console.log(error.response);
+        console.log("Error status code:", error.response.status);
+        console.log("Error response data:", error.response.data.message);
+        // showNotification(
+        //   "Error",
+        //   error?.response?.data?.message ||
+        //     "An error occurred while updating the profile"
+        // );
       } else {
         showNotification("Error", "An unexpected error occurred");
       }

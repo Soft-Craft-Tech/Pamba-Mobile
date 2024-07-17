@@ -121,6 +121,12 @@ axiosInstance.interceptors.request.use(
       "0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62"
     );
     config.headers.set("x-access-token", accessToken as string);
+    console.log("Final request config:", {
+      url: config.url,
+      method: config.method,
+      headers: config.headers,
+      data: config.data,
+    });
     return config;
   },
   (error) => {
