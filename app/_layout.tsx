@@ -10,6 +10,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "./ctx";
 import { FontAwesome } from "@expo/vector-icons";
 
+// eas build --profile staging --platform android
+
 export {
   // Catch any errors thrown by the Layout component.
   ErrorBoundary,
