@@ -22,7 +22,6 @@ import { useSignupMutation } from "@/api/use-auth";
 import { setItem } from "@/core/storage";
 import { showNotification } from "@/hooks/toastNotication";
 import axios from "axios";
-import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
   name: z
