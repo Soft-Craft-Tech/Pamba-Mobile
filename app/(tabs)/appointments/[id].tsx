@@ -44,7 +44,7 @@ const SingleAppointment = () => {
   const status = data?.appointment?.cancelled;
 
   const { mutate: cancelAppointment, isPending: isPendingsState } =
-    useCancelAppointment(data.appointment.id, {
+    useCancelAppointment(data?.appointment?.id, {
       onSuccess: (data) => {
         showNotification("Success", data?.message);
         queryClient.invalidateQueries({

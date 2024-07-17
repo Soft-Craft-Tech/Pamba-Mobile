@@ -76,6 +76,7 @@ const Reschedule: React.FC = () => {
     onError: (error) => {
       if (axios.isAxiosError(error) && error?.response) {
         console.log("Error status code:", error.response.status);
+        console.log("Error response data:", error.response.data);
         showNotification("Error", error?.response?.data?.message);
       } else {
         showNotification("Error", "An unexpected error occurred");

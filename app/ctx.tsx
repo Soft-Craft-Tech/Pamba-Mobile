@@ -94,7 +94,6 @@ export function SessionProvider({
         "https://pamba-web.onrender.com/API/clients/login",
         credentials
       );
-      console.log("API response:", response);
       setItem("authenticationToken", response.data.authToken);
       return response.data;
     },

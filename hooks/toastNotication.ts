@@ -8,7 +8,7 @@ export const showNotification = (
     title: type,
     description: description,
     duration: 2000,
-    showAnimationDuration: 800,
+    showAnimationDuration: 300,
     showEasing: Easing.bounce,
     onHidden: () => console.log("Hidden"),
     onPress: () => console.log("Press"),

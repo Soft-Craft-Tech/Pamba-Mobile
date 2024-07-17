@@ -1,6 +1,4 @@
 import CustomButton from "@/components/Button";
-import DividerContainer from "@/components/DividerContainer";
-import SocialIcons from "@/components/SocialIcons";
 import { Ionicons } from "@expo/vector-icons";
 import Checkbox from "expo-checkbox";
 import { Link, router } from "expo-router";
