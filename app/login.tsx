@@ -127,7 +127,7 @@ export default function LoginScreen() {
             <Controller
               control={control}
               name="rememberMe"
-              defaultValue={false}
+              defaultValue={true}
               render={({ field: { onChange, value } }) => (
                 <Checkbox
                   color={value ? "#007B99" : undefined}
@@ -147,8 +147,8 @@ export default function LoginScreen() {
           onPress={handleSubmit(onSubmit)}
           buttonText="Login"
         />
-        <DividerContainer />
-        <SocialIcons />
+        {/* <DividerContainer />
+        <SocialIcons /> */}
         <View style={styles.signupContainer}>
           <Text style={styles.signupText}>Don't have an account? </Text>
           <Link href="/create-account">

@@ -1,20 +1,27 @@
+import { UseMutationOptions } from "@tanstack/react-query";
 import {
   PasswordRequestVariables,
   ResendOtpVariables,
   SignupVariables,
   VerifcationVariables,
 } from "./types";
-import { useApiMutation } from "./use-api-request";
+import { useApiMutation, useApiMutationTwo } from "./use-api-request";
 
 type SignupResponse = {
   [key: string]: any;
 };
 
-export function useSignupMutation() {
-  return useApiMutation<SignupResponse, SignupVariables>(
-    "/clients/signup",
-    "post"
-  );
+// export function useSignupMutation() {
+//   return useApiMutation<SignupResponse, SignupVariables>(
+//     "/clients/signup",
+//     "post"
+//   );
+// }
+
+export function useSignupMutation(
+  options?: UseMutationOptions<any, Error, any>
+) {
+  return useApiMutationTwo<any, any>("/clients/signup", options);
 }
 
 export function useVerificationMutation() {

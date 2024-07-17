@@ -20,6 +20,9 @@ import CustomButton from "@/components/Button";
 import PhoneInput from "react-native-phone-number-input";
 import { useSignupMutation } from "@/api/use-auth";
 import { setItem } from "@/core/storage";
+import { showNotification } from "@/hooks/toastNotication";
+import axios from "axios";
+import { useQueryClient } from "@tanstack/react-query";
 
 const schema = z.object({
   name: z
@@ -61,9 +64,23 @@ export type FormType = z.infer<typeof schema>;
 
 export default function CreateAccountScreen() {
   const [showPassword, setShowPassword] = useState(false);
-  const { mutate: signup, isPending, isSuccess } = useSignupMutation();
-
   const router = useRouter();
+  const { mutate: signup, isPending } = useSignupMutation({
+    onSuccess: (data) => {
+      showNotification("Success", data?.message);
+      router.push("/verification");
+    },
+    onError: (error) => {
+      if (axios.isAxiosError(error) && error?.response) {
+        console.log("Error status code:", error.response.status);
+        console.log("Error response data:", error.response.data);
+        showNotification("Error", error?.response?.data?.message);
+      } else {
+        showNotification("Error", "An unexpected error occurred");
+      }
+    },
+  });
+
   const {
     handleSubmit,
     control,
@@ -78,9 +95,6 @@ export default function CreateAccountScreen() {
     };
     signup({ ...transformedData });
   };
-  if (isSuccess) {
-    router.push("/verification");
-  }
 
   return (
     <ScrollView>
@@ -281,7 +295,7 @@ export default function CreateAccountScreen() {
             buttonText="REGISTER"
             loading={isPending}
           />
-          <View style={styles.dividerContainer}>
+          {/* <View style={styles.dividerContainer}>
             <View style={styles.divider} />
             <Text style={styles.orText}>or</Text>
             <View style={styles.divider} />
@@ -299,7 +313,7 @@ export default function CreateAccountScreen() {
             <TouchableOpacity>
               <Ionicons size={24} name="logo-github" />
             </TouchableOpacity>
-          </View>
+          </View> */}
           <View style={styles.signupContainer}>
             <Text style={styles.signupText}>Already have an account? </Text>
             <Link href="/login">
