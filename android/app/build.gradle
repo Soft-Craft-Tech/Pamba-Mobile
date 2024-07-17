@@ -88,7 +88,7 @@ android {
         applicationId 'com.dclintonn.pamba'
         minSdkVersion rootProject.ext.minSdkVersion
         targetSdkVersion rootProject.ext.targetSdkVersion
-        versionCode 1
+        versionCode 3
         versionName "0.0.5"
     }
     signingConfigs {

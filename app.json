@@ -24,7 +24,8 @@
         "foregroundImage": "./assets/images/adaptive-icon.png",
         "backgroundColor": "#DB1471"
       },
-      "package": "com.dclintonn.pamba"
+      "package": "com.dclintonn.pamba",
+      "versionCode": 3
     },
     "web": {
       "bundler": "metro",
