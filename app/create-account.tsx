@@ -86,12 +86,17 @@ export default function CreateAccountScreen() {
     control,
     formState: { errors },
   } = useForm<FormType>({ resolver: zodResolver(schema) });
+
   const onSubmit = (data: any) => {
-    const transformedphone = "+254" + data.phone.slice(1);
+    let transformedPhone = data.phone;
+    if (data.phone.length === 10) {
+      transformedPhone = data.phone.slice(1);
+    }
+    const finalPhone = "+254" + transformedPhone;
     setItem("email", data.email);
     const transformedData = {
       ...data,
-      phone: transformedphone,
+      phone: finalPhone,
     };
     signup({ ...transformedData });
   };
