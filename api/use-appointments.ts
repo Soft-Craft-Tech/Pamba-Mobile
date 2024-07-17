@@ -78,7 +78,7 @@ export function useRescheduleAppointment(
   options?: UseMutationOptions<any, Error, any>
 ) {
   return usePutMutation<any, any>(
-    `/appointments/reschedule${appointment_id}`,
+    `/appointments/reschedule/${appointment_id}`,
     options
   );
 }
@@ -87,7 +87,7 @@ export function useCancelAppointment(
   slug: string | undefined,
   options?: UseMutationOptions<any, Error, any>
 ) {
-  return usePutMutation<any, any>(`/appointments/cancel${slug}`, options);
+  return usePutMutation<any, any>(`/appointments/cancel/${slug}`, options);
 }
 
 export function useUpdateClientProfile(

@@ -111,17 +111,20 @@ export const usePutMutation = <TData = unknown, TVariables = unknown>(
 // Add request interceptor
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    // Set headers using the proper method
-    config.headers.set("Content-Type", "application/json");
+    if (config.data instanceof FormData) {
+      config.headers.set("Content-Type", "multipart/form-data");
+    } else {
+      config.headers.set("Content-Type", "application/json");
+    }
     config.headers.set(
       "X-API-KEY",
       "0837e78c2bbaa018a74ddcf00eda51680ec252377a912baa62"
     );
     config.headers.set("x-access-token", accessToken as string);
-
     return config;
   },
   (error) => {
+    console.log("axios", error);
     return Promise.reject(error);
   }
 );

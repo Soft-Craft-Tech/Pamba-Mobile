@@ -14,12 +14,26 @@ import SingleViewSkeleton from "@/components/Appointments/single-view-skeleton";
 import { showNotification } from "@/hooks/toastNotication";
 import { useQueryClient } from "@tanstack/react-query";
 import axios from "axios";
+import { Controller, useForm } from "react-hook-form";
+import { CustomInput } from "@/components/CustomInput";
+
+interface FormData {
+  comment: string;
+}
 
 const SingleAppointment = () => {
   const router = useRouter();
   const local = useLocalSearchParams<{ id: string }>();
   const { data, isPending } = useGetSingleAppointment(local?.id);
   const queryClient = useQueryClient();
+
+  const [isComment, setIsComment] = React.useState(false);
+
+  const { control, handleSubmit } = useForm<FormData>({
+    defaultValues: {
+      comment: "",
+    },
+  });
 
   const { data: serviceData } = useGetASingleService(
     data?.appointment?.service_id
@@ -38,11 +52,15 @@ const SingleAppointment = () => {
           queryClient.invalidateQueries({
             queryKey: ["/appointments/my-appointments"],
           });
+          setIsComment(false);
           router.push("/");
         },
         onError: (error) => {
           if (axios.isAxiosError(error) && error?.response) {
+            console.log("Error status code:", error.response.status);
+            console.log("Error response data:", error.response.data);
             showNotification("Error", error?.response?.data?.message);
+            setIsComment(false);
           } else {
             showNotification("Error", "An unexpected error occurred");
           }
@@ -59,12 +77,11 @@ const SingleAppointment = () => {
   }
   const selectedSlot = {
     appointment_id: data.appointment.id,
-    comment: "Comment",
   };
 
-  const handleCancelAppointment = () => {
+  const handleCancelAppointment = async (formData: FormData) => {
     if (data?.appointment?.id) {
-      cancelAppointment({ ...selectedSlot });
+      cancelAppointment({ ...selectedSlot, ...formData });
     } else {
       showNotification("Error", "Appointment ID not found");
     }
@@ -112,14 +129,29 @@ const SingleAppointment = () => {
               </View>
             </View>
           </View>
-          {!status && (
+          {isComment && (
+            <Controller
+              control={control}
+              rules={{ required: "Add Comment Here" }}
+              render={({ field: { onChange, value } }) => (
+                <CustomInput
+                  label="Add Comment Here"
+                  text={value}
+                  onChange={onChange}
+                />
+              )}
+              name="comment"
+            />
+          )}
+          {!status && !isComment && (
             <View style={styles.buttons}>
               <CustomButton
-                onPress={handleCancelAppointment}
+                onPress={() => {
+                  setIsComment(true);
+                }}
                 buttonText="Cancel"
                 width="46%"
                 variant="outline"
-                loading={isPendingsState}
               />
               <CustomButton
                 onPress={() => {
@@ -127,6 +159,17 @@ const SingleAppointment = () => {
                 }}
                 buttonText="Reschedule"
                 width="46%"
+              />
+            </View>
+          )}
+
+          {isComment && (
+            <View style={{ marginTop: 10 }}>
+              <CustomButton
+                onPress={handleSubmit(handleCancelAppointment)}
+                buttonText="Cancel"
+                variant="outline"
+                loading={isPendingsState}
               />
             </View>
           )}
