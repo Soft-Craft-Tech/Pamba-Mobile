@@ -11,13 +11,6 @@ type SignupResponse = {
   [key: string]: any;
 };
 
-// export function useSignupMutation() {
-//   return useApiMutation<SignupResponse, SignupVariables>(
-//     "/clients/signup",
-//     "post"
-//   );
-// }
-
 export function useSignupMutation(
   options?: UseMutationOptions<any, Error, any>
 ) {
