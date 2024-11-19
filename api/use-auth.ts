@@ -2,7 +2,6 @@ import { UseMutationOptions } from "@tanstack/react-query";
 import {
   PasswordRequestVariables,
   ResendOtpVariables,
-  SignupVariables,
   VerifcationVariables,
 } from "./types";
 import { useApiMutation, useApiMutationTwo } from "./use-api-request";

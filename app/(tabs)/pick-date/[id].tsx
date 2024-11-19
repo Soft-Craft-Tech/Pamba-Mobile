@@ -67,6 +67,8 @@ type PickDateState = {
   visible: boolean;
 };
 
+// USED SOME PLACEHOLDER DATA AS THIS WAS NOT YET PROVIDED
+
 const providerData: ProviderData[] = [
   {
     label: "Olivia Rhae",

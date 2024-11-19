@@ -4,7 +4,7 @@ import { StyleSheet, Text, View } from "react-native";
 
 const TermsAndConditions = () => {
   const local = useLocalSearchParams<{ id: string }>();
-  console.log(local.id);
+
   return (
     <View style={styles.container}>
       {local.id === "Privacy Policy" ? (

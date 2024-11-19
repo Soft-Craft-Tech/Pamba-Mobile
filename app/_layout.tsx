@@ -10,6 +10,8 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { SessionProvider } from "./ctx";
 import { FontAwesome } from "@expo/vector-icons";
 
+// Use command below to build app for android
+
 // eas build --profile staging --platform android
 
 export {

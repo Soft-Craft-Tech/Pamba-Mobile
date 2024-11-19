@@ -14,6 +14,8 @@ import {
 import { Avatar } from "react-native-paper";
 import { SafeAreaProvider } from "react-native-safe-area-context";
 
+// NOTIFICATIONS WERE NOT READY FROM THE APIs
+
 const notifications = [
   {
     id: "1",

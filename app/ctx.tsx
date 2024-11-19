@@ -9,7 +9,6 @@ import { axiosStrategy } from "./axiosClient";
 
 interface ErrorResponse {
   message: string;
-  // Add other properties if needed
 }
 
 interface SignInCredentials {
@@ -35,6 +34,7 @@ const postWithAuthorization = async (
   const credentialsBase64 = btoa(
     `${credentials.username}:${credentials.password}`
   );
+  // ADD ALL OF THESE INTO ONE CENTRAL CONFIG
   const config = {
     headers: {
       "Content-Type": "application/json",

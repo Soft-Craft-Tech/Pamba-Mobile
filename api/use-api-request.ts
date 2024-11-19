@@ -23,7 +23,6 @@ type ApiResponse<T> = {
 
 type MutationHttpMethod = "post" | "put" | "patch" | "delete";
 
-// Hook for GET requests
 export function useApiQuery<TData>(
   endpoint: string
 ): UseQueryResult<ApiResponse<TData>, Error> {
@@ -108,7 +107,8 @@ export const usePutMutation = <TData = unknown, TVariables = unknown>(
   });
 };
 
-// Add request interceptor
+// TO DO ADD THESE TO ENVIROMENT VARIABLES
+
 axiosInstance.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
     if (config.data instanceof FormData) {

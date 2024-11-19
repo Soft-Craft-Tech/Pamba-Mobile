@@ -15,6 +15,8 @@ import { useLocalSearchParams, useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 
+// TO DO STORE DATA IN URL STATE INSTEAD OF ASYNC STORAGE, THIS WAS SOME DIRTY WORK
+
 const schema = z.object({
   gender: z.string({
     required_error: "Gender is required",

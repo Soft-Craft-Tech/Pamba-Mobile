@@ -299,6 +299,7 @@ export default function CreateAccountScreen() {
             buttonText="REGISTER"
             loading={isPending}
           />
+          {/* THESE CAN BE USED WHEN THIRD PARTY AUTH HAS BEEN ADDED */}
           {/* <View style={styles.dividerContainer}>
             <View style={styles.divider} />
             <Text style={styles.orText}>or</Text>
