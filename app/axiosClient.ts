@@ -3,6 +3,8 @@ import { getItem } from "expo-secure-store";
 
 const accessToken = getItem("authenticationToken");
 
+// TO DO, ADD ALL OF THESE TO ENVIROMENT VARIABLES
+
 export const axiosStrategy = axios.create({
   baseURL: "https://pamba-web.onrender.com/API",
   headers: {

@@ -20,6 +20,8 @@ import {
 } from "@/api/use-appointments";
 import SingleViewSkeleton from "@/components/Appointments/single-view-skeleton";
 
+// TO DO ADD SOME IMAGES URLS FROM PAMBA ASSETS WHICH I DIDN'T HAVE AT THE TIME
+
 const SALON_IMAGE_URI =
   "https://plus.unsplash.com/premium_photo-1664537435460-35963d8e413e?q=80&w=3386&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D";
 

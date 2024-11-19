@@ -61,7 +61,7 @@ export interface Appointment {
   cancelled: boolean;
   comment: string;
   completed: boolean;
-  create_at: string; // Consider renaming to createdAt for consistency with JavaScript conventions
+  create_at: string;
   date: string;
   description: string;
   id: number;
@@ -77,6 +77,6 @@ export interface AppointmentResponse {
   cancelled: any[]; // Assuming cancelled can be any type of array based on the provided data
   last: null;
   message: string;
-  previous: Appointment[]; // Assuming previous can be any type of array based on the provided data
+  previous: Appointment[];
   upcoming: Appointment[];
 }
